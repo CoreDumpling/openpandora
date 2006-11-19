@@ -1,0 +1,38 @@
+0.6.4 (10-Oct-06)
+NEW: Popup tray notification balloon
+NEW: Global shortcuts
+UPD: Proxy settings
+FIX: Better performance
+
+0.6.3 (28-Sep-06)
+NEW: Change stations from tray icon 
+NEW: Party Mode (Disable Pandora from stopping playback if there is no user interaction for 3 hours) 
+FIX: More reliable song submition to Last.fm 
+
+0.6.2 (26-Sep-06)
+FIX: Proxy support
+NEW: Lyrics in a new window
+NEW: Keep on top of other windows
+FIX: No more debugger messages (if you had)
+
+0.6.1 (20-Sep-06)
+NEW: Support for Pandora paying users 
+NEW: Added to installer option to launch at startup 
+NEW: Tool - Copy to clipboard
+
+0.6.0 (18-Sep-06)
+NEW: Full control from tray icon (play/pause/skip/like/don't like)
+NEW: Multimedia keyboard support 
+FIX: Minor bug fixes
+
+0.5.0 (03-Sep-06)
+NEW: Last.fm support 
+FIX: Minor bug fixes
+
+0.4.3 (13-Aug-06)
+NEW: New settings window 
+UPD: Better support for future changes in Pandora website 
+UPD: More accurate informing about new version
+
+0.4.2 (16-Jul-06)
+FIX: Update to reflect Pandora changes

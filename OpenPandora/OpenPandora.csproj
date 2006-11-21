@@ -263,6 +263,11 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Win32\Kernel32.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Win32\NotifyIconBaloon.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

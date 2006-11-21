@@ -1218,6 +1218,27 @@ namespace OpenPandora
 			}
 		}
 		#endregion
+
+		#region private void memoryTimer_Tick(object sender, System.EventArgs e)
+		private void memoryTimer_Tick(object sender, System.EventArgs e)
+		{
+			try
+			{
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+				{
+					Kernel32.SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				Debug.WriteLine(ex.StackTrace);
+			}
+		}
+		#endregion
+
 		
 		//
 		// Menu event handlers
@@ -1708,6 +1729,11 @@ namespace OpenPandora
 			browserRefreshTimer.Interval = 2500;
 			browserRefreshTimer.Tick += new EventHandler(this.browserRefreshTimer_Tick);
 			browserRefreshTimer.Enabled = false;
+
+			memoryTimer = new System.Windows.Forms.Timer();
+			memoryTimer.Interval = 60000;
+			memoryTimer.Tick += new EventHandler(this.memoryTimer_Tick);
+			memoryTimer.Enabled = true;
 		}
 		#endregion
 		
@@ -2418,6 +2444,7 @@ namespace OpenPandora
 		private System.Windows.Forms.Timer messageTimer;
 		private System.Windows.Forms.Timer browserTimer;
 		private System.Windows.Forms.Timer browserRefreshTimer;
+		private System.Windows.Forms.Timer memoryTimer;
 		private Audioscrobbler audioscrobbler;
 		private bool submittedToLastFm = false;
 		private Pandora pandora;

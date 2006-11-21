@@ -7,7 +7,7 @@
     >
         <Build>
             <Settings
-                ApplicationIcon = ""
+                ApplicationIcon = "Bitmap\Pandora.ico"
                 AssemblyKeyContainerName = ""
                 AssemblyName = "OpenPandora"
                 AssemblyOriginatorKeyFile = ""

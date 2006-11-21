@@ -1226,6 +1226,7 @@ namespace OpenPandora
 			{
 				GC.Collect();
 				GC.WaitForPendingFinalizers();
+
 				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 				{
 					Kernel32.SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);

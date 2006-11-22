@@ -255,9 +255,9 @@ namespace OpenPandora
 			// 
 			this.pictureBoxFill.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureBoxFill.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxFill.Image")));
-			this.pictureBoxFill.Location = new System.Drawing.Point(0, 18);
+			this.pictureBoxFill.Location = new System.Drawing.Point(0, 19);
 			this.pictureBoxFill.Name = "pictureBoxFill";
-			this.pictureBoxFill.Size = new System.Drawing.Size(650, 300);
+			this.pictureBoxFill.Size = new System.Drawing.Size(650, 323);
 			this.pictureBoxFill.TabIndex = 2;
 			this.pictureBoxFill.TabStop = false;
 			this.pictureBoxFill.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxFill_MouseUp);
@@ -271,7 +271,7 @@ namespace OpenPandora
 			this.browser.Enabled = true;
 			this.browser.Location = new System.Drawing.Point(-2, -2);
 			this.browser.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("browser.OcxState")));
-			this.browser.Size = new System.Drawing.Size(800, 300);
+			this.browser.Size = new System.Drawing.Size(800, 323);
 			this.browser.TabIndex = 3;
 			this.browser.NewWindow3 += new AxSHDocVw.DWebBrowserEvents2_NewWindow3EventHandler(this.browser_NewWindow3);
 			this.browser.DocumentComplete += new AxSHDocVw.DWebBrowserEvents2_DocumentCompleteEventHandler(this.browser_DocumentComplete);
@@ -282,18 +282,18 @@ namespace OpenPandora
 			this.panelBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelBrowser.Controls.Add(this.browser);
 			this.panelBrowser.Controls.Add(this.browser2);
-			this.panelBrowser.Location = new System.Drawing.Point(0, 18);
+			this.panelBrowser.Location = new System.Drawing.Point(0, 19);
 			this.panelBrowser.Name = "panelBrowser";
-			this.panelBrowser.Size = new System.Drawing.Size(800, 464);
+			this.panelBrowser.Size = new System.Drawing.Size(800, 500);
 			this.panelBrowser.TabIndex = 4;
 			// 
 			// browser2
 			// 
 			this.browser2.ContainingControl = this;
 			this.browser2.Enabled = true;
-			this.browser2.Location = new System.Drawing.Point(96, 72);
+			this.browser2.Location = new System.Drawing.Point(96, 78);
 			this.browser2.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("browser2.OcxState")));
-			this.browser2.Size = new System.Drawing.Size(300, 150);
+			this.browser2.Size = new System.Drawing.Size(300, 161);
 			this.browser2.TabIndex = 10;
 			this.browser2.StatusTextChange += new AxSHDocVw.DWebBrowserEvents2_StatusTextChangeEventHandler(this.browser2_StatusTextChange);
 			this.browser2.DocumentComplete += new AxSHDocVw.DWebBrowserEvents2_DocumentCompleteEventHandler(this.browser2_DocumentComplete);
@@ -306,7 +306,7 @@ namespace OpenPandora
 			this.pictureBoxTitle.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
 			this.pictureBoxTitle.Location = new System.Drawing.Point(0, 0);
 			this.pictureBoxTitle.Name = "pictureBoxTitle";
-			this.pictureBoxTitle.Size = new System.Drawing.Size(640, 18);
+			this.pictureBoxTitle.Size = new System.Drawing.Size(640, 19);
 			this.pictureBoxTitle.TabIndex = 6;
 			this.pictureBoxTitle.TabStop = false;
 			this.pictureBoxTitle.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBoxTitle_Paint);
@@ -324,7 +324,7 @@ namespace OpenPandora
 			this.btnClose.ForeColor = System.Drawing.Color.White;
 			this.btnClose.Location = new System.Drawing.Point(622, 2);
 			this.btnClose.Name = "btnClose";
-			this.btnClose.Size = new System.Drawing.Size(16, 16);
+			this.btnClose.Size = new System.Drawing.Size(16, 17);
 			this.btnClose.TabIndex = 7;
 			this.btnClose.TabStop = false;
 			this.btnClose.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -341,7 +341,7 @@ namespace OpenPandora
 			this.btnMinimize.ForeColor = System.Drawing.Color.White;
 			this.btnMinimize.Location = new System.Drawing.Point(606, 2);
 			this.btnMinimize.Name = "btnMinimize";
-			this.btnMinimize.Size = new System.Drawing.Size(16, 16);
+			this.btnMinimize.Size = new System.Drawing.Size(16, 17);
 			this.btnMinimize.TabIndex = 8;
 			this.btnMinimize.TabStop = false;
 			this.btnMinimize.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -353,16 +353,16 @@ namespace OpenPandora
 			// 
 			this.settingsView.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
 			this.settingsView.ForeColor = System.Drawing.Color.WhiteSmoke;
-			this.settingsView.Location = new System.Drawing.Point(177, 43);
+			this.settingsView.Location = new System.Drawing.Point(177, 46);
 			this.settingsView.Name = "settingsView";
-			this.settingsView.Size = new System.Drawing.Size(294, 190);
+			this.settingsView.Size = new System.Drawing.Size(294, 205);
 			this.settingsView.TabIndex = 9;
 			this.settingsView.Visible = false;
 			// 
-			// OpenPandoraForm
+			// Player
 			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(640, 268);
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 14);
+			this.ClientSize = new System.Drawing.Size(640, 288);
 			this.Controls.Add(this.settingsView);
 			this.Controls.Add(this.btnMinimize);
 			this.Controls.Add(this.btnClose);
@@ -372,7 +372,7 @@ namespace OpenPandora
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
-			this.Name = "OpenPandoraForm";
+			this.Name = "Player";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Open Pandora";
 			this.Resize += new System.EventHandler(this.formPandora_Resize);

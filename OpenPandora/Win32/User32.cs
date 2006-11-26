@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace OpenPandora
@@ -56,6 +57,42 @@ namespace OpenPandora
 		
 		[DllImport("user32.dll")]
 		public static extern int SetActiveWindow(int hwnd);
+
+		[DllImport("user32.dll")]
+		public static extern bool SetForegroundWindow(int hwnd);
+        
+		[DllImport("user32.dll")]
+		public static extern bool ShowWindowAsync(int hwnd, int nCmdShow);
+
+		[DllImport("user32.dll")]
+		public static extern bool IsIconic(int hwnd);
+
+		private const int SW_HIDE = 0;
+		private const int SW_SHOWNORMAL = 1;
+		private const int SW_NORMAL = 1;
+		private const int SW_SHOWMINIMIZED = 2;
+		private const int SW_SHOWMAXIMIZED = 3;
+		private const int SW_MAXIMIZE = 3;
+		private const int SW_SHOWNOACTIVATE = 4;
+		private const int SW_SHOW = 5;
+		private const int SW_MINIMIZE = 6;
+		private const int SW_SHOWMINNOACTIVE = 7;
+		private const int SW_SHOWNA = 8;
+		private const int SW_RESTORE = 9;
+		private const int SW_SHOWDEFAULT = 10;
+		private const int SW_FORCEMINIMIZE = 11;
+		private const int SW_MAX = 11;
+
+
+		public static void SwitchToProcess(Process process)
+		{
+			if (IsIconic((int)process.MainWindowHandle))
+			{
+				ShowWindowAsync((int)process.MainWindowHandle, SW_RESTORE);
+			}
+
+			SetForegroundWindow((int)process.MainWindowHandle);
+		}
 		
 		//
 		// Delegates
@@ -68,7 +105,7 @@ namespace OpenPandora
 		//
 		
 		[StructLayout(LayoutKind.Sequential)]
-		public struct RECT 
+			public struct RECT 
 		{
 			public int left;
 			public int top;

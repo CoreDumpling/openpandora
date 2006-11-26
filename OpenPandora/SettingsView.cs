@@ -663,10 +663,12 @@ namespace OpenPandora
 		// Public methods
 		//
 
+		#region public void SetLastFmAvatar(Bitmap avatarBitmap)
 		public void SetLastFmAvatar(Bitmap avatarBitmap)
 		{
 			pictureBoxLastFmAvatar.Image = avatarBitmap;
 		}
+		#endregion
 
 		//
 		// Event handlers
@@ -749,7 +751,7 @@ namespace OpenPandora
 		#region private void btnClose_Click(object sender, System.EventArgs e)
 		private void btnClose_Click(object sender, System.EventArgs e)
 		{
-			this.Hide();
+			this.ParentForm.Close();
 		}
 		#endregion
 

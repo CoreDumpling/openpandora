@@ -265,6 +265,30 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NotifyIcon\NotifyIcon.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NotifyIcon\NotifyIcon.resx"
+                    DependentUpon = "NotifyIcon.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "NotifyIcon\OpenPandora.Windows.Forms.NotifyIcon.bmp"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "NotifyIcon\PerfTimer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NotifyIcon\Win32.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Setup\OpenPandora.nsi"
                     BuildAction = "None"
                 />

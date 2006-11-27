@@ -35,6 +35,9 @@ namespace OpenPandora
 {
 	public class Player : System.Windows.Forms.Form
 	{
+
+		const int CS_DROPSHADOW = 0x20000;
+
 		public static readonly Color BACKGROUND_COLOR = Color.FromArgb(49, 49, 49);
 		public static readonly Color PANDORA_COLOR = Color.FromArgb(51, 102, 153);
 
@@ -47,6 +50,8 @@ namespace OpenPandora
 		private static readonly string INSTALLER_URL = @"http://openpandora.googlepages.com/openpandora.zip";
 		private static readonly string INSTALLER_BETA_URL = @"http://openpandora.googlepages.com/openpandorabeta.zip";
 		
+		private static readonly int MEMORYTIMER_DELAY = 10000;
+		private static readonly int MEMORYTIMER_PAUSE = 300000;
 
 		private System.ComponentModel.IContainer components;
 		private System.Windows.Forms.PictureBox pictureBoxFill;
@@ -59,6 +64,7 @@ namespace OpenPandora
 		private BaseForm settingsForm;
 		private AxSHDocVw.AxWebBrowser browser2;
 		private System.Windows.Forms.Button btnMinimize;
+		private OpenPandora.Windows.Forms.NotifyIcon notifyIcon;
 		
 		//
 		// Constructor
@@ -236,6 +242,32 @@ namespace OpenPandora
 		}
 		#endregion
 
+		#region protected override CreateParams CreateParams
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+				cp.ClassStyle = CS_DROPSHADOW;
+				return cp;
+			}
+		}
+		#endregion
+
+		protected override void WndProc(ref Message m)
+		{
+			if (m.Msg == OpenPandora.Interop.Win32.WM_SYSCOMMAND)
+				switch (m.WParam.ToInt32())
+				{
+					case OpenPandora.Interop.Win32.SC_MINIMIZE:
+						this.notifyIcon.MinimizeToTray(this.Handle);
+						return;
+					default:
+						break;
+				}
+			base.WndProc(ref m);
+		} 
+
 		#region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
@@ -412,11 +444,11 @@ namespace OpenPandora
 		{
 			if (this.Visible)
 			{
-				this.Hide();
+				notifyIcon.MinimizeToTray(this.Handle);
 			}
 			else
 			{
-				this.Show();
+				notifyIcon.RestoreFromTray(this.Handle);
 				this.WindowState = FormWindowState.Normal;
 				this.Activate();
 			}
@@ -517,7 +549,7 @@ namespace OpenPandora
 		#region private void pictureBoxFill_DoubleClick(object sender, System.EventArgs e)
 		private void pictureBoxFill_DoubleClick(object sender, System.EventArgs e)
 		{
-			this.Hide();
+			notifyIcon.MinimizeToTray(this.Handle);
 		}
 		#endregion
 
@@ -817,6 +849,9 @@ namespace OpenPandora
 						
 						++continuesPlayCounter;
 								
+						memoryTimer.Interval = MEMORYTIMER_DELAY;
+						memoryTimer.Start();
+								
 						if (!paused)
 						{
 							playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
@@ -857,6 +892,9 @@ namespace OpenPandora
 						refreshXfire = false;
 									
 						playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
+									
+						memoryTimer.Interval = MEMORYTIMER_PAUSE;
+						memoryTimer.Start();
 									
 						return;
 					}
@@ -1047,7 +1085,7 @@ namespace OpenPandora
 			if (this.configuration.CloseButtonMinimizeToTray ||
 				!this.configuration.CloseButtonVisible)
 			{
-				this.Hide();
+				notifyIcon.MinimizeToTray(this.Handle);
 			}
 			else
 			{
@@ -1085,7 +1123,7 @@ namespace OpenPandora
 		#region private void btnMinimize_Click(object sender, System.EventArgs e)
 		private void btnMinimize_Click(object sender, System.EventArgs e)
 		{
-			this.Hide();
+			notifyIcon.MinimizeToTray(this.Handle);
 		}
 		#endregion
 
@@ -1220,6 +1258,11 @@ namespace OpenPandora
 		{
 			try
 			{
+				Debug.WriteLine("Memory Purge");
+
+				if (memoryTimer.Interval == MEMORYTIMER_DELAY)
+					memoryTimer.Stop();
+				
 				GC.Collect();
 				GC.WaitForPendingFinalizers();
 
@@ -1730,22 +1773,22 @@ namespace OpenPandora
 			browserRefreshTimer.Enabled = false;
 
 			memoryTimer = new System.Windows.Forms.Timer();
-			memoryTimer.Interval = 60000;
+			memoryTimer.Interval = 10000;
 			memoryTimer.Tick += new EventHandler(this.memoryTimer_Tick);
-			memoryTimer.Enabled = true;
+			memoryTimer.Enabled = false;
 		}
 		#endregion
 		
 		#region private void InitializeNotifyIcon()
 		private void InitializeNotifyIcon()
 		{
-			notifyIcon = new NotifyIcon();
+			notifyIcon = new  OpenPandora.Windows.Forms.NotifyIcon(this.components);
 			notifyIcon.Text = this.Text;
 			notifyIcon.Icon = System.Drawing.Icon.FromHandle(pandora16.GetHicon());
 			notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
 			notifyIcon.Click += new EventHandler(this.notifyIcon_Click);
-			notifyIcon.Visible = true;
 			notifyIcon.ContextMenu = this.contextMenu;
+			notifyIcon.Visible = true;
 		}
 		#endregion
 
@@ -2431,7 +2474,7 @@ namespace OpenPandora
 		private MenuItem menuToolsLocateRadio;
 
 		private object missing = System.Type.Missing;
-		private NotifyIcon notifyIcon;
+
 		private Bitmap pandora16;
 		private Point mouseOffset;
 		private bool loaded = false;

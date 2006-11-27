@@ -43,7 +43,7 @@ namespace OpenPandora
 
 		private static readonly string DEFAULT_TITLE = "OpenPandora";
 		private static readonly string PAUSED = "[Paused]";
-		private static readonly string STARTUP_URL = @"http://pandora.com";
+		private static readonly string STARTUP_URL = @"http://www.pandora.com/?cmd=mini";
 		private static readonly string STARTUP_URL2 = @"http://openpandora.googlepages.com/pandoraevents6.htm";
 		public static readonly string CONTROLLER_URL = @"http://openpandora.googlepages.com/controller.xml";
 		private static readonly string WEBSITE_URL = @"http://openpandora.googlepages.com/";

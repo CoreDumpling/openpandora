@@ -1845,7 +1845,7 @@ namespace OpenPandora
 				this.Text.IndexOf(PAUSED) == -1 && 
 			    title.IndexOf(PAUSED) == -1)
 			{
-				NotifyIconBaloon.Show(song.Name, "by: " + song.Artist, notifyIcon);
+				notifyIcon.ShowBalloon(OpenPandora.Interop.BalloonIconStyle.None, song.Name, "by: " + song.Artist,3000);
 			}
 			
 			this.Text = title;

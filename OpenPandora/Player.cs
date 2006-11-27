@@ -512,7 +512,14 @@ namespace OpenPandora
 		{
 			this.Hide();
 
+			if (menuMiniPlayer.Checked)
+			{
+				configuration.MiniPlayerLocation = this.Location.X + "," + this.Location.Y;
+			}
+			else
+			{
 			configuration.Location = this.Location.X + "," + this.Location.Y;
+			}
 			configuration.Save();
 			
 			try
@@ -2464,6 +2471,9 @@ namespace OpenPandora
 
 						try
 						{
+							Process[] processes = Process.GetProcessesByName("Xfire");
+
+							if (processes.Length>0)
 							Xfire.SetMessage(string.Empty);
 						} 
 						catch {}

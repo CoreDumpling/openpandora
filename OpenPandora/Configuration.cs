@@ -59,6 +59,7 @@ namespace OpenPandora
 			OffsetLeft,
 			OffsetTop,
 			Location,
+			MiniPlayerLocation,
 			SendToXfire
 		}
 		#endregion
@@ -528,6 +529,19 @@ namespace OpenPandora
 		}
 		#endregion
 
+		[XmlElement("miniPlayerLocation")]
+		#region public string MiniPlayerLocation
+		public string MiniPlayerLocation
+		{
+			get { return items[ConfigurationItemType.MiniPlayerLocation].Value as string; }
+			set
+			{
+				items[ConfigurationItemType.MiniPlayerLocation].Value = value;
+				Refresh();
+			}
+		}
+		#endregion
+
 		[XmlElement("sendToXfire")]
 		#region public bool SendToXfire
 		public bool SendToXfire
@@ -752,6 +766,8 @@ namespace OpenPandora
 				new ConfigurationItem("Radio top offset", 306, true);
 			items[ConfigurationItemType.Location] = 
 				new ConfigurationItem("Window location", string.Empty, true);
+			items[ConfigurationItemType.MiniPlayerLocation] = 
+				new ConfigurationItem("MiniPlayer location", string.Empty, true);
 			items[ConfigurationItemType.SendToXfire] = 
 				new ConfigurationItem("Send song info to Xfire", false, true);
 

@@ -577,6 +577,15 @@ namespace OpenPandora
 					mousePosition.Offset(this.mouseOffset.X, this.mouseOffset.Y);
 					this.Location = mousePosition;
 				}
+
+				if (menuMiniPlayer.Checked)
+				{
+					configuration.MiniPlayerLocation = this.Location.X + "," + this.Location.Y;
+				}
+				else
+				{
+					configuration.Location = this.Location.X + "," + this.Location.Y;
+				}
 			}
 		}
 		#endregion
@@ -1396,6 +1405,21 @@ namespace OpenPandora
 
 					this.TopMost = this.configuration.KeepOnTop;
 
+					if (configuration.Location != string.Empty)
+					{
+						try
+						{
+							string[] coordinates = configuration.Location.Split(new char[] {','});
+
+							this.Location = new Point(int.Parse(coordinates[0]), int.Parse(coordinates[1]));
+						}
+						catch (Exception ex)
+						{
+							Debug.WriteLine(ex.Message);
+							Debug.WriteLine(ex.StackTrace);
+						}
+					}
+
 					MoveToWorkingArea();
 
 					ApplyConfiguration(configuration, true);
@@ -1403,6 +1427,23 @@ namespace OpenPandora
 				else
 				{
 					this.Size = new Size(240, pictureBoxTitle.Height + 22);
+
+					if (configuration.MiniPlayerLocation != string.Empty)
+					{
+						try
+						{
+							string[] coordinates = configuration.MiniPlayerLocation.Split(new char[] {','});
+
+							this.Location = new Point(int.Parse(coordinates[0]), int.Parse(coordinates[1]));
+						}
+						catch (Exception ex)
+						{
+							Debug.WriteLine(ex.Message);
+							Debug.WriteLine(ex.StackTrace);
+						}
+					}
+
+					MoveToWorkingArea();
 
 					this.TopMost = true;
 					btnMinimize.Hide();

@@ -759,7 +759,7 @@ namespace OpenPandora
 		private void btnSave_Click(object sender, System.EventArgs e)
 		{
 			this.Apply();
-			this.Hide();
+			this.ParentForm.Close();
 		}
 		#endregion
 		

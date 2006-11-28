@@ -21,6 +21,15 @@ namespace OpenPandora
 {
 	public class Song
 	{
+		#region public Song(string id, string name, string artist, string url, string artUrl)
+		public Song(string id, string name, string artist, string url, string artUrl)
+			: this(id, name, artist)
+		{
+			this.url = url;
+			this.artUrl = artUrl;
+		}
+		#endregion
+
 		#region public Song(string id, string name, string artist)
 		public Song(string id, string name, string artist)
 		{
@@ -47,6 +56,22 @@ namespace OpenPandora
 		{
 			get { return this.artist; }
 			set { this.artist = value; }
+		}
+		#endregion
+
+		#region public string Url
+		public string Url
+		{
+			get { return this.url; }
+			set { this.url = value; }
+		}
+		#endregion
+
+		#region public string ArtUrl
+		public string ArtUrl
+		{
+			get { return this.artUrl; }
+			set { this.artUrl = value; }
 		}
 		#endregion
 
@@ -82,5 +107,7 @@ namespace OpenPandora
 		private string name;
 		private string artist;
 		private string id;
+		private string url;
+		private string artUrl;
 	}
 }

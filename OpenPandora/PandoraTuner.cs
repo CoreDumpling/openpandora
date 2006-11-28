@@ -97,12 +97,6 @@ namespace OpenPandora
 							isPayingUser = true;
 						}
 					}
-					else if (parameters[0].Equals("stationChange"))
-					{
-						containsStation = true;
-					
-						stationCode = parameters[1];
-					}
 					else if (parameters[0].Equals("songPlayed"))
 					{
 						containsPlay = true;
@@ -134,6 +128,12 @@ namespace OpenPandora
 						else if (parameters[1].Equals("sharedStationSearch"))
 						{
 							containsSharedStation = true;
+						}
+						else if (parameters[1].Equals("changeStation"))
+						{
+							containsStation = true;
+					
+							stationCode = parameters[1];
 						}
 						else if (parameters[1].Equals("cancelCreateStation"))
 						{

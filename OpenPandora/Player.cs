@@ -205,8 +205,8 @@ namespace OpenPandora
 
 			try
 			{
-				object url2 = STARTUP_URL2;
-				browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
+				//object url2 = STARTUP_URL2;
+				//browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
 			
 				object url = STARTUP_URL;
 				browser.Navigate2(ref url, ref missing, ref missing, ref missing, ref missing);
@@ -254,10 +254,11 @@ namespace OpenPandora
 		}
 		#endregion
 
-		protected override void WndProc(ref Message m)
+		protected override void WndProc(ref Message message)
 		{
-			if (m.Msg == OpenPandora.Interop.Win32.WM_SYSCOMMAND)
-				switch (m.WParam.ToInt32())
+			if (message.Msg == OpenPandora.Interop.Win32.WM_SYSCOMMAND)
+			{
+				switch (message.WParam.ToInt32())
 				{
 					case OpenPandora.Interop.Win32.SC_MINIMIZE:
 						this.notifyIcon.MinimizeToTray(this.Handle);
@@ -265,8 +266,10 @@ namespace OpenPandora
 					default:
 						break;
 				}
-			base.WndProc(ref m);
-		} 
+			}
+
+			base.WndProc(ref message);
+		}
 
 		#region Windows Form Designer generated code
 		/// <summary>
@@ -817,7 +820,7 @@ namespace OpenPandora
 						currentStationCode = tuner.StationCode;
 
 						song = new Song(string.Empty, string.Empty, string.Empty);
-						
+						/*
 						Station currentStation = null;
 						
 						foreach (Station station in stations)
@@ -845,6 +848,7 @@ namespace OpenPandora
 								}
 							}
 						}
+						*/
 					}
 					
 					if (tuner.ContainsOpen)
@@ -959,48 +963,119 @@ namespace OpenPandora
 			{	
 				if (url.StartsWith("javascript:"))
 				{
-					if (url.LastIndexOf("SongPlayed") > 0)
+					string[] scripts = url.Split(';');
+
+					foreach (string script in scripts)
 					{
-						const string SONG_NAME_MARK = "songName:unescape";
-						const string ARTIST_NAME_MARK = "artistName:unescape";
-						const string SONG_URL_MARK = "songURL:unescape";
+						if (script.LastIndexOf("SongPlayed") > 0)
+						{
+							const string SONG_NAME_MARK = "songName:unescape";
+							const string ARTIST_NAME_MARK = "artistName:unescape";
+							const string SONG_URL_MARK = "songURL:unescape";
+							const string ART_URL_MARK = "artURL:unescape";
+							const string END_MARK = "}";
 						
-						int songMark = url.IndexOf(SONG_NAME_MARK) + SONG_NAME_MARK.Length;
-						int songMarkLength = url.LastIndexOf(ARTIST_NAME_MARK) - songMark;
-						int artistMark = url.IndexOf(ARTIST_NAME_MARK) + ARTIST_NAME_MARK.Length;
-						int artistMarkLength = url.LastIndexOf(SONG_URL_MARK) - artistMark;
+							int songMark = script.IndexOf(SONG_NAME_MARK) + SONG_NAME_MARK.Length;
+							int songMarkLength = script.LastIndexOf(ARTIST_NAME_MARK) - songMark;
+							int artistMark = script.IndexOf(ARTIST_NAME_MARK) + ARTIST_NAME_MARK.Length;
+							int artistMarkLength = script.LastIndexOf(SONG_URL_MARK) - artistMark;
+							int songUrlMark = script.IndexOf(SONG_URL_MARK) + SONG_URL_MARK.Length;
+							int songUrlMarkLength = script.LastIndexOf(ART_URL_MARK) - songUrlMark;
+							int artUrlMark = script.IndexOf(ART_URL_MARK) + ART_URL_MARK.Length;
+							int artUrlMarkLength = script.LastIndexOf(END_MARK) - artUrlMark;
 
-						string songNamePart = url.Substring(songMark, songMarkLength);
-						string artistNamePart = url.Substring(artistMark, artistMarkLength);
+							string songNamePart = script.Substring(songMark, songMarkLength);
+							string artistNamePart = script.Substring(artistMark, artistMarkLength);
+							string songUrlPart = script.Substring(songUrlMark, songUrlMarkLength);
+							string artUrlPart = script.Substring(artUrlMark, artUrlMarkLength);
 											
-						string songName = songNamePart.Substring(songNamePart.IndexOf("'") + 1, songNamePart.LastIndexOf("'") - songNamePart.IndexOf("'") - 1);
-						string artistName = artistNamePart.Substring(artistNamePart.IndexOf("'") + 1, artistNamePart.LastIndexOf("'") - artistNamePart.IndexOf("'") - 1);
+							string songName = songNamePart.Substring(songNamePart.IndexOf("'") + 1, songNamePart.LastIndexOf("'") - songNamePart.IndexOf("'") - 1);
+							string artistName = artistNamePart.Substring(artistNamePart.IndexOf("'") + 1, artistNamePart.LastIndexOf("'") - artistNamePart.IndexOf("'") - 1);
+							string songUrl = songUrlPart.Substring(songNamePart.IndexOf("'") + 1, songUrlPart.LastIndexOf("'") - songUrlPart.IndexOf("'") - 1);
+							string artUrl = artUrlPart.Substring(artUrlPart.IndexOf("'") + 1, artUrlPart.LastIndexOf("'") - artUrlPart.IndexOf("'") - 1);
 					
-						songName = HttpUtility.UrlDecode(songName.Replace("%25%32%37", "%27"));
-						artistName = HttpUtility.UrlDecode(artistName.Replace("%25%32%37", "%27"));
+							songName = HttpUtility.UrlDecode(songName.Replace("%25%32%37", "%27"));
+							artistName = HttpUtility.UrlDecode(artistName.Replace("%25%32%37", "%27"));
+							songUrl = HttpUtility.UrlDecode(songUrl);
+							artUrl = HttpUtility.UrlDecode(artUrl);
 
-						bool refreshPlayer = false;
+							bool refreshPlayer = false;
 					
-						if (song.Name == string.Empty)
-						{
-							song.Name = songName;
-							song.Artist = artistName;
+							if (song.Name == string.Empty)
+							{
+								song.Name = songName;
+								song.Artist = artistName;
+								song.Url = songUrl;
+								song.ArtUrl = artUrl;
 
-							refreshPlayer = true;
+								refreshPlayer = true;
+							}
+							else
+							{
+								nextSong = new Song(string.Empty, songName, artistName, songUrl, artUrl);
+							}
+					
+							Debug.WriteLine(song.Name + " ~by~ " + song.Artist);
+					
+							submittedToLastFm = false;
+							menuLastFmSubmit.Enabled = true;
+
+							if (refreshPlayer)
+							{
+								RefreshPlayer();
+							}
 						}
-						else
+						else if (script.LastIndexOf("StationPlayed") > 0)
 						{
-							nextSong = new Song(string.Empty, songName, artistName);
-						}
-					
-						Debug.WriteLine(song.Name + " ~by~ " + song.Artist);
-					
-						submittedToLastFm = false;
-						menuLastFmSubmit.Enabled = true;
+							const string STATION_NAME_MARK = "stationName:unescape";
+							const string STATION_ID_MARK = "stationId:unescape";
+							const string IS_SHARED_MARK = "isShared:";
 
-						if (refreshPlayer)
-						{
-							RefreshPlayer();
+							int stationNameMark = script.IndexOf(STATION_NAME_MARK) + STATION_NAME_MARK.Length;
+							int stationNameMarkLength = script.LastIndexOf(STATION_ID_MARK) - stationNameMark;
+							int stationIdMark = script.IndexOf(STATION_ID_MARK) + STATION_ID_MARK.Length;
+							int stationIdMarkLength = script.LastIndexOf(IS_SHARED_MARK) - stationIdMark;
+
+							string stationNamePart = script.Substring(stationNameMark, stationNameMarkLength);
+							string stationIdPart = script.Substring(stationIdMark, stationIdMarkLength);
+											
+							string stationName = stationNamePart.Substring(stationNamePart.IndexOf("'") + 1, stationNamePart.LastIndexOf("'") - stationNamePart.IndexOf("'") - 1);
+							string stationIdText = stationIdPart.Substring(stationIdPart.IndexOf("'") + 1, stationIdPart.LastIndexOf("'") - stationIdPart.IndexOf("'") - 1);
+					
+							stationName = HttpUtility.UrlDecode(stationName.Replace("%25%32%37", "%27"));
+
+							if (currentStationCode != stationIdText)
+							{
+								Station currentStation = null;
+						
+								foreach (Station station in stations)
+								{
+									if (station.Code.Equals(stationIdText))
+									{
+										currentStation = station;
+										break;
+									}
+								}
+						
+								if (currentStation != null)
+								{
+									foreach (MenuItem menuItem in menuPlayerStations.MenuItems)
+									{
+										if (menuItem.Text.Equals(currentStation.Name))
+										{
+											title = "Playing ... " + currentStation.Name;
+											ShowMessage(title);
+											menuItem.Checked = true;
+										}
+										else
+										{
+											menuItem.Checked = false;
+										}
+									}
+								}
+
+								currentStationCode = stationIdText;
+							}
 						}
 					}
 				}
@@ -1212,6 +1287,10 @@ namespace OpenPandora
 
 				panelBrowser.BringToFront();
 				settingsView.BringToFront();
+
+				// Navigate to events page
+				object url2 = STARTUP_URL2;
+				browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
 					
 				configuration.OffsetLeft = left;
 				configuration.OffsetTop = top;
@@ -1367,6 +1446,7 @@ namespace OpenPandora
 		private void menuSettings_Click(object sender, System.EventArgs e)
 		{
 			settingsForm.Show();
+			settingsForm.Activate();
 
 			/*if (menuMiniPlayer.Checked)
 			{

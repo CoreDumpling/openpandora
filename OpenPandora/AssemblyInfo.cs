@@ -34,9 +34,9 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("OpenPandora")]
 [assembly: AssemblyDescription("Open your music and enjoy it with Pandora music discovery service.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("OpenPandora")]
+[assembly: AssemblyCompany("Eitan Pogrebizsky")]
 [assembly: AssemblyProduct("OpenPandora")]
-[assembly: AssemblyCopyright("2006")]
+[assembly: AssemblyCopyright("Copyright (C) 2006 Eitan Pogrebizsky")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 

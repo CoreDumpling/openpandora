@@ -499,12 +499,12 @@ namespace OpenPandora
 			if (this.WindowState == FormWindowState.Minimized &&
 				this.Visible)
 			{
-				this.Hide();
+				notifyIcon.MinimizeToTray(this.Handle);
 			}
 			else if (this.WindowState != FormWindowState.Minimized &&
 				!this.Visible)
 			{
-				this.Show();
+				notifyIcon.RestoreFromTray(this.Handle);
 				this.Activate();
 			}
 		}
@@ -513,7 +513,7 @@ namespace OpenPandora
 		#region private void formPandora_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		private void formPandora_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			this.Hide();
+			notifyIcon.MinimizeToTray(this.Handle);
 
 			if (menuMiniPlayer.Checked)
 			{

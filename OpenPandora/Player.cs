@@ -35,7 +35,6 @@ namespace OpenPandora
 {
 	public class Player : System.Windows.Forms.Form
 	{
-
 		const int CS_DROPSHADOW = 0x20000;
 
 		public static readonly Color BACKGROUND_COLOR = Color.FromArgb(49, 49, 49);
@@ -64,7 +63,7 @@ namespace OpenPandora
 		private BaseForm settingsForm;
 		private AxSHDocVw.AxWebBrowser browser2;
 		private System.Windows.Forms.Button btnMinimize;
-		private OpenPandora.Windows.Forms.NotifyIcon notifyIcon;
+		private System.Windows.Forms.NotifyIcon notifyIcon;
 		
 		//
 		// Constructor
@@ -74,73 +73,146 @@ namespace OpenPandora
 		public Player()
 		{			
 			InitializeComponent();
-			
-			this.VScroll = false;
-			this.HScroll = false;
-			
-			this.pandora16 = new Bitmap(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(this.GetType().Namespace + ".Pandora16.bmp"));
-			this.pandora16.MakeTransparent(Color.Black);
-			
-			//
-			// Initialize
-			//
-			
-			InitializeMenus();
-			InitializeTimers();
-			InitializeNotifyIcon();
-			
-			//
-			// Configuration
-			//
 
-			this.configuration = Configuration.Load();
-			ApplyConfiguration(this.configuration, false);
-			
-			isPayingUser = this.configuration.PayingUser;
-			
-			//
-			// Colors
-			//
+			this.SuspendLayout();
 
-			btnClose.ForeColor = BACKGROUND_COLOR;
-			btnMinimize.ForeColor = BACKGROUND_COLOR;
-
-			//
-			// Tool tip
-			//
-
-			toolTip.SetToolTip(this.btnMinimize, "Minimize");
-			toolTip.SetToolTip(this.btnClose, "Close");
-			
-			//
-			// Settings
-			//
-			
-			settingsView = new SettingsView();
-			settingsView.Player = this;
-			settingsView.Dock = DockStyle.Fill;
-
-			settingsForm = new BaseForm("Settings");
-			settingsForm.HideOnClose = true;
-			settingsForm.Size = new Size(settingsView.Width + 2, settingsView.Height + 19);
-			settingsForm.Controls.Add(settingsView);
-						
-			//
-			// Window
-			//
-			
-			this.Size = new Size(640, 268);
-
-			this.windowHeight = this.Height;
-			this.windowWidth = this.Width;
-			
-			if (configuration.Location != string.Empty)
+			try
 			{
+			
+				this.VScroll = false;
+				this.HScroll = false;
+			
+				this.pandora16 = new Bitmap(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(this.GetType().Namespace + ".Pandora16.bmp"));
+				this.pandora16.MakeTransparent(Color.Black);
+			
+				//
+				// Initialize
+				//
+			
+				InitializeMenus();
+				InitializeTimers();
+				InitializeNotifyIcon();
+			
+				//
+				// Configuration
+				//
+
+				this.configuration = Configuration.Load();
+				ApplyConfiguration(this.configuration, false);
+			
+				isPayingUser = this.configuration.PayingUser;
+			
+				//
+				// Colors
+				//
+
+				btnClose.ForeColor = BACKGROUND_COLOR;
+				btnMinimize.ForeColor = BACKGROUND_COLOR;
+
+				//
+				// Tool tip
+				//
+
+				toolTip.SetToolTip(this.btnMinimize, "Minimize");
+				toolTip.SetToolTip(this.btnClose, "Close");
+			
+				//
+				// Settings
+				//
+			
+				settingsView = new SettingsView();
+				settingsView.Player = this;
+				settingsView.Dock = DockStyle.Fill;
+
+				settingsForm = new BaseForm("Settings");
+				settingsForm.HideOnClose = true;
+				settingsForm.Size = new Size(settingsView.Width + 2, settingsView.Height + 19);
+				settingsForm.Controls.Add(settingsView);
+						
+				//
+				// Window
+				//
+			
+				this.Size = new Size(640, 268);
+
+				this.windowHeight = this.Height;
+				this.windowWidth = this.Width;
+			
+				if (configuration.Location != string.Empty)
+				{
+					try
+					{
+						string[] coordinates = configuration.Location.Split(new char[] {','});
+
+						this.Location = new Point(int.Parse(coordinates[0]), int.Parse(coordinates[1]));
+					}
+					catch (Exception ex)
+					{
+						Debug.WriteLine(ex.Message);
+						Debug.WriteLine(ex.StackTrace);
+					}
+				}
+
+				MoveToWorkingArea();
+
+				//
+				// Browser
+				//
+
+				browser.Silent = true;
+				browser.Size = new Size(this.Size.Width + configuration.OffsetLeft + 40, this.Size.Height + configuration.OffsetTop + 40);
+
+				//Graphics g = this.CreateGraphics();
+				//int x = -2 - (int)(configuration.OffsetLeft * 96.0 / g.DpiX);
+				//int y = -2 - (int)(configuration.OffsetTop);
+				//browser.Location = new Point(x, y);
+
+				pictureBoxFill.Left = 0;
+			
+				//
+				// Windows hook
+				//
+			
 				try
 				{
-					string[] coordinates = configuration.Location.Split(new char[] {','});
+					windowsHook = new WindowsHook();
+					windowsHook.KeyDown += new KeyEventHandler(this.GlobalKeyDown);
+					windowsHook.KeyUp += new KeyEventHandler(this.GlobalKeyUp);
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine(ex.Message);
+					Debug.WriteLine(ex.StackTrace);
+				}
+			
+				//
+				// Stations
+				//
+			
+				StationLoader.Loaded += new EventHandler(this.StationsLoaded);
+			
+				//
+				// Title
+				//
+			
+				title = DEFAULT_TITLE;
+				this.Text = title;
+				notifyIcon.Text = title;
+				pictureBoxTitle.Refresh();
 
-					this.Location = new Point(int.Parse(coordinates[0]), int.Parse(coordinates[1]));
+				//
+				// Refresh browser, somehow form Load event start before ctor finishes
+				//
+
+				Debug.WriteLine("Loading radio ...");
+
+				try
+				{
+					//object url2 = STARTUP_URL2;
+					//browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
+			
+					object url = STARTUP_URL;
+					browser.Navigate2(ref url, ref missing, ref missing, ref missing, ref missing);
 				}
 				catch (Exception ex)
 				{
@@ -148,73 +220,9 @@ namespace OpenPandora
 					Debug.WriteLine(ex.StackTrace);
 				}
 			}
-
-			MoveToWorkingArea();
-
-			//
-			// Browser
-			//
-
-			browser.Silent = true;
-			browser.Size = new Size(this.Size.Width + configuration.OffsetLeft + 40, this.Size.Height + configuration.OffsetTop + 40);
-
-			Graphics g = this.CreateGraphics();
-			int x = -2 - (int)(configuration.OffsetLeft * 96.0 / g.DpiX);
-			int y = -2 - (int)(configuration.OffsetTop);
-
-			browser.Location = new Point(x, y);
-
-			pictureBoxFill.Left = 0;
-			
-			//
-			// Windows hook
-			//
-			
-			try
+			finally
 			{
-				windowsHook = new WindowsHook();
-				windowsHook.KeyDown += new KeyEventHandler(this.GlobalKeyDown);
-				windowsHook.KeyUp += new KeyEventHandler(this.GlobalKeyUp);
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex.Message);
-				Debug.WriteLine(ex.StackTrace);
-			}
-			
-			//
-			// Stations
-			//
-			
-			StationLoader.Loaded += new EventHandler(this.StationsLoaded);
-			
-			//
-			// Title
-			//
-			
-			title = DEFAULT_TITLE;
-			this.Text = title;
-			notifyIcon.Text = title;
-			pictureBoxTitle.Refresh();
-
-			//
-			// Refresh browser, somehow form Load event start before ctor finishes
-			//
-
-			Debug.WriteLine("Loading radio ...");
-
-			try
-			{
-				//object url2 = STARTUP_URL2;
-				//browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
-			
-				object url = STARTUP_URL;
-				browser.Navigate2(ref url, ref missing, ref missing, ref missing, ref missing);
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex.Message);
-				Debug.WriteLine(ex.StackTrace);
+				this.ResumeLayout();
 			}
 		}
 		#endregion
@@ -253,23 +261,6 @@ namespace OpenPandora
 			}
 		}
 		#endregion
-
-		protected override void WndProc(ref Message message)
-		{
-			if (message.Msg == OpenPandora.Interop.Win32.WM_SYSCOMMAND)
-			{
-				switch (message.WParam.ToInt32())
-				{
-					case OpenPandora.Interop.Win32.SC_MINIMIZE:
-						this.notifyIcon.MinimizeToTray(this.Handle);
-						return;
-					default:
-						break;
-				}
-			}
-
-			base.WndProc(ref message);
-		}
 
 		#region Windows Form Designer generated code
 		/// <summary>
@@ -394,7 +385,7 @@ namespace OpenPandora
 			// Player
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(640, 267);
+			this.ClientSize = new System.Drawing.Size(640, 268);
 			this.Controls.Add(this.btnMinimize);
 			this.Controls.Add(this.btnClose);
 			this.Controls.Add(this.pictureBoxTitle);
@@ -447,13 +438,11 @@ namespace OpenPandora
 		{
 			if (this.Visible)
 			{
-				notifyIcon.MinimizeToTray(this.Handle);
+				MinimizeToTray();
 			}
 			else
 			{
-				notifyIcon.RestoreFromTray(this.Handle);
-				this.WindowState = FormWindowState.Normal;
-				this.Activate();
+				RestoreFromTray();
 			}
 		}
 		#endregion
@@ -499,13 +488,12 @@ namespace OpenPandora
 			if (this.WindowState == FormWindowState.Minimized &&
 				this.Visible)
 			{
-				notifyIcon.MinimizeToTray(this.Handle);
+				MinimizeToTray();
 			}
 			else if (this.WindowState != FormWindowState.Minimized &&
 				!this.Visible)
 			{
-				notifyIcon.RestoreFromTray(this.Handle);
-				this.Activate();
+				RestoreFromTray();
 			}
 		}
 		#endregion
@@ -513,7 +501,7 @@ namespace OpenPandora
 		#region private void formPandora_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		private void formPandora_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			notifyIcon.MinimizeToTray(this.Handle);
+			this.Hide();
 
 			if (menuMiniPlayer.Checked)
 			{
@@ -521,8 +509,9 @@ namespace OpenPandora
 			}
 			else
 			{
-			configuration.Location = this.Location.X + "," + this.Location.Y;
+				configuration.Location = this.Location.X + "," + this.Location.Y;
 			}
+
 			configuration.Save();
 			
 			try
@@ -559,7 +548,7 @@ namespace OpenPandora
 		#region private void pictureBoxFill_DoubleClick(object sender, System.EventArgs e)
 		private void pictureBoxFill_DoubleClick(object sender, System.EventArgs e)
 		{
-			notifyIcon.MinimizeToTray(this.Handle);
+			MinimizeToTray();
 		}
 		#endregion
 
@@ -817,7 +806,7 @@ namespace OpenPandora
 					if (tuner.ContainsStation)
 					{
 						Debug.WriteLine("Changed station to " + tuner.StationCode);
-						currentStationCode = tuner.StationCode;
+						//currentStationCode = tuner.StationCode;
 
 						song = new Song(string.Empty, string.Empty, string.Empty);
 						/*
@@ -1176,7 +1165,7 @@ namespace OpenPandora
 			if (this.configuration.CloseButtonMinimizeToTray ||
 				!this.configuration.CloseButtonVisible)
 			{
-				notifyIcon.MinimizeToTray(this.Handle);
+				MinimizeToTray();
 			}
 			else
 			{
@@ -1214,7 +1203,7 @@ namespace OpenPandora
 		#region private void btnMinimize_Click(object sender, System.EventArgs e)
 		private void btnMinimize_Click(object sender, System.EventArgs e)
 		{
-			notifyIcon.MinimizeToTray(this.Handle);
+			MinimizeToTray();
 		}
 		#endregion
 
@@ -1356,7 +1345,9 @@ namespace OpenPandora
 				Debug.WriteLine("Memory Purge");
 
 				if (memoryTimer.Interval == MEMORYTIMER_DELAY)
+				{
 					memoryTimer.Stop();
+				}
 				
 				GC.Collect();
 				GC.WaitForPendingFinalizers();
@@ -1391,9 +1382,7 @@ namespace OpenPandora
 		{
 			if (!this.Visible)
 			{
-				this.Show();
-				this.WindowState = FormWindowState.Normal;
-				this.Activate();
+				RestoreFromTray();
 			}
 			
 			ShowMessage(DEFAULT_TITLE + " " + Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
@@ -1447,21 +1436,6 @@ namespace OpenPandora
 		{
 			settingsForm.Show();
 			settingsForm.Activate();
-
-			/*if (menuMiniPlayer.Checked)
-			{
-				menuMiniPlayer_Click(sender, e);
-			}
-
-			if (!this.Visible)
-			{
-				this.Show();
-				this.WindowState = FormWindowState.Normal;
-				this.Activate();
-			}
-			
-			settingsView.BringToFront();
-			settingsView.Show();*/
 		}
 		#endregion
 
@@ -1717,17 +1691,22 @@ namespace OpenPandora
 			
 				try
 				{
-					//
-					// Title buttons
+					if (!menuMiniPlayer.Checked)
+					{
+						//
+						// Title buttons
 			
-					this.btnClose.Visible = this.configuration.CloseButtonVisible;
-					this.btnMinimize.Visible = this.configuration.MinimizeButtonVisible;
+						this.btnClose.Visible = this.configuration.CloseButtonVisible;
+						this.btnMinimize.Visible = this.configuration.MinimizeButtonVisible;
+					}
 					
 					//
 					// Window
 					
 					this.TopMost = this.configuration.KeepOnTop;
-			
+					settingsForm.TopMost = this.configuration.KeepOnTop;
+
+
 					//
 					// Tool tip
 
@@ -1910,7 +1889,7 @@ namespace OpenPandora
 		#region private void InitializeNotifyIcon()
 		private void InitializeNotifyIcon()
 		{
-			notifyIcon = new  OpenPandora.Windows.Forms.NotifyIcon(this.components);
+			notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
 			notifyIcon.Text = this.Text;
 			notifyIcon.Icon = System.Drawing.Icon.FromHandle(pandora16.GetHicon());
 			notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
@@ -1932,7 +1911,7 @@ namespace OpenPandora
 				this.Text.IndexOf(PAUSED) == -1 && 
 			    title.IndexOf(PAUSED) == -1)
 			{
-				notifyIcon.ShowBalloon(OpenPandora.Interop.BalloonIconStyle.None, "by: " + song.Artist, song.Name, 5000);
+				NotifyIconBaloon.Show(song.Name, "by: " + song.Artist, notifyIcon);
 			}
 			
 			this.Text = title;
@@ -2391,6 +2370,23 @@ namespace OpenPandora
 		}
 		#endregion
 		
+		#region private void MinimizeToTray()
+		private void MinimizeToTray()
+		{
+			this.Hide();
+			NotifyIconBaloon.AnimateMinimizeToTray(this);
+		}
+		#endregion
+
+		#region private void RestoreFromTray()
+		private void RestoreFromTray()
+		{
+			NotifyIconBaloon.AnimateRestoreFromTray(this);
+			this.Show();
+			this.Activate();
+		}
+		#endregion
+
 		//
 		// Shortcuts
 		//
@@ -2534,6 +2530,9 @@ namespace OpenPandora
 				
 					try
 					{
+						AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+						Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+
 						Application.Run(new Player());
 					}
 					catch (Exception ex)
@@ -2574,6 +2573,21 @@ namespace OpenPandora
 					}
 				}
 			}
+		}
+		#endregion
+
+		#region static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			Debug.WriteLine("CurrentDomain_UnhandledException: " + e.ExceptionObject.ToString() + ". Terminating:" + e.IsTerminating);
+		}
+		#endregion
+
+		#region private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+		private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+		{
+			Debug.WriteLine("Application_ThreadException: " + e.Exception.Message);
+			Debug.WriteLine(e.Exception.StackTrace);
 		}
 		#endregion
 

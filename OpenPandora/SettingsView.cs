@@ -686,7 +686,7 @@ namespace OpenPandora
 					this.loading = true;
 				
 					RefreshSettings();
-					Apply();
+					Apply(false);
 				
 					this.loading = false;
 				}
@@ -744,7 +744,7 @@ namespace OpenPandora
 		#region private void btnApply_Click(object sender, System.EventArgs e)
 		private void btnApply_Click(object sender, System.EventArgs e)
 		{
-			Apply();
+			Apply(true);
 		}
 		#endregion
 
@@ -758,7 +758,7 @@ namespace OpenPandora
 		#region private void btnSave_Click(object sender, System.EventArgs e)
 		private void btnSave_Click(object sender, System.EventArgs e)
 		{
-			this.Apply();
+			this.Apply(true);
 			this.ParentForm.Close();
 		}
 		#endregion
@@ -827,8 +827,8 @@ namespace OpenPandora
 		// Private methods
 		//
 		
-		#region private void Apply()
-		private void Apply()
+		#region private void Apply(bool refreshPlayer)
+		private void Apply(bool refreshPlayer)
 		{
 			UpdateSettings(this, new EventArgs());
 			
@@ -837,7 +837,7 @@ namespace OpenPandora
 				configuration.LastFmPassword = Audioscrobbler.GetPasswordMD5(this.password);
 			}
 			
-			player.ApplyConfiguration(configuration, true);
+			player.ApplyConfiguration(configuration, refreshPlayer);
 		}
 		#endregion
 		

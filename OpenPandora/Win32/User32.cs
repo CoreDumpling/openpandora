@@ -67,6 +67,24 @@ namespace OpenPandora
 		[DllImport("user32.dll")]
 		public static extern bool IsIconic(int hwnd);
 
+		[DllImport("user32.dll")]
+		public static extern int EnumChildWindows(int hwndParent, EnumChildProc lpEnumFunc, ref RECT lParam);
+
+		[DllImport("user32.dll", CharSet=CharSet.Auto)]
+		public static extern int GetClassName(int hwnd, [MarshalAs(UnmanagedType.LPTStr)] string lpClassName, int capacity);
+
+		[DllImport("user32", CharSet=CharSet.Auto)]
+		public static extern int DrawAnimatedRects(int hwnd, int idAni,	ref RECT lprcFrom, ref RECT lprcTo);
+
+		[DllImport("User32", CharSet=CharSet.Auto)]
+		public static extern int SystemParametersInfo(int uAction, int uParam, ref ANIMATIONINFO lpvParam, int fuWinIni);
+
+		public const int SPI_GETANIMATION = 0x48;
+
+		public const int IDANI_OPEN = 0x1;
+		public const int IDANI_CLOSE = 0x2;
+		public const int IDANI_CAPTION = 0x3;
+
 		private const int SW_HIDE = 0;
 		private const int SW_SHOWNORMAL = 1;
 		private const int SW_NORMAL = 1;
@@ -83,7 +101,6 @@ namespace OpenPandora
 		private const int SW_FORCEMINIMIZE = 11;
 		private const int SW_MAX = 11;
 
-
 		public static void SwitchToProcess(Process process)
 		{
 			if (IsIconic((int)process.MainWindowHandle))
@@ -99,18 +116,26 @@ namespace OpenPandora
 		//
 		
 		public delegate int HOOKPROC(int nCode, int wParam, int lParam);
+		public delegate bool EnumChildProc(int hwnd, ref RECT lParam);
 		
 		//
 		// Structs
 		//
 		
 		[StructLayout(LayoutKind.Sequential)]
-			public struct RECT 
+		public struct RECT 
 		{
 			public int left;
 			public int top;
 			public int right;
 			public int bottom;
+		}
+
+		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Auto)]
+		public struct ANIMATIONINFO
+		{
+			public int cbSize; 
+			public int  iMinAnimate;
 		}
 	}
 }

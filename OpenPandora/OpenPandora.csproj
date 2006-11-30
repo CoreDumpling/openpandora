@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP
         ProjectType = "Local"
-        ProductVersion = "7.10.3077"
+        ProductVersion = "7.10.6030"
         SchemaVersion = "2.0"
         ProjectGuid = "{EAB35716-AC4E-409E-A54B-D5B2655F0147}"
     >
@@ -261,30 +261,6 @@
                 />
                 <File
                     RelPath = "Messenger\Messenger.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "NotifyIcon\NotifyIcon.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "NotifyIcon\NotifyIcon.resx"
-                    DependentUpon = "NotifyIcon.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "NotifyIcon\OpenPandora.Windows.Forms.NotifyIcon.bmp"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "NotifyIcon\PerfTimer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "NotifyIcon\Win32.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

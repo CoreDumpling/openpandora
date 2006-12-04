@@ -1696,8 +1696,11 @@ namespace OpenPandora
 						//
 						// Title buttons
 			
-						this.btnClose.Visible = this.configuration.CloseButtonVisible;
-						this.btnMinimize.Visible = this.configuration.MinimizeButtonVisible;
+						if (!menuMiniPlayer.Checked)
+						{
+							this.btnClose.Visible = this.configuration.CloseButtonVisible;
+							this.btnMinimize.Visible = this.configuration.MinimizeButtonVisible;
+						}
 					}
 					
 					//

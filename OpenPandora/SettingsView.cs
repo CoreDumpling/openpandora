@@ -371,7 +371,6 @@ namespace OpenPandora
 			this.chbPartyMode.Size = new System.Drawing.Size(280, 24);
 			this.chbPartyMode.TabIndex = 18;
 			this.chbPartyMode.Text = "Party Mode (keep playing if left for too long)";
-			this.chbPartyMode.Visible = false;
 			this.chbPartyMode.CheckedChanged += new System.EventHandler(this.SettingChanged);
 			// 
 			// chbKeepOnTop

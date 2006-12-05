@@ -94,15 +94,6 @@ namespace OpenPandora
 				InitializeNotifyIcon();
 			
 				//
-				// Configuration
-				//
-
-				this.configuration = Configuration.Load();
-				ApplyConfiguration(this.configuration, false);
-			
-				isPayingUser = this.configuration.PayingUser;
-			
-				//
 				// Colors
 				//
 
@@ -128,6 +119,15 @@ namespace OpenPandora
 				settingsForm.HideOnClose = true;
 				settingsForm.Size = new Size(settingsView.Width + 2, settingsView.Height + 19);
 				settingsForm.Controls.Add(settingsView);
+				
+				//
+				// Configuration
+				//
+
+				this.configuration = Configuration.Load();
+				ApplyConfiguration(this.configuration, false);
+			
+				isPayingUser = this.configuration.PayingUser;
 						
 				//
 				// Window
@@ -806,38 +806,7 @@ namespace OpenPandora
 					if (tuner.ContainsStation)
 					{
 						Debug.WriteLine("Changed station to " + tuner.StationCode);
-						//currentStationCode = tuner.StationCode;
-
 						song = new Song(string.Empty, string.Empty, string.Empty);
-						/*
-						Station currentStation = null;
-						
-						foreach (Station station in stations)
-						{
-							if (station.Code.Equals(currentStationCode))
-							{
-								currentStation = station;
-								break;
-							}
-						}
-						
-						if (currentStation != null)
-						{
-							foreach (MenuItem menuItem in menuPlayerStations.MenuItems)
-							{
-								if (menuItem.Text.Equals(currentStation.Name))
-								{
-									title = "Playing ... " + currentStation.Name;
-									ShowMessage(title);
-									menuItem.Checked = true;
-								}
-								else
-								{
-									menuItem.Checked = false;
-								}
-							}
-						}
-						*/
 					}
 					
 					if (tuner.ContainsOpen)
@@ -912,6 +881,7 @@ namespace OpenPandora
 					{
 						Debug.WriteLine("Party");
 						pandora.PlayPause();
+						Thread.Sleep(100);
 						pandora.PlayPause();
 
 						continuesPlayCounter = 0;
@@ -1696,11 +1666,8 @@ namespace OpenPandora
 						//
 						// Title buttons
 			
-						if (!menuMiniPlayer.Checked)
-						{
-							this.btnClose.Visible = this.configuration.CloseButtonVisible;
-							this.btnMinimize.Visible = this.configuration.MinimizeButtonVisible;
-						}
+						this.btnClose.Visible = this.configuration.CloseButtonVisible;
+						this.btnMinimize.Visible = this.configuration.MinimizeButtonVisible;
 					}
 					
 					//
@@ -2228,6 +2195,13 @@ namespace OpenPandora
 			this.menuToolsLyrics.Enabled = true;
 						
 			this.menuPlayerPlayPause.Text = "Pause";
+
+			if (this.isFirstTrack)
+			{
+				browserTimer.Start();
+			}
+
+			this.isFirstTrack = false;
 		}
 		#endregion
 		
@@ -2633,6 +2607,7 @@ namespace OpenPandora
 		private bool sentOnceToMessenger = false;
 		private bool sentOnceToXfire = false;
 
+		private bool isFirstTrack = true;
 		private string userUrl;
 		private string user = "Unknown";
 		private string currentStationCode = string.Empty;

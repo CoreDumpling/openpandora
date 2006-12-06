@@ -50,7 +50,7 @@ namespace OpenPandora
 			PayingUser,
 			KeepOnTop,
 			PartyMode,
-			NotifyIconBalloon,
+			NotificationWindow,
 			ProxyHost,
 			ProxyPort,
 			ProxyUser,
@@ -60,7 +60,8 @@ namespace OpenPandora
 			OffsetTop,
 			Location,
 			MiniPlayerLocation,
-			SendToXfire
+			SendToXfire,
+			SendToSkype
 		}
 		#endregion
 
@@ -412,14 +413,14 @@ namespace OpenPandora
 		}
 		#endregion
 
-		[XmlElement("notifyIconBalloon")]
-		#region public bool NotifyIconBalloon
-		public bool NotifyIconBalloon
+		[XmlElement("notificationWindow")]
+		#region public bool NotificationWindow
+		public bool NotificationWindow
 		{
-			get { return (bool)items[ConfigurationItemType.NotifyIconBalloon].Value; }
+			get { return (bool)items[ConfigurationItemType.NotificationWindow].Value; }
 			set
 			{
-				items[ConfigurationItemType.NotifyIconBalloon].Value = value;
+				items[ConfigurationItemType.NotificationWindow].Value = value;
 				Refresh();
 			}
 		}
@@ -550,6 +551,19 @@ namespace OpenPandora
 			set
 			{
 				items[ConfigurationItemType.SendToXfire].Value = value;
+				Refresh();
+			}
+		}
+		#endregion
+
+		[XmlElement("sendToSkype")]
+		#region public bool SendToSkype
+		public bool SendToSkype
+		{
+			get { return (bool)items[ConfigurationItemType.SendToSkype].Value; }
+			set
+			{
+				items[ConfigurationItemType.SendToSkype].Value = value;
 				Refresh();
 			}
 		}
@@ -748,8 +762,8 @@ namespace OpenPandora
 				new ConfigurationItem("Keep on top of other windows", false, true);
 			items[ConfigurationItemType.PartyMode] = 
 				new ConfigurationItem("Party Mode (prevent from stop playing if left alone)", false, true);
-			items[ConfigurationItemType.NotifyIconBalloon] = 
-				new ConfigurationItem("Show tray icon baloon", false, true);
+			items[ConfigurationItemType.NotificationWindow] = 
+				new ConfigurationItem("Show notification window", false, true);
 			items[ConfigurationItemType.ProxyHost] = 
 				new ConfigurationItem("Proxy host name", string.Empty, true);
 			items[ConfigurationItemType.ProxyPort] = 
@@ -770,6 +784,8 @@ namespace OpenPandora
 				new ConfigurationItem("MiniPlayer location", string.Empty, true);
 			items[ConfigurationItemType.SendToXfire] = 
 				new ConfigurationItem("Send song info to Xfire", false, true);
+			items[ConfigurationItemType.SendToSkype] = 
+				new ConfigurationItem("Send song info to Skype", false, true);
 
 			return items;
 		}

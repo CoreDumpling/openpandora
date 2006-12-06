@@ -35,7 +35,6 @@ namespace OpenPandora
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.CheckBox chbShowCloseButton;
 		private System.Windows.Forms.CheckBox chbMinimizeToTrayOnClose;
-		private System.Windows.Forms.CheckBox chbSendToMessenger;
 		private System.Windows.Forms.CheckBox chbOpenLinksInDefaultBrowser;
 		private System.Windows.Forms.RadioButton rdbTitleTemplate1;
 		private System.Windows.Forms.RadioButton rdbTitleTemplate2;
@@ -56,7 +55,6 @@ namespace OpenPandora
 		private System.Windows.Forms.CheckBox chbSubmitSkipped;
 		private System.Windows.Forms.CheckBox chbKeepOnTop;
 		private System.Windows.Forms.CheckBox chbPartyMode;
-		private System.Windows.Forms.CheckBox chbPopupBaloon;
 		private System.Windows.Forms.TabPage tabProxy;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label5;
@@ -74,7 +72,11 @@ namespace OpenPandora
 		private System.Windows.Forms.CheckBox chbGlobalShortcuts;
 		private System.Windows.Forms.LinkLabel linkHelpGlobalShortcuts;
 		private System.Windows.Forms.PictureBox pictureBoxLastFmAvatar;
+		private System.Windows.Forms.CheckBox chbPopupNotificationWindow;
+		private System.Windows.Forms.TabPage tabPageSendSongInfo;
+		private System.Windows.Forms.CheckBox chbSendToSkype;
 		private System.Windows.Forms.CheckBox chbSendToXfire;
+		private System.Windows.Forms.CheckBox chbSendToMessenger;
 		private System.ComponentModel.Container components = null;
 
 		//
@@ -119,7 +121,6 @@ namespace OpenPandora
 			this.btnSave = new System.Windows.Forms.Button();
 			this.chbShowCloseButton = new System.Windows.Forms.CheckBox();
 			this.chbMinimizeToTrayOnClose = new System.Windows.Forms.CheckBox();
-			this.chbSendToMessenger = new System.Windows.Forms.CheckBox();
 			this.chbOpenLinksInDefaultBrowser = new System.Windows.Forms.CheckBox();
 			this.rdbTitleTemplate1 = new System.Windows.Forms.RadioButton();
 			this.rdbTitleTemplate2 = new System.Windows.Forms.RadioButton();
@@ -130,8 +131,7 @@ namespace OpenPandora
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tabPageDisplay = new System.Windows.Forms.TabPage();
 			this.tabPageGeneral = new System.Windows.Forms.TabPage();
-			this.chbSendToXfire = new System.Windows.Forms.CheckBox();
-			this.chbPopupBaloon = new System.Windows.Forms.CheckBox();
+			this.chbPopupNotificationWindow = new System.Windows.Forms.CheckBox();
 			this.chbPartyMode = new System.Windows.Forms.CheckBox();
 			this.chbKeepOnTop = new System.Windows.Forms.CheckBox();
 			this.tabPageControl = new System.Windows.Forms.TabPage();
@@ -159,6 +159,10 @@ namespace OpenPandora
 			this.txtProxyHost = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
+			this.tabPageSendSongInfo = new System.Windows.Forms.TabPage();
+			this.chbSendToSkype = new System.Windows.Forms.CheckBox();
+			this.chbSendToXfire = new System.Windows.Forms.CheckBox();
+			this.chbSendToMessenger = new System.Windows.Forms.CheckBox();
 			this.grbTitleFormat.SuspendLayout();
 			this.tabs.SuspendLayout();
 			this.tabPageDisplay.SuspendLayout();
@@ -166,6 +170,7 @@ namespace OpenPandora
 			this.tabPageControl.SuspendLayout();
 			this.tabPageLastFM.SuspendLayout();
 			this.tabProxy.SuspendLayout();
+			this.tabPageSendSongInfo.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnApply
@@ -173,7 +178,7 @@ namespace OpenPandora
 			this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnApply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnApply.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(177)));
-			this.btnApply.Location = new System.Drawing.Point(8, 166);
+			this.btnApply.Location = new System.Drawing.Point(8, 168);
 			this.btnApply.Name = "btnApply";
 			this.btnApply.Size = new System.Drawing.Size(48, 21);
 			this.btnApply.TabIndex = 0;
@@ -187,7 +192,7 @@ namespace OpenPandora
 			this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnClose.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(177)));
-			this.btnClose.Location = new System.Drawing.Point(240, 166);
+			this.btnClose.Location = new System.Drawing.Point(274, 168);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(48, 21);
 			this.btnClose.TabIndex = 1;
@@ -201,7 +206,7 @@ namespace OpenPandora
 			this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnSave.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(177)));
-			this.btnSave.Location = new System.Drawing.Point(64, 166);
+			this.btnSave.Location = new System.Drawing.Point(64, 168);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(48, 21);
 			this.btnSave.TabIndex = 2;
@@ -227,15 +232,6 @@ namespace OpenPandora
 			this.chbMinimizeToTrayOnClose.TabIndex = 6;
 			this.chbMinimizeToTrayOnClose.Text = "Minimize To Tray On Close";
 			this.chbMinimizeToTrayOnClose.CheckedChanged += new System.EventHandler(this.SettingChanged);
-			// 
-			// chbSendToMessenger
-			// 
-			this.chbSendToMessenger.Location = new System.Drawing.Point(8, 8);
-			this.chbSendToMessenger.Name = "chbSendToMessenger";
-			this.chbSendToMessenger.Size = new System.Drawing.Size(176, 24);
-			this.chbSendToMessenger.TabIndex = 7;
-			this.chbSendToMessenger.Text = "Send Song Info To Messenger";
-			this.chbSendToMessenger.CheckedChanged += new System.EventHandler(this.SettingChanged);
 			// 
 			// chbOpenLinksInDefaultBrowser
 			// 
@@ -310,6 +306,7 @@ namespace OpenPandora
 			// 
 			this.tabs.Controls.Add(this.tabPageDisplay);
 			this.tabs.Controls.Add(this.tabPageGeneral);
+			this.tabs.Controls.Add(this.tabPageSendSongInfo);
 			this.tabs.Controls.Add(this.tabPageControl);
 			this.tabs.Controls.Add(this.tabPageLastFM);
 			this.tabs.Controls.Add(this.tabProxy);
@@ -317,7 +314,7 @@ namespace OpenPandora
 			this.tabs.Name = "tabs";
 			this.tabs.Padding = new System.Drawing.Point(0, 0);
 			this.tabs.SelectedIndex = 0;
-			this.tabs.Size = new System.Drawing.Size(296, 160);
+			this.tabs.Size = new System.Drawing.Size(328, 160);
 			this.tabs.TabIndex = 17;
 			// 
 			// tabPageDisplay
@@ -328,54 +325,44 @@ namespace OpenPandora
 			this.tabPageDisplay.Controls.Add(this.chbMinimizeToTrayOnClose);
 			this.tabPageDisplay.Location = new System.Drawing.Point(4, 22);
 			this.tabPageDisplay.Name = "tabPageDisplay";
-			this.tabPageDisplay.Size = new System.Drawing.Size(288, 134);
+			this.tabPageDisplay.Size = new System.Drawing.Size(320, 150);
 			this.tabPageDisplay.TabIndex = 0;
 			this.tabPageDisplay.Text = "Display";
 			// 
 			// tabPageGeneral
 			// 
 			this.tabPageGeneral.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
-			this.tabPageGeneral.Controls.Add(this.chbSendToXfire);
-			this.tabPageGeneral.Controls.Add(this.chbPopupBaloon);
+			this.tabPageGeneral.Controls.Add(this.chbPopupNotificationWindow);
 			this.tabPageGeneral.Controls.Add(this.chbPartyMode);
 			this.tabPageGeneral.Controls.Add(this.chbKeepOnTop);
-			this.tabPageGeneral.Controls.Add(this.chbSendToMessenger);
 			this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
 			this.tabPageGeneral.Name = "tabPageGeneral";
-			this.tabPageGeneral.Size = new System.Drawing.Size(288, 134);
+			this.tabPageGeneral.Size = new System.Drawing.Size(320, 134);
 			this.tabPageGeneral.TabIndex = 2;
 			this.tabPageGeneral.Text = "General";
 			// 
-			// chbSendToXfire
+			// chbPopupNotificationWindow
 			// 
-			this.chbSendToXfire.Location = new System.Drawing.Point(8, 32);
-			this.chbSendToXfire.Name = "chbSendToXfire";
-			this.chbSendToXfire.Size = new System.Drawing.Size(192, 24);
-			this.chbSendToXfire.TabIndex = 20;
-			this.chbSendToXfire.Text = "Send Song Info To Xfire";
-			this.chbSendToXfire.CheckedChanged += new System.EventHandler(this.SettingChanged);
-			// 
-			// chbPopupBaloon
-			// 
-			this.chbPopupBaloon.Location = new System.Drawing.Point(8, 80);
-			this.chbPopupBaloon.Name = "chbPopupBaloon";
-			this.chbPopupBaloon.Size = new System.Drawing.Size(192, 24);
-			this.chbPopupBaloon.TabIndex = 19;
-			this.chbPopupBaloon.Text = "Popup Tray Notification Balloon";
-			this.chbPopupBaloon.CheckedChanged += new System.EventHandler(this.SettingChanged);
+			this.chbPopupNotificationWindow.Location = new System.Drawing.Point(8, 32);
+			this.chbPopupNotificationWindow.Name = "chbPopupNotificationWindow";
+			this.chbPopupNotificationWindow.Size = new System.Drawing.Size(192, 24);
+			this.chbPopupNotificationWindow.TabIndex = 19;
+			this.chbPopupNotificationWindow.Text = "Popup Notification Window";
+			this.chbPopupNotificationWindow.CheckedChanged += new System.EventHandler(this.SettingChanged);
 			// 
 			// chbPartyMode
 			// 
-			this.chbPartyMode.Location = new System.Drawing.Point(8, 104);
+			this.chbPartyMode.Location = new System.Drawing.Point(8, 56);
 			this.chbPartyMode.Name = "chbPartyMode";
 			this.chbPartyMode.Size = new System.Drawing.Size(280, 24);
 			this.chbPartyMode.TabIndex = 18;
 			this.chbPartyMode.Text = "Party Mode (keep playing if left for too long)";
+			this.chbPartyMode.Visible = false;
 			this.chbPartyMode.CheckedChanged += new System.EventHandler(this.SettingChanged);
 			// 
 			// chbKeepOnTop
 			// 
-			this.chbKeepOnTop.Location = new System.Drawing.Point(8, 56);
+			this.chbKeepOnTop.Location = new System.Drawing.Point(8, 8);
 			this.chbKeepOnTop.Name = "chbKeepOnTop";
 			this.chbKeepOnTop.Size = new System.Drawing.Size(192, 24);
 			this.chbKeepOnTop.TabIndex = 17;
@@ -390,7 +377,7 @@ namespace OpenPandora
 			this.tabPageControl.Controls.Add(this.chbKeyboardMediaKeys);
 			this.tabPageControl.Location = new System.Drawing.Point(4, 22);
 			this.tabPageControl.Name = "tabPageControl";
-			this.tabPageControl.Size = new System.Drawing.Size(288, 134);
+			this.tabPageControl.Size = new System.Drawing.Size(320, 134);
 			this.tabPageControl.TabIndex = 4;
 			this.tabPageControl.Text = "Control";
 			// 
@@ -437,7 +424,7 @@ namespace OpenPandora
 			this.tabPageLastFM.Controls.Add(this.label3);
 			this.tabPageLastFM.Location = new System.Drawing.Point(4, 22);
 			this.tabPageLastFM.Name = "tabPageLastFM";
-			this.tabPageLastFM.Size = new System.Drawing.Size(288, 134);
+			this.tabPageLastFM.Size = new System.Drawing.Size(320, 134);
 			this.tabPageLastFM.TabIndex = 1;
 			this.tabPageLastFM.Text = "Last.FM";
 			// 
@@ -536,7 +523,7 @@ namespace OpenPandora
 			this.tabProxy.Controls.Add(this.label5);
 			this.tabProxy.Location = new System.Drawing.Point(4, 22);
 			this.tabProxy.Name = "tabProxy";
-			this.tabProxy.Size = new System.Drawing.Size(288, 134);
+			this.tabProxy.Size = new System.Drawing.Size(320, 134);
 			this.tabProxy.TabIndex = 3;
 			this.tabProxy.Text = "Proxy";
 			// 
@@ -623,6 +610,42 @@ namespace OpenPandora
 			this.label5.TabIndex = 14;
 			this.label5.Text = "Host";
 			// 
+			// tabPageSendSongInfo
+			// 
+			this.tabPageSendSongInfo.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToSkype);
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToXfire);
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToMessenger);
+			this.tabPageSendSongInfo.Location = new System.Drawing.Point(4, 22);
+			this.tabPageSendSongInfo.Name = "tabPageSendSongInfo";
+			this.tabPageSendSongInfo.Size = new System.Drawing.Size(320, 134);
+			this.tabPageSendSongInfo.TabIndex = 5;
+			this.tabPageSendSongInfo.Text = "Send Song Info";
+			// 
+			// chbSendToSkype
+			// 
+			this.chbSendToSkype.Location = new System.Drawing.Point(8, 56);
+			this.chbSendToSkype.Name = "chbSendToSkype";
+			this.chbSendToSkype.Size = new System.Drawing.Size(192, 24);
+			this.chbSendToSkype.TabIndex = 24;
+			this.chbSendToSkype.Text = "Send Song Info To Skype";
+			// 
+			// chbSendToXfire
+			// 
+			this.chbSendToXfire.Location = new System.Drawing.Point(8, 32);
+			this.chbSendToXfire.Name = "chbSendToXfire";
+			this.chbSendToXfire.Size = new System.Drawing.Size(192, 24);
+			this.chbSendToXfire.TabIndex = 23;
+			this.chbSendToXfire.Text = "Send Song Info To Xfire";
+			// 
+			// chbSendToMessenger
+			// 
+			this.chbSendToMessenger.Location = new System.Drawing.Point(8, 8);
+			this.chbSendToMessenger.Name = "chbSendToMessenger";
+			this.chbSendToMessenger.Size = new System.Drawing.Size(176, 24);
+			this.chbSendToMessenger.TabIndex = 22;
+			this.chbSendToMessenger.Text = "Send Song Info To Messenger";
+			// 
 			// SettingsView
 			// 
 			this.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
@@ -633,7 +656,7 @@ namespace OpenPandora
 			this.Controls.Add(this.chbOpenLinksInDefaultBrowser);
 			this.ForeColor = System.Drawing.Color.WhiteSmoke;
 			this.Name = "SettingsView";
-			this.Size = new System.Drawing.Size(294, 190);
+			this.Size = new System.Drawing.Size(328, 192);
 			this.VisibleChanged += new System.EventHandler(this.SettingsView_VisibleChanged);
 			this.grbTitleFormat.ResumeLayout(false);
 			this.tabs.ResumeLayout(false);
@@ -642,6 +665,7 @@ namespace OpenPandora
 			this.tabPageControl.ResumeLayout(false);
 			this.tabPageLastFM.ResumeLayout(false);
 			this.tabProxy.ResumeLayout(false);
+			this.tabPageSendSongInfo.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -685,7 +709,7 @@ namespace OpenPandora
 					this.loading = true;
 				
 					RefreshSettings();
-					Apply(false);
+					Apply();
 				
 					this.loading = false;
 				}
@@ -743,7 +767,7 @@ namespace OpenPandora
 		#region private void btnApply_Click(object sender, System.EventArgs e)
 		private void btnApply_Click(object sender, System.EventArgs e)
 		{
-			Apply(true);
+			Apply();
 		}
 		#endregion
 
@@ -757,7 +781,7 @@ namespace OpenPandora
 		#region private void btnSave_Click(object sender, System.EventArgs e)
 		private void btnSave_Click(object sender, System.EventArgs e)
 		{
-			this.Apply(true);
+			this.Apply();
 			this.ParentForm.Close();
 		}
 		#endregion
@@ -826,8 +850,8 @@ namespace OpenPandora
 		// Private methods
 		//
 		
-		#region private void Apply(bool refreshPlayer)
-		private void Apply(bool refreshPlayer)
+		#region private void Apply()
+		private void Apply()
 		{
 			UpdateSettings(this, new EventArgs());
 			
@@ -836,7 +860,7 @@ namespace OpenPandora
 				configuration.LastFmPassword = Audioscrobbler.GetPasswordMD5(this.password);
 			}
 			
-			player.ApplyConfiguration(configuration, refreshPlayer);
+			player.ApplyConfiguration(configuration, true);
 		}
 		#endregion
 		
@@ -847,6 +871,7 @@ namespace OpenPandora
 			chbMinimizeToTrayOnClose.Checked = this.configuration.CloseButtonMinimizeToTray;
 			chbSendToMessenger.Checked = this.configuration.SendToMessenger;
 			chbSendToXfire.Checked = this.configuration.SendToXfire;
+			chbSendToSkype.Checked = this.configuration.SendToSkype;
 			chbOpenLinksInDefaultBrowser.Checked = this.configuration.OpenInDefaultBrowser;
 
 			chbShowCloseButton.Enabled = this.configuration.IsConfigurationItemEnabled(Configuration.ConfigurationItemType.CloseButtonVisible);
@@ -878,7 +903,7 @@ namespace OpenPandora
 			
 			chbKeepOnTop.Checked = this.configuration.KeepOnTop;
 			chbPartyMode.Checked = this.configuration.PartyMode;
-			chbPopupBaloon.Checked = this.configuration.NotifyIconBalloon;
+			chbPopupNotificationWindow.Checked = this.configuration.NotificationWindow;
 			
 			//
 			// Last.fm
@@ -940,6 +965,7 @@ namespace OpenPandora
 			configuration.CloseButtonMinimizeToTray = chbMinimizeToTrayOnClose.Checked;
 			configuration.SendToMessenger = chbSendToMessenger.Checked;
 			configuration.SendToXfire = chbSendToXfire.Checked;
+			configuration.SendToSkype = chbSendToSkype.Checked;
 			configuration.OpenInDefaultBrowser = chbOpenLinksInDefaultBrowser.Checked;
 			
 			if (rdbTitleTemplate1.Checked)
@@ -969,7 +995,7 @@ namespace OpenPandora
 			configuration.GlobalShortcuts = chbGlobalShortcuts.Checked;
 			configuration.KeepOnTop = chbKeepOnTop.Checked;
 			configuration.PartyMode = chbPartyMode.Checked;
-			configuration.NotifyIconBalloon = chbPopupBaloon.Checked;
+			configuration.NotificationWindow = chbPopupNotificationWindow.Checked;
 			
 			if (rdbProxyManual.Checked)
 			{

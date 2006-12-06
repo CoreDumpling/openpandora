@@ -64,6 +64,8 @@ namespace OpenPandora
 		private AxSHDocVw.AxWebBrowser browser2;
 		private System.Windows.Forms.Button btnMinimize;
 		private System.Windows.Forms.NotifyIcon notifyIcon;
+		private OpenPandora.Windows.Forms.TaskbarNotifier taskbarNotifier;
+		private Skype skype;
 		
 		//
 		// Constructor
@@ -92,6 +94,7 @@ namespace OpenPandora
 				InitializeMenus();
 				InitializeTimers();
 				InitializeNotifyIcon();
+				InitializeTaskbarNotifier();
 			
 				//
 				// Colors
@@ -580,6 +583,8 @@ namespace OpenPandora
 				if (menuMiniPlayer.Checked)
 				{
 					configuration.MiniPlayerLocation = this.Location.X + "," + this.Location.Y;
+					if (taskbarNotifier.Visible)
+						taskbarNotifier.Hide();
 				}
 				else
 				{
@@ -644,14 +649,22 @@ namespace OpenPandora
 
 			if (pictureBoxTitle.Width < textSize.Width)
 			{
-				toolTip.SetToolTip(this.pictureBoxTitle, text);
+				if (titleTimer.Enabled == false)
+				{
+					titleTimer.Start();
+					titlePosition = 3;
+				}
+				//toolTip.SetToolTip(this.pictureBoxTitle, text);
 			}
 			else
 			{
-				toolTip.SetToolTip(this.pictureBoxTitle, string.Empty);
+				titleTimer.Stop();
+				titlePosition = int.Parse(System.Math.Floor((double)(pictureBoxTitle.Width - textSize.Width)/2).ToString());
+				//toolTip.SetToolTip(this.pictureBoxTitle, string.Empty);
 			}
 
-			titleGraphics.DrawString(text, new Font("Tahoma", 8), Brushes.WhiteSmoke, new PointF(3, 3));
+			titleGraphics.DrawString(text, new Font("Tahoma", 8), Brushes.WhiteSmoke, new PointF(titlePosition, 3));
+
 		}
 		#endregion
 
@@ -830,6 +843,9 @@ namespace OpenPandora
 						memoryTimer.Interval = MEMORYTIMER_DELAY;
 						memoryTimer.Start();
 								
+						if (taskbarNotifier.Visible)
+							taskbarNotifier.Hide();
+
 						if (!paused)
 						{
 							playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
@@ -857,6 +873,7 @@ namespace OpenPandora
 								
 						refreshMessenger = !paused;
 						refreshXfire = !paused;
+						refreshSkype = !paused;
 								
 						paused = false;
 					}
@@ -868,6 +885,7 @@ namespace OpenPandora
 						paused = true;
 						refreshMessenger = false;
 						refreshXfire = false;
+						refreshSkype = false;
 									
 						playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
 									
@@ -1335,6 +1353,61 @@ namespace OpenPandora
 		}
 		#endregion
 
+		#region private void titleTimer_Tick(object sender, System.EventArgs e)
+		private void titleTimer_Tick(object sender, System.EventArgs e)
+		{
+			try
+			{
+
+				string text;
+				
+				if (message != string.Empty)
+				{
+					text = message;
+				}
+				else
+				{
+					text = title;
+				}
+
+				if (text == null)
+				{
+					return;
+				}
+
+				Graphics titleGraphics = pictureBoxTitle.CreateGraphics();
+				SizeF textSize = titleGraphics.MeasureString(text, new Font("Tahoma", 8));
+
+				if ((titlePosition + textSize.Width + 4 >=  pictureBoxTitle.Width) && titlebounce == false)
+				{
+					titleDirection = -1;
+				}
+				else 
+				{
+					titlebounce = true;
+				}
+					
+				if (titlePosition <= 2 && titlebounce == true)
+				{
+					titleDirection = 1;
+				}
+				else
+				{
+					titlebounce = false;
+				}
+
+				titlePosition = titlePosition + 2 * titleDirection;
+				
+				pictureBoxTitle.Refresh();
+
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				Debug.WriteLine(ex.StackTrace);
+			}
+		}
+		#endregion
 		
 		//
 		// Menu event handlers
@@ -1453,7 +1526,7 @@ namespace OpenPandora
 
 					MoveToWorkingArea();
 
-					ApplyConfiguration(configuration, true);
+					ApplyConfiguration(configuration, false);
 				}
 				else
 				{
@@ -1698,6 +1771,7 @@ namespace OpenPandora
 					{
 						refreshMessenger = true;
 						refreshXfire = true;
+						refreshSkype = true;
 					}
 			
 					if (refreshPlayer)
@@ -1853,6 +1927,11 @@ namespace OpenPandora
 			memoryTimer.Interval = 10000;
 			memoryTimer.Tick += new EventHandler(this.memoryTimer_Tick);
 			memoryTimer.Enabled = false;
+
+			titleTimer = new System.Windows.Forms.Timer();
+			titleTimer.Interval = 100;
+			titleTimer.Tick += new EventHandler(this.titleTimer_Tick);
+			titleTimer.Enabled = false;
 		}
 		#endregion
 		
@@ -1869,19 +1948,29 @@ namespace OpenPandora
 		}
 		#endregion
 
+		#region private void InitializeTaskbarNotifier(
+		private void InitializeTaskbarNotifier()
+		{
+			this.taskbarNotifier = new OpenPandora.Windows.Forms.TaskbarNotifier();	
+
+			this.taskbarNotifier.Show();
+		}
+		#endregion
+
 		#region private void RefreshPlayer()
 		private void RefreshPlayer()
 		{
 			BuildTitle();
 
-			if (configuration.NotifyIconBalloon &&
+			if (configuration.NotificationWindow &&
 			    this.Text != title &&
 				song.Name != string.Empty &&
 				!this.Focused &&
 				this.Text.IndexOf(PAUSED) == -1 && 
 			    title.IndexOf(PAUSED) == -1)
 			{
-				NotifyIconBaloon.Show(song.Name, "by: " + song.Artist, notifyIcon);
+				taskbarNotifier.Show(this.song.Name,this.song.Artist,"",this.song.ArtUrl,this.song.Url,"","",500,10000,500,17,17);
+				//notifyIcon.ShowBalloon(OpenPandora.Interop.BalloonIconStyle.None, "by: " + song.Artist, song.Name, 5000);
 			}
 			
 			this.Text = title;
@@ -1891,6 +1980,7 @@ namespace OpenPandora
 			
 			RefreshMessenger();
 			RefreshXfire();
+			RefreshSkype();
 		}
 		#endregion
 		
@@ -1946,6 +2036,66 @@ namespace OpenPandora
 			{
 				Xfire.SetMessage(string.Empty);
 				sentOnceToXfire = false;
+			}
+		}
+		#endregion
+		
+		#region private void RefreshSkype()
+		private void RefreshSkype()
+		{
+			if (skype == null)
+				skype = new Skype();
+
+			if (this.configuration.SendToSkype)
+			{
+				if (refreshSkype)
+				{
+					if (skype.skypeHandler == 0)
+					{
+						if (skype.Connect())
+						{
+							if (song.Name != string.Empty)
+							{
+								skype.SetMessage(BuildShortSongTitle());
+								sentOnceToSkype = true;
+							}
+							else
+							{
+								skype.SetMessage("");
+								sentOnceToSkype = false;
+							}
+						}
+					}
+					else
+					{
+						if (song.Name != string.Empty)
+						{
+							skype.SetMessage(BuildShortSongTitle());
+							sentOnceToSkype = true;
+						}
+						else
+						{
+							skype.SetMessage("");
+							sentOnceToSkype = false;
+						}
+					}
+				}
+			}
+			else if (sentOnceToSkype)
+			{
+				if (skype.skypeHandler == 0)
+				{
+					if (skype.Connect())
+					{
+						skype.SetMessage("");
+						sentOnceToSkype = false;
+					}
+				}
+				else
+				{
+					skype.SetMessage("");
+					sentOnceToSkype = false;
+				}
 			}
 		}
 		#endregion
@@ -2224,6 +2374,7 @@ namespace OpenPandora
 			paused = false;
 			refreshMessenger = true;
 			refreshXfire = true;
+			refreshSkype = true;
 						
 			this.menuPlayerPlayPause.Enabled = false;
 			this.menuPlayerSkip.Enabled = false;
@@ -2606,6 +2757,7 @@ namespace OpenPandora
 		private bool isBetaVersion = false;
 		private bool sentOnceToMessenger = false;
 		private bool sentOnceToXfire = false;
+        private bool sentOnceToSkype = false;
 
 		private bool isFirstTrack = true;
 		private string userUrl;
@@ -2619,6 +2771,7 @@ namespace OpenPandora
 		private bool paused = false;
 		private bool refreshMessenger = false;
 		private bool refreshXfire = false;
+        private bool refreshSkype = false;
 		private string browserTitle = string.Empty;
 		private string message = string.Empty;
 		private string title = string.Empty;
@@ -2626,6 +2779,7 @@ namespace OpenPandora
 		private System.Windows.Forms.Timer browserTimer;
 		private System.Windows.Forms.Timer browserRefreshTimer;
 		private System.Windows.Forms.Timer memoryTimer;
+        private System.Windows.Forms.Timer titleTimer;
 		private Audioscrobbler audioscrobbler;
 		private bool submittedToLastFm = false;
 		private Pandora pandora;
@@ -2642,6 +2796,10 @@ namespace OpenPandora
 		
 		private int playedLength = 0;
 		private DateTime playedStartTime;
+		private int titlePosition = 0;
+		private int titleDirection = 1;
+		private bool titlebounce = false;
+
 		#endregion
 
 		private void browser2_StatusTextChange(object sender, DWebBrowserEvents2_StatusTextChangeEvent e)

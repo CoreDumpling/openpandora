@@ -176,6 +176,11 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "LinkLabelNoFocus.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Manager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -230,6 +235,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TaskbarNotifier.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TaskbarNotifier.resx"
+                    DependentUpon = "TaskbarNotifier.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "TransparentPanel.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "WebForm.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -271,6 +291,16 @@
                 <File
                     RelPath = "Site\release_notes.txt"
                     BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Skype\Skype.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Skype\Skype.resx"
+                    DependentUpon = "Skype.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Win32\Kernel32.cs"

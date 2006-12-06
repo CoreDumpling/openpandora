@@ -29,7 +29,6 @@ namespace OpenPandora.Windows.Forms
 		}
 		#endregion
 
-		private Rectangle WorkAreaRectangle;
 		private Timer timer = new Timer();
 		private TaskbarStates taskbarState = TaskbarStates.hidden;
 		private int ShowEvents;
@@ -37,6 +36,8 @@ namespace OpenPandora.Windows.Forms
 		private int VisibleEvents;
 		private int IncrementShow;
 		private int IncrementHide;
+
+		private Point mouseOffset;
 
 		private bool IsMouseOverPopup = false;
 
@@ -58,6 +59,9 @@ namespace OpenPandora.Windows.Forms
 		private System.Text.RegularExpressions.Regex regex;
 		private System.Text.RegularExpressions.Match match;
 	
+		public delegate void LocationChangedEventDelegate(Point Location);
+		public event LocationChangedEventDelegate OnLocationChanged;
+
 		#region private void InitializeComponent()
 		private void InitializeComponent()
 		{
@@ -176,10 +180,11 @@ namespace OpenPandora.Windows.Forms
 			this.TransparentPanelMouse.Name = "TransparentPanelMouse";
 			this.TransparentPanelMouse.Size = new System.Drawing.Size(128, 179);
 			this.TransparentPanelMouse.TabIndex = 6;
-			this.TransparentPanelMouse.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Control_MouseUp);
+			this.TransparentPanelMouse.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TransparentPanelMouse_MouseUp);
 			this.TransparentPanelMouse.MouseEnter += new System.EventHandler(this.TransparentPanelMouse_MouseEnter);
-			this.TransparentPanelMouse.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Control_MouseMove);
+			this.TransparentPanelMouse.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TransparentPanelMouse_MouseMove);
 			this.TransparentPanelMouse.MouseLeave += new System.EventHandler(this.TransparentPanelMouse_MouseLeave);
+			this.TransparentPanelMouse.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TransparentPanelMouse_MouseDown);
 			// 
 			// TaskbarNotifier
 			// 
@@ -271,9 +276,10 @@ namespace OpenPandora.Windows.Forms
 		{
 			BuildDisplay(songname, artist, album, songarturl, songurl, artisturl, albumurl);
 
-			WorkAreaRectangle = Screen.GetWorkingArea(WorkAreaRectangle);
-
-			SetBounds(WorkAreaRectangle.Right - 128 - x, WorkAreaRectangle.Bottom - 179 - y, 128, 179);
+			this.Left = x;
+			this.Top = y;	
+			this.Width = 128;
+			this.Height = 179;
 			
 			VisibleEvents = timetostay;
 
@@ -686,9 +692,39 @@ namespace OpenPandora.Windows.Forms
 		}
 		#endregion
 
-		#region private void Control_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
-		private void Control_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+		#region private void TransparentPanelMouse_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void TransparentPanelMouse_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
+			if (e.Button == MouseButtons.Left)
+			{
+				this.mouseOffset = new Point(-e.X, -e.Y);
+			}
+		}
+		#endregion
+
+		#region private void TransparentPanelMouse_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void TransparentPanelMouse_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Left)
+			{
+				this.Cursor = Cursors.Hand;
+				Point mousePosition = Control.MousePosition;
+				
+				if (Math.Abs(e.X + this.mouseOffset.X) > 1 ||
+					Math.Abs(e.Y + this.mouseOffset.Y) > 1)
+				{
+					mousePosition.Offset(this.mouseOffset.X, this.mouseOffset.Y);
+					this.Location = mousePosition;
+
+					if (OnLocationChanged != null)
+					{
+						OnLocationChanged(this.Location); 
+					}
+
+				}
+
+			}
+
 			if ((e.X >= linkLabelSongName.Location.X) && (e.Y >= linkLabelSongName.Location.Y) && (e.X <= linkLabelSongName.Location.X + linkLabelSongName.Width) && (e.Y <= linkLabelSongName.Location.Y + linkLabelSongName.Height))
 			{
 				this.Cursor = Cursors.Hand;
@@ -732,13 +768,15 @@ namespace OpenPandora.Windows.Forms
 			}
 
 			this.Refresh();
-		}
 
+		}
 		#endregion
 
-		#region private void Control_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
-		private void Control_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+		#region private void pictureBoxFill_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void TransparentPanelMouse_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
+			this.mouseOffset = new Point(0, 0);
+
 			if ((e.X >= linkLabelSongName.Location.X) && (e.Y >= linkLabelSongName.Location.Y) && (e.X <= linkLabelSongName.Location.X + linkLabelSongName.Width) && (e.Y <= linkLabelSongName.Location.Y + linkLabelSongName.Height))
 			{
 				Shell32.ShellExecute(0, "Open", linkLabelSongName.URL , "", Application.StartupPath, 1);
@@ -754,9 +792,7 @@ namespace OpenPandora.Windows.Forms
 				Shell32.ShellExecute(0, "Open", linkLabelArtist.URL , "", Application.StartupPath, 1);
 			}
 		}
-
 		#endregion
 
-		
 	}
 }

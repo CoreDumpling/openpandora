@@ -1702,6 +1702,17 @@ namespace OpenPandora
 		#endregion
 
 		//
+		// TaskbarNotifier events
+		//
+		
+		#region private void taskbarNotifier_OnLocationChanged(Point Location)
+		private void taskbarNotifier_OnLocationChanged(Point Location)
+		{
+			configuration.NotificationWindowLocation = taskbarNotifier.Location.X + "," + taskbarNotifier.Location.Y;
+		}
+		#endregion
+
+		//
 		// Internal methods
 		//
 		
@@ -1954,6 +1965,8 @@ namespace OpenPandora
 		{
 			this.taskbarNotifier = new OpenPandora.Windows.Forms.TaskbarNotifier();	
 
+			this.taskbarNotifier.OnLocationChanged += new OpenPandora.Windows.Forms.TaskbarNotifier.LocationChangedEventDelegate(taskbarNotifier_OnLocationChanged);
+
 			this.taskbarNotifier.Show();
 		}
 		#endregion
@@ -1970,7 +1983,8 @@ namespace OpenPandora
 				this.Text.IndexOf(PAUSED) == -1 && 
 			    title.IndexOf(PAUSED) == -1)
 			{
-				taskbarNotifier.Show(this.song.Name,this.song.Artist,"",this.song.ArtUrl,this.song.Url,"","",17,17,500,10000,500);
+				string[] coordinates = configuration.NotificationWindowLocation.Split(new char[] {','});
+				taskbarNotifier.Show(this.song.Name,this.song.Artist,"",this.song.ArtUrl,this.song.Url,"","",int.Parse(coordinates[0]),int.Parse(coordinates[1]),500,10000,500);
 				//notifyIcon.ShowBalloon(OpenPandora.Interop.BalloonIconStyle.None, "by: " + song.Artist, song.Name, 5000);
 			}
 			

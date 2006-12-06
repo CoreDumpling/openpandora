@@ -61,7 +61,8 @@ namespace OpenPandora
 			Location,
 			MiniPlayerLocation,
 			SendToXfire,
-			SendToSkype
+			SendToSkype,
+			NotificationWindowLocation
 		}
 		#endregion
 
@@ -569,6 +570,18 @@ namespace OpenPandora
 		}
 		#endregion
 
+		#region public string NotificationWindowLocation
+		public string NotificationWindowLocation
+		{
+			get { return items[ConfigurationItemType.NotificationWindowLocation].Value as string; }
+			set
+			{
+				items[ConfigurationItemType.NotificationWindowLocation].Value = value;
+				Refresh();
+			}
+		}
+		#endregion
+
 		//
 		// Public methods
 		//
@@ -786,6 +799,8 @@ namespace OpenPandora
 				new ConfigurationItem("Send song info to Xfire", false, true);
 			items[ConfigurationItemType.SendToSkype] = 
 				new ConfigurationItem("Send song info to Skype", false, true);
+			items[ConfigurationItemType.NotificationWindowLocation] = 
+				new ConfigurationItem("Notification window location", "1,1", true);
 
 			return items;
 		}

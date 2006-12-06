@@ -247,13 +247,13 @@ namespace OpenPandora.Windows.Forms
 		//
 		// Public Methods
 		//
-		#region public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int X, int Y)
-		public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int X, int Y)
+		#region public void Show(string songname, string artist, string album, string songarturl, string songurl, string artisturl, string albumurl, int x, int y)
+		public void Show(string songname, string artist, string album, string songarturl, string songurl, string artisturl, string albumurl, int x, int y)
 		{
-			BuildDisplay(SongName, Artist, Album, SongArtURL, SongURL, ArtistURL, AlbumURL);
+			BuildDisplay(songname, artist, album, songarturl, songurl, artisturl, albumurl);
 
-			this.Left = X;
-			this.Top = Y;
+			this.Left = x;
+			this.Top = y;	
 			this.Width = 128;
 			this.Height = 179;
 
@@ -266,22 +266,22 @@ namespace OpenPandora.Windows.Forms
 
 		#endregion
 
-		#region public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int TimeToShow, int TimeToStay, int TimeToHide, int X, int Y)
-		public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int TimeToShow, int TimeToStay, int TimeToHide, int X, int Y)
+		#region public void Show(string songname, string artist, string album, string songarturl, string songurl, string artisturl, string albumurl, int x, int y, int timetoshow, int timetostay, int timetohide)
+		public void Show(string songname, string artist, string album, string songarturl, string songurl, string artisturl, string albumurl, int x, int y, int timetoshow, int timetostay, int timetohide)
 		{
-			BuildDisplay(SongName, Artist, Album, SongArtURL, SongURL, ArtistURL, AlbumURL);
+			BuildDisplay(songname, artist, album, songarturl, songurl, artisturl, albumurl);
 
 			WorkAreaRectangle = Screen.GetWorkingArea(WorkAreaRectangle);
 
-			SetBounds(WorkAreaRectangle.Right - 128 - X, WorkAreaRectangle.Bottom - 179 - Y, 128, 179);
+			SetBounds(WorkAreaRectangle.Right - 128 - x, WorkAreaRectangle.Bottom - 179 - y, 128, 179);
 			
-			VisibleEvents = TimeToStay;
+			VisibleEvents = timetostay;
 
 			int Events;
-			if (TimeToShow > 10)
+			if (timetoshow > 10)
 			{
-				Events = Math.Min((TimeToShow / 10), 100);
-				ShowEvents = TimeToShow / Events;
+				Events = Math.Min((timetoshow / 10), 100);
+				ShowEvents = timetoshow / Events;
 				IncrementShow = 100 / Events;
 			}
 			else
@@ -290,10 +290,10 @@ namespace OpenPandora.Windows.Forms
 				IncrementShow = 10;
 			}
 
-			if( TimeToHide > 10)
+			if( timetohide > 10)
 			{
-				Events = Math.Min((TimeToHide / 10), 100);
-				HideEvents = TimeToHide / Events;
+				Events = Math.Min((timetohide / 10), 100);
+				HideEvents = timetohide / Events;
 				IncrementHide = 100 / Events;
 			}
 			else
@@ -349,13 +349,13 @@ namespace OpenPandora.Windows.Forms
 
 		#endregion
 
-		#region public void Hide(int nTimeToStay)
-		public void Hide(int TimeToStay)
+		#region public void Hide(int timetostay)
+		public void Hide(int timetostay)
 		{
 			timer.Stop();
 			HideEvents = 10;
 			IncrementHide = 100;
-			timer.Interval = TimeToStay;
+			timer.Interval = timetostay;
 			timer.Start();
 			Refresh();
 		}
@@ -402,15 +402,15 @@ namespace OpenPandora.Windows.Forms
 		}
 		#endregion
 
-		#region private void BuildDisplay(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL)
-		private void BuildDisplay(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL)
+		#region private void BuildDisplay(string songname, string artist, string album, string songarturl, string songurl, string artisturl, string albumurl)
+		private void BuildDisplay(string songname, string artist, string album, string songarturl, string songurl, string artisturl, string albumurl)
 		{
 			ResetLinks();
 
-			if (linkLabelSongName.URL != SongURL)
+			if (linkLabelSongName.URL != songurl)
 			{
             
-				if (SongArtURL == null || SongArtURL == "")
+				if (songarturl == null || songarturl == "")
 				{
 					Debug.WriteLine("TaskbarNotifier: No ArtURL");
 					this.pictureBoxAlbumArt.Image = ((System.Drawing.Image)(resourcesBackGround.GetObject("pictureBoxAlbumArt.Image")));
@@ -420,7 +420,7 @@ namespace OpenPandora.Windows.Forms
             
 					try
 					{
-						buffer = DownloadData(SongArtURL);
+						buffer = DownloadData(songarturl);
 
 						stream = new System.IO.MemoryStream(buffer);
 						pictureBoxAlbumArt.Image = Image.FromStream(stream);
@@ -431,21 +431,21 @@ namespace OpenPandora.Windows.Forms
 					}
 				}
 
-				GetAlbumAndURL(SongURL);
+				GetAlbumAndURL(songurl);
 
-				linkLabelSongName.FullText = SongName;
-				linkLabelArtist.FullText = Artist;
-				linkLabelSongName.URL = SongURL;
+				linkLabelSongName.FullText = songname;
+				linkLabelArtist.FullText = artist;
+				linkLabelSongName.URL = songurl;
 			}
 		}
 
 		#endregion
 
-		#region private byte[] DownloadData(string URL)
-		private byte[] DownloadData(string URL)
+		#region private byte[] DownloadData(string url)
+		private byte[] DownloadData(string url)
 		{
 			System.IO.Stream stream;
-			stream = wc.OpenRead(URL);
+			stream = wc.OpenRead(url);
 			
 			byte[] buffer = new byte[512];
 			int read=0;
@@ -530,12 +530,12 @@ namespace OpenPandora.Windows.Forms
 		}
 		#endregion
 
-		#region private void GetAlbumAndURL(string SongURL)
-		private void GetAlbumAndURL(string SongURL)
+		#region private void GetAlbumAndURL(string songurl)
+		private void GetAlbumAndURL(string songurl)
 		{
 			try
 			{
-				buffer = DownloadData(SongURL);
+				buffer = DownloadData(songurl);
 				
 				songsource = encoder.GetString(buffer);
 

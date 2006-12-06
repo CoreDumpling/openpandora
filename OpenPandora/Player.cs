@@ -659,7 +659,8 @@ namespace OpenPandora
 			else
 			{
 				titleTimer.Stop();
-				titlePosition = int.Parse(System.Math.Floor((double)(pictureBoxTitle.Width - textSize.Width)/2).ToString());
+				titlePosition = 3;
+				//titlePosition = int.Parse(System.Math.Floor((double)(pictureBoxTitle.Width - textSize.Width)/2).ToString());
 				//toolTip.SetToolTip(this.pictureBoxTitle, string.Empty);
 			}
 
@@ -1969,7 +1970,7 @@ namespace OpenPandora
 				this.Text.IndexOf(PAUSED) == -1 && 
 			    title.IndexOf(PAUSED) == -1)
 			{
-				taskbarNotifier.Show(this.song.Name,this.song.Artist,"",this.song.ArtUrl,this.song.Url,"","",500,10000,500,17,17);
+				taskbarNotifier.Show(this.song.Name,this.song.Artist,"",this.song.ArtUrl,this.song.Url,"","",17,17,500,10000,500);
 				//notifyIcon.ShowBalloon(OpenPandora.Interop.BalloonIconStyle.None, "by: " + song.Artist, song.Name, 5000);
 			}
 			

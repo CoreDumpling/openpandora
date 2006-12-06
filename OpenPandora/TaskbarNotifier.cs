@@ -9,11 +9,11 @@ using System.Text.RegularExpressions;
 
 namespace OpenPandora.Windows.Forms
 {
-	/// <summary>
-	/// TaskbarNotifier allows to display MSN style/Skinned instant messaging popups
-	/// </summary>
+
 	public class TaskbarNotifier : System.Windows.Forms.Form
 	{
+		[DllImport("user32.dll")]
+		private static extern Boolean ShowWindow(IntPtr hWnd,Int32 nCmdShow);
 
 		const int CS_DROPSHADOW = 0x20000;
 
@@ -32,11 +32,11 @@ namespace OpenPandora.Windows.Forms
 		private Rectangle WorkAreaRectangle;
 		private Timer timer = new Timer();
 		private TaskbarStates taskbarState = TaskbarStates.hidden;
-		private int nShowEvents;
-		protected int nHideEvents;
-		private int nVisibleEvents;
-		private int nIncrementShow;
-		private int nIncrementHide;
+		private int ShowEvents;
+		protected int HideEvents;
+		private int VisibleEvents;
+		private int IncrementShow;
+		private int IncrementHide;
 
 		private bool IsMouseOverPopup = false;
 
@@ -58,6 +58,7 @@ namespace OpenPandora.Windows.Forms
 		private System.Text.RegularExpressions.Regex regex;
 		private System.Text.RegularExpressions.Match match;
 	
+		#region private void InitializeComponent()
 		private void InitializeComponent()
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(TaskbarNotifier));
@@ -203,17 +204,17 @@ namespace OpenPandora.Windows.Forms
 
 		}
 
+		#endregion
 
+		//
+		// Constructor
+		//
 		#region TaskbarNotifier Constructor
-		/// <summary>
-		/// The Constructor for TaskbarNotifier
-		/// </summary>
 		public TaskbarNotifier()
 		{
 
 			InitializeComponent();
 
-			// Window Style
 			FormBorderStyle = FormBorderStyle.None;
 			WindowState = FormWindowState.Minimized;
 			base.Show();
@@ -234,9 +235,6 @@ namespace OpenPandora.Windows.Forms
 		#endregion
 
 		#region TaskbarNotifier Enums
-		/// <summary>
-		/// List of the different popup animation status
-		/// </summary>
 		public enum TaskbarStates
 		{
 			hidden = 0,
@@ -246,6 +244,128 @@ namespace OpenPandora.Windows.Forms
 		}
 		#endregion
 
+		//
+		// Public Methods
+		//
+		#region public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int X, int Y)
+		public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int X, int Y)
+		{
+			BuildDisplay(SongName, Artist, Album, SongArtURL, SongURL, ArtistURL, AlbumURL);
+
+			this.Left = X;
+			this.Top = Y;
+			this.Width = 128;
+			this.Height = 179;
+
+			taskbarState = TaskbarStates.visible;
+			this.Opacity = 1.0;
+			this.TopMost = true;
+			ShowWindow(this.Handle, 4);
+
+		}
+
+		#endregion
+
+		#region public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int TimeToShow, int TimeToStay, int TimeToHide, int X, int Y)
+		public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int TimeToShow, int TimeToStay, int TimeToHide, int X, int Y)
+		{
+			BuildDisplay(SongName, Artist, Album, SongArtURL, SongURL, ArtistURL, AlbumURL);
+
+			WorkAreaRectangle = Screen.GetWorkingArea(WorkAreaRectangle);
+
+			SetBounds(WorkAreaRectangle.Right - 128 - X, WorkAreaRectangle.Bottom - 179 - Y, 128, 179);
+			
+			VisibleEvents = TimeToStay;
+
+			int Events;
+			if (TimeToShow > 10)
+			{
+				Events = Math.Min((TimeToShow / 10), 100);
+				ShowEvents = TimeToShow / Events;
+				IncrementShow = 100 / Events;
+			}
+			else
+			{
+				ShowEvents = 10;
+				IncrementShow = 10;
+			}
+
+			if( TimeToHide > 10)
+			{
+				Events = Math.Min((TimeToHide / 10), 100);
+				HideEvents = TimeToHide / Events;
+				IncrementHide = 100 / Events;
+			}
+			else
+			{
+				HideEvents = 10;
+				IncrementHide = 10;
+			}
+
+			switch (taskbarState)
+			{
+				case TaskbarStates.hidden:
+					this.Opacity = 0;
+					taskbarState = TaskbarStates.appearing;
+					timer.Interval = ShowEvents;
+					timer.Start();
+					ShowWindow(this.Handle, 4);
+					break;
+
+				case TaskbarStates.appearing:
+					Refresh();
+					break;
+
+				case TaskbarStates.visible:
+					timer.Stop();
+					timer.Interval = VisibleEvents;
+					timer.Start();
+					Refresh();
+					break;
+
+				case TaskbarStates.disappearing:
+					timer.Stop();
+					taskbarState = TaskbarStates.visible;
+					timer.Interval = VisibleEvents;
+					timer.Start();
+					Refresh();
+					break;
+			}
+		}
+
+		#endregion
+
+		#region public new void Hide()
+		public new void Hide()
+		{
+			if (taskbarState != TaskbarStates.hidden)
+			{
+				timer.Stop();
+				taskbarState = TaskbarStates.hidden;
+				base.Opacity = 0.0;
+				base.Hide();
+			}
+		}
+
+		#endregion
+
+		#region public void Hide(int nTimeToStay)
+		public void Hide(int TimeToStay)
+		{
+			timer.Stop();
+			HideEvents = 10;
+			IncrementHide = 100;
+			timer.Interval = TimeToStay;
+			timer.Start();
+			Refresh();
+		}
+
+		#endregion
+
+		//
+		// Private methods
+		//
+		#region private void BuildShortText(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
 		private void BuildShortText(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
 		{
 			Graphics textGraphics = linkLabel.CreateGraphics();
@@ -260,7 +380,9 @@ namespace OpenPandora.Windows.Forms
 
 			textGraphics.Dispose();
 		}
+		#endregion
 
+		#region private void BuildShortText2Lines(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
 		private void BuildShortText2Lines(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
 		{
 			Graphics textGraphics = linkLabel.CreateGraphics();
@@ -278,32 +400,9 @@ namespace OpenPandora.Windows.Forms
 
 			textGraphics.Dispose();
 		}
+		#endregion
 
-
-		private void linkLabel_TextChanged(object sender, System.EventArgs e)
-		{
-		
-			BuildShortText((OpenPandora.Windows.Forms.LinkLabelNoFocus)sender, 80);
-
-		}
-
-		private void linkLabelSong_TextChanged(object sender, System.EventArgs e)
-		{
-		
-			BuildShortText2Lines((OpenPandora.Windows.Forms.LinkLabelNoFocus)sender, 200);
-
-		}
-
-		private void TaskbarNotifier_Load(object sender, System.EventArgs e)
-		{
-
-			drawBackground();
-
-		}
-
-		[DllImport("user32.dll")]
-		private static extern Boolean ShowWindow(IntPtr hWnd,Int32 nCmdShow);
-
+		#region private void BuildDisplay(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL)
 		private void BuildDisplay(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL)
 		{
 			ResetLinks();
@@ -340,6 +439,9 @@ namespace OpenPandora.Windows.Forms
 			}
 		}
 
+		#endregion
+
+		#region private byte[] DownloadData(string URL)
 		private byte[] DownloadData(string URL)
 		{
 			System.IO.Stream stream;
@@ -382,163 +484,9 @@ namespace OpenPandora.Windows.Forms
 
 		}
 
-		public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int X, int Y)
-		{
-			BuildDisplay(SongName, Artist, Album, SongArtURL, SongURL, ArtistURL, AlbumURL);
+		#endregion
 
-			this.Left = X;
-			this.Top = Y;
-			this.Width = 128;
-			this.Height = 179;
-
-			taskbarState = TaskbarStates.visible;
-			this.Opacity = 1.0;
-			this.TopMost = true;
-			ShowWindow(this.Handle, 4);
-
-		}
-
-		public void Show(string SongName, string Artist, string Album, string SongArtURL, string SongURL, string ArtistURL, string AlbumURL, int nTimeToShow, int nTimeToStay, int nTimeToHide, int X, int Y)
-		{
-			BuildDisplay(SongName, Artist, Album, SongArtURL, SongURL, ArtistURL, AlbumURL);
-
-			WorkAreaRectangle = Screen.GetWorkingArea(WorkAreaRectangle);
-
-			SetBounds(WorkAreaRectangle.Right - 128 - X, WorkAreaRectangle.Bottom - 179 - Y, 128, 179);
-			
-			nVisibleEvents = nTimeToStay;
-
-			// We calculate the pixel increment and the timer value for the showing animation
-			int nEvents;
-			if (nTimeToShow > 10)
-			{
-				nEvents = Math.Min((nTimeToShow / 10), 100);
-				nShowEvents = nTimeToShow / nEvents;
-				nIncrementShow = 100 / nEvents;
-			}
-			else
-			{
-				nShowEvents = 10;
-				nIncrementShow = 10;
-			}
-
-			// We calculate the pixel increment and the timer value for the hiding animation
-			if( nTimeToHide > 10)
-			{
-				nEvents = Math.Min((nTimeToHide / 10), 100);
-				nHideEvents = nTimeToHide / nEvents;
-				nIncrementHide = 100 / nEvents;
-			}
-			else
-			{
-				nHideEvents = 10;
-				nIncrementHide = 10;
-			}
-
-			switch (taskbarState)
-			{
-				case TaskbarStates.hidden:
-					this.Opacity = 0;
-					taskbarState = TaskbarStates.appearing;
-					timer.Interval = nShowEvents;
-					timer.Start();
-					// We Show the popup without stealing focus
-					ShowWindow(this.Handle, 4);
-					break;
-
-				case TaskbarStates.appearing:
-					Refresh();
-					break;
-
-				case TaskbarStates.visible:
-					timer.Stop();
-					timer.Interval = nVisibleEvents;
-					timer.Start();
-					Refresh();
-					break;
-
-				case TaskbarStates.disappearing:
-					timer.Stop();
-					taskbarState = TaskbarStates.visible;
-					timer.Interval = nVisibleEvents;
-					timer.Start();
-					Refresh();
-					break;
-			}
-		}
-
-		public new void Hide()
-		{
-			if (taskbarState != TaskbarStates.hidden)
-			{
-				timer.Stop();
-				taskbarState = TaskbarStates.hidden;
-				base.Opacity = 0.0;
-				base.Hide();
-			}
-		}
-
-		public void Hide(int nTimeToStay)
-		{
-			timer.Stop();
-			nHideEvents = 10;
-			nIncrementHide = 100;
-			timer.Interval = nTimeToStay;
-			timer.Start();
-			Refresh();
-		}
-
-		protected void OnTimer(Object obj, EventArgs ea)
-		{
-			switch (taskbarState)
-			{
-				case TaskbarStates.appearing:
-					if ((this.Opacity * 100) < 100)
-						this.Opacity = this.Opacity + (double)nIncrementShow / 100;
-					else
-					{
-						timer.Stop();
-						timer.Interval = nVisibleEvents;
-						taskbarState = TaskbarStates.visible;
-						timer.Start();
-					}
-					break;
-
-				case TaskbarStates.visible:
-					timer.Stop();
-					timer.Interval = nHideEvents;
-					if (!IsMouseOverPopup)
-					{
-						taskbarState = TaskbarStates.disappearing;
-					} 
-					timer.Start();
-					break;
-
-				case TaskbarStates.disappearing:
-					if (IsMouseOverPopup) 
-					{
-						taskbarState = TaskbarStates.appearing;
-					} 
-					else 
-					{
-						if (this.Opacity > 0)
-							this.Opacity = this.Opacity - (double)nIncrementHide / 100;
-						else
-							Hide();
-					}
-					break;
-			}
-			
-		}
-
-		private void TaskbarNotifier_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
-		{
-			Graphics g = this.CreateGraphics(); 
-			Bitmap b =  ((System.Drawing.Bitmap)(resourcesBackGround.GetObject("$this.BackgroundImage")));
-			g.DrawImage(b, 0, 0, b.Width, b.Height); 
-			g.Dispose();
-		}
-
+		#region private void drawBackground()
 		private void drawBackground()
 		{
 			GraphicsPath Path = new GraphicsPath(); 
@@ -564,24 +512,9 @@ namespace OpenPandora.Windows.Forms
 
 		}
 
-		private void linkLabel_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
-		{
-			Shell32.ShellExecute(0, "Open", ((OpenPandora.Windows.Forms.LinkLabelNoFocus)sender).URL , "", Application.StartupPath, 1);
-		}
+		#endregion
 
-		private void TransparentPanelMouse_MouseEnter(object sender, System.EventArgs e)
-		{
-			Debug.WriteLine("MouseEnter");
-			IsMouseOverPopup = true;
-		}
-
-		private void TransparentPanelMouse_MouseLeave(object sender, System.EventArgs e)
-		{
-			Debug.WriteLine("MouseLeave");
-			IsMouseOverPopup = false;
-			ResetLinks();
-		}
-
+		#region private void ResetLinks()
 		private void ResetLinks()
 		{
 			this.Cursor = Cursors.Default;
@@ -595,7 +528,165 @@ namespace OpenPandora.Windows.Forms
 			linkLabelAlbum.LinkBehavior = LinkBehavior.HoverUnderline;
 			linkLabelAlbum.LinkColor = Color.FromArgb(68,68,68);
 		}
+		#endregion
 
+		#region private void GetAlbumAndURL(string SongURL)
+		private void GetAlbumAndURL(string SongURL)
+		{
+			try
+			{
+				buffer = DownloadData(SongURL);
+				
+				songsource = encoder.GetString(buffer);
+
+				regex = new Regex("<div id=.artist.>.*?</div>",RegexOptions.Singleline);
+				match = regex.Match(songsource);
+				if (match.Success)
+				{
+					regex = new Regex("href=.*?\".*?\"",RegexOptions.Singleline);
+					match = regex.Match(match.Value);
+					if (match.Success)
+					{
+						linkLabelArtist.URL = match.Value.Replace("href=\"","").Replace("\"","");
+					}
+
+				}
+
+				regex = new Regex("<div id=.album.>.*?</div>",RegexOptions.Singleline);
+				match = regex.Match(songsource);
+				if (match.Success)
+				{
+					linkLabelAlbum.FullText = Regex.Replace(match.Value,"<.*?>","",RegexOptions.Singleline).Replace("\n","").Replace("\t","");
+
+					regex = new Regex("href=.*?\".*?\"",RegexOptions.Singleline);
+					match = regex.Match(match.Value);
+					if (match.Success)
+					{
+						linkLabelAlbum.URL = match.Value.Replace("href=\"","").Replace("\"","");
+					}
+
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine("TaskbarNotifier: " + ex.Message);
+			}
+			
+		}
+
+		#endregion
+
+        //
+		// Event Handlers
+		//
+		#region private void linkLabel_TextChanged(object sender, System.EventArgs e)
+		private void linkLabel_TextChanged(object sender, System.EventArgs e)
+		{
+		
+			BuildShortText((OpenPandora.Windows.Forms.LinkLabelNoFocus)sender, 80);
+
+		}
+		#endregion
+
+		#region private void linkLabelSong_TextChanged(object sender, System.EventArgs e)
+		private void linkLabelSong_TextChanged(object sender, System.EventArgs e)
+		{
+		
+			BuildShortText2Lines((OpenPandora.Windows.Forms.LinkLabelNoFocus)sender, 200);
+
+		}
+		#endregion
+
+		#region private void TaskbarNotifier_Load(object sender, System.EventArgs e)
+		private void TaskbarNotifier_Load(object sender, System.EventArgs e)
+		{
+
+			drawBackground();
+
+		}
+		#endregion
+
+		#region private void OnTimer(Object obj, EventArgs ea)
+		private void OnTimer(Object obj, EventArgs ea)
+		{
+			switch (taskbarState)
+			{
+				case TaskbarStates.appearing:
+					if ((this.Opacity * 100) < 100)
+						this.Opacity = this.Opacity + (double)IncrementShow / 100;
+					else
+					{
+						timer.Stop();
+						timer.Interval = VisibleEvents;
+						taskbarState = TaskbarStates.visible;
+						timer.Start();
+					}
+					break;
+
+				case TaskbarStates.visible:
+					timer.Stop();
+					timer.Interval = HideEvents;
+					if (!IsMouseOverPopup)
+					{
+						taskbarState = TaskbarStates.disappearing;
+					} 
+					timer.Start();
+					break;
+
+				case TaskbarStates.disappearing:
+					if (IsMouseOverPopup) 
+					{
+						taskbarState = TaskbarStates.appearing;
+					} 
+					else 
+					{
+						if (this.Opacity > 0)
+							this.Opacity = this.Opacity - (double)IncrementHide / 100;
+						else
+							Hide();
+					}
+					break;
+			}
+			
+		}
+
+		#endregion
+
+		#region private void TaskbarNotifier_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		private void TaskbarNotifier_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			Graphics g = this.CreateGraphics(); 
+			Bitmap b =  ((System.Drawing.Bitmap)(resourcesBackGround.GetObject("$this.BackgroundImage")));
+			g.DrawImage(b, 0, 0, b.Width, b.Height); 
+			g.Dispose();
+		}
+		#endregion
+
+		#region private void linkLabel_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+		private void linkLabel_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+		{
+			Shell32.ShellExecute(0, "Open", ((OpenPandora.Windows.Forms.LinkLabelNoFocus)sender).URL , "", Application.StartupPath, 1);
+		}
+		#endregion
+
+		#region private void TransparentPanelMouse_MouseEnter(object sender, System.EventArgs e)
+		private void TransparentPanelMouse_MouseEnter(object sender, System.EventArgs e)
+		{
+			Debug.WriteLine("MouseEnter");
+			IsMouseOverPopup = true;
+		}
+		#endregion
+
+		#region private void TransparentPanelMouse_MouseLeave(object sender, System.EventArgs e)
+		private void TransparentPanelMouse_MouseLeave(object sender, System.EventArgs e)
+		{
+			Debug.WriteLine("MouseLeave");
+			IsMouseOverPopup = false;
+			ResetLinks();
+		}
+		#endregion
+
+		#region private void Control_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
 		private void Control_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if ((e.X >= linkLabelSongName.Location.X) && (e.Y >= linkLabelSongName.Location.Y) && (e.X <= linkLabelSongName.Location.X + linkLabelSongName.Width) && (e.Y <= linkLabelSongName.Location.Y + linkLabelSongName.Height))
@@ -643,6 +734,9 @@ namespace OpenPandora.Windows.Forms
 			this.Refresh();
 		}
 
+		#endregion
+
+		#region private void Control_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
 		private void Control_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if ((e.X >= linkLabelSongName.Location.X) && (e.Y >= linkLabelSongName.Location.Y) && (e.X <= linkLabelSongName.Location.X + linkLabelSongName.Width) && (e.Y <= linkLabelSongName.Location.Y + linkLabelSongName.Height))
@@ -661,48 +755,8 @@ namespace OpenPandora.Windows.Forms
 			}
 		}
 
-		private void GetAlbumAndURL(string SongURL)
-		{
-			try
-			{
-				buffer = DownloadData(SongURL);
-				
-				songsource = encoder.GetString(buffer);
+		#endregion
 
-				regex = new Regex("<div id=.artist.>.*?</div>",RegexOptions.Singleline);
-				match = regex.Match(songsource);
-				if (match.Success)
-				{
-					regex = new Regex("href=.*?\".*?\"",RegexOptions.Singleline);
-					match = regex.Match(match.Value);
-					if (match.Success)
-					{
-						linkLabelArtist.URL = match.Value.Replace("href=\"","").Replace("\"","");
-					}
-
-				}
-
-				regex = new Regex("<div id=.album.>.*?</div>",RegexOptions.Singleline);
-				match = regex.Match(songsource);
-				if (match.Success)
-				{
-					linkLabelAlbum.FullText = Regex.Replace(match.Value,"<.*?>","",RegexOptions.Singleline).Replace("\n","").Replace("\t","");
-
-					regex = new Regex("href=.*?\".*?\"",RegexOptions.Singleline);
-					match = regex.Match(match.Value);
-					if (match.Success)
-					{
-						linkLabelAlbum.URL = match.Value.Replace("href=\"","").Replace("\"","");
-					}
-
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine("TaskbarNotifier: " + ex.Message);
-			}
-			
-		}
-
+		
 	}
 }

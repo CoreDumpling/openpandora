@@ -134,6 +134,10 @@ namespace OpenPandora
 			this.chbPopupNotificationWindow = new System.Windows.Forms.CheckBox();
 			this.chbPartyMode = new System.Windows.Forms.CheckBox();
 			this.chbKeepOnTop = new System.Windows.Forms.CheckBox();
+			this.tabPageSendSongInfo = new System.Windows.Forms.TabPage();
+			this.chbSendToSkype = new System.Windows.Forms.CheckBox();
+			this.chbSendToXfire = new System.Windows.Forms.CheckBox();
+			this.chbSendToMessenger = new System.Windows.Forms.CheckBox();
 			this.tabPageControl = new System.Windows.Forms.TabPage();
 			this.linkHelpGlobalShortcuts = new System.Windows.Forms.LinkLabel();
 			this.chbGlobalShortcuts = new System.Windows.Forms.CheckBox();
@@ -159,18 +163,14 @@ namespace OpenPandora
 			this.txtProxyHost = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
-			this.tabPageSendSongInfo = new System.Windows.Forms.TabPage();
-			this.chbSendToSkype = new System.Windows.Forms.CheckBox();
-			this.chbSendToXfire = new System.Windows.Forms.CheckBox();
-			this.chbSendToMessenger = new System.Windows.Forms.CheckBox();
 			this.grbTitleFormat.SuspendLayout();
 			this.tabs.SuspendLayout();
 			this.tabPageDisplay.SuspendLayout();
 			this.tabPageGeneral.SuspendLayout();
+			this.tabPageSendSongInfo.SuspendLayout();
 			this.tabPageControl.SuspendLayout();
 			this.tabPageLastFM.SuspendLayout();
 			this.tabProxy.SuspendLayout();
-			this.tabPageSendSongInfo.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnApply
@@ -325,7 +325,7 @@ namespace OpenPandora
 			this.tabPageDisplay.Controls.Add(this.chbMinimizeToTrayOnClose);
 			this.tabPageDisplay.Location = new System.Drawing.Point(4, 22);
 			this.tabPageDisplay.Name = "tabPageDisplay";
-			this.tabPageDisplay.Size = new System.Drawing.Size(320, 150);
+			this.tabPageDisplay.Size = new System.Drawing.Size(320, 134);
 			this.tabPageDisplay.TabIndex = 0;
 			this.tabPageDisplay.Text = "Display";
 			// 
@@ -368,6 +368,42 @@ namespace OpenPandora
 			this.chbKeepOnTop.TabIndex = 17;
 			this.chbKeepOnTop.Text = "Keep On Top Of Other Windows";
 			this.chbKeepOnTop.CheckedChanged += new System.EventHandler(this.SettingChanged);
+			// 
+			// tabPageSendSongInfo
+			// 
+			this.tabPageSendSongInfo.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToSkype);
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToXfire);
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToMessenger);
+			this.tabPageSendSongInfo.Location = new System.Drawing.Point(4, 22);
+			this.tabPageSendSongInfo.Name = "tabPageSendSongInfo";
+			this.tabPageSendSongInfo.Size = new System.Drawing.Size(320, 134);
+			this.tabPageSendSongInfo.TabIndex = 5;
+			this.tabPageSendSongInfo.Text = "Plugins";
+			// 
+			// chbSendToSkype
+			// 
+			this.chbSendToSkype.Location = new System.Drawing.Point(8, 56);
+			this.chbSendToSkype.Name = "chbSendToSkype";
+			this.chbSendToSkype.Size = new System.Drawing.Size(192, 24);
+			this.chbSendToSkype.TabIndex = 24;
+			this.chbSendToSkype.Text = "Send Song Info To Skype";
+			// 
+			// chbSendToXfire
+			// 
+			this.chbSendToXfire.Location = new System.Drawing.Point(8, 32);
+			this.chbSendToXfire.Name = "chbSendToXfire";
+			this.chbSendToXfire.Size = new System.Drawing.Size(192, 24);
+			this.chbSendToXfire.TabIndex = 23;
+			this.chbSendToXfire.Text = "Send Song Info To Xfire";
+			// 
+			// chbSendToMessenger
+			// 
+			this.chbSendToMessenger.Location = new System.Drawing.Point(8, 8);
+			this.chbSendToMessenger.Name = "chbSendToMessenger";
+			this.chbSendToMessenger.Size = new System.Drawing.Size(176, 24);
+			this.chbSendToMessenger.TabIndex = 22;
+			this.chbSendToMessenger.Text = "Send Song Info To Messenger";
 			// 
 			// tabPageControl
 			// 
@@ -610,42 +646,6 @@ namespace OpenPandora
 			this.label5.TabIndex = 14;
 			this.label5.Text = "Host";
 			// 
-			// tabPageSendSongInfo
-			// 
-			this.tabPageSendSongInfo.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
-			this.tabPageSendSongInfo.Controls.Add(this.chbSendToSkype);
-			this.tabPageSendSongInfo.Controls.Add(this.chbSendToXfire);
-			this.tabPageSendSongInfo.Controls.Add(this.chbSendToMessenger);
-			this.tabPageSendSongInfo.Location = new System.Drawing.Point(4, 22);
-			this.tabPageSendSongInfo.Name = "tabPageSendSongInfo";
-			this.tabPageSendSongInfo.Size = new System.Drawing.Size(320, 134);
-			this.tabPageSendSongInfo.TabIndex = 5;
-			this.tabPageSendSongInfo.Text = "Send Song Info";
-			// 
-			// chbSendToSkype
-			// 
-			this.chbSendToSkype.Location = new System.Drawing.Point(8, 56);
-			this.chbSendToSkype.Name = "chbSendToSkype";
-			this.chbSendToSkype.Size = new System.Drawing.Size(192, 24);
-			this.chbSendToSkype.TabIndex = 24;
-			this.chbSendToSkype.Text = "Send Song Info To Skype";
-			// 
-			// chbSendToXfire
-			// 
-			this.chbSendToXfire.Location = new System.Drawing.Point(8, 32);
-			this.chbSendToXfire.Name = "chbSendToXfire";
-			this.chbSendToXfire.Size = new System.Drawing.Size(192, 24);
-			this.chbSendToXfire.TabIndex = 23;
-			this.chbSendToXfire.Text = "Send Song Info To Xfire";
-			// 
-			// chbSendToMessenger
-			// 
-			this.chbSendToMessenger.Location = new System.Drawing.Point(8, 8);
-			this.chbSendToMessenger.Name = "chbSendToMessenger";
-			this.chbSendToMessenger.Size = new System.Drawing.Size(176, 24);
-			this.chbSendToMessenger.TabIndex = 22;
-			this.chbSendToMessenger.Text = "Send Song Info To Messenger";
-			// 
 			// SettingsView
 			// 
 			this.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
@@ -662,10 +662,10 @@ namespace OpenPandora
 			this.tabs.ResumeLayout(false);
 			this.tabPageDisplay.ResumeLayout(false);
 			this.tabPageGeneral.ResumeLayout(false);
+			this.tabPageSendSongInfo.ResumeLayout(false);
 			this.tabPageControl.ResumeLayout(false);
 			this.tabPageLastFM.ResumeLayout(false);
 			this.tabProxy.ResumeLayout(false);
-			this.tabPageSendSongInfo.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}

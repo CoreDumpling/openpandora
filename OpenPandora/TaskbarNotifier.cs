@@ -202,6 +202,7 @@ namespace OpenPandora.Windows.Forms
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "TaskbarNotifier";
 			this.Opacity = 0;
+			this.TopMost = true;
 			this.TransparencyKey = System.Drawing.Color.Magenta;
 			this.Load += new System.EventHandler(this.TaskbarNotifier_Load);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.TaskbarNotifier_Paint);
@@ -257,10 +258,18 @@ namespace OpenPandora.Windows.Forms
 		{
 			BuildDisplay(songname, artist, album, songarturl, songurl, artisturl, albumurl);
 
-			this.Left = x;
-			this.Top = y;	
 			this.Width = 128;
 			this.Height = 179;
+
+			if (x < 0 || y < 0)
+			{
+				SetDefaultLocation();
+			}
+			else
+			{
+				this.Left = x;
+				this.Top = y;
+			}
 
 			taskbarState = TaskbarStates.visible;
 			this.Opacity = 1.0;
@@ -268,7 +277,6 @@ namespace OpenPandora.Windows.Forms
 			ShowWindow(this.Handle, 4);
 
 		}
-
 		#endregion
 
 		#region public void Show(string songname, string artist, string album, string songarturl, string songurl, string artisturl, string albumurl, int x, int y, int timetoshow, int timetostay, int timetohide)
@@ -276,11 +284,19 @@ namespace OpenPandora.Windows.Forms
 		{
 			BuildDisplay(songname, artist, album, songarturl, songurl, artisturl, albumurl);
 
-			this.Left = x;
-			this.Top = y;	
 			this.Width = 128;
 			this.Height = 179;
-			
+
+			if (x < 0 || y < 0)
+			{
+				SetDefaultLocation();
+			}
+			else
+			{
+				this.Left = x;
+				this.Top = y;
+			}
+	
 			VisibleEvents = timetostay;
 
 			int Events;
@@ -371,6 +387,7 @@ namespace OpenPandora.Windows.Forms
 		//
 		// Private methods
 		//
+
 		#region private void BuildShortText(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
 		private void BuildShortText(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
 		{
@@ -582,9 +599,18 @@ namespace OpenPandora.Windows.Forms
 
 		#endregion
 
+		#region private void SetDefaultLocation()
+		private void SetDefaultLocation()
+		{
+			this.Left = Screen.PrimaryScreen.WorkingArea.Right - this.Width - 4;
+			this.Top = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height - 4;
+		}
+		#endregion
+
         //
 		// Event Handlers
 		//
+
 		#region private void linkLabel_TextChanged(object sender, System.EventArgs e)
 		private void linkLabel_TextChanged(object sender, System.EventArgs e)
 		{
@@ -793,6 +819,5 @@ namespace OpenPandora.Windows.Forms
 			}
 		}
 		#endregion
-
 	}
 }

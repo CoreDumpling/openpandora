@@ -4,9 +4,8 @@ namespace OpenPandora.Windows.Forms
 {
 	public class LinkLabelNoFocus : LinkLabel 
 	{ 
-
-		private string _URL;
-		private string _FullText;
+		private string url;
+		private string fullText;
 		private string _ShortText;
 
 		protected override bool ShowFocusCues 
@@ -21,11 +20,11 @@ namespace OpenPandora.Windows.Forms
 		{
 			get
 			{
-				return _URL;
+				return url;
 			}
 			set
 			{
-				_URL = value;
+				url = value;
 			}
 		}
 
@@ -33,11 +32,11 @@ namespace OpenPandora.Windows.Forms
 		{
 			get
 			{
-				return _FullText;
+				return fullText;
 			}
 			set
 			{
-				_FullText = value;
+				fullText = value;
 				_ShortText = value;
 				this.Text = value;
 				this.LinkArea = new LinkArea(0,this.Text.Length);

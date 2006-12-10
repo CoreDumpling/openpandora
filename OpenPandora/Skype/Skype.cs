@@ -31,7 +31,6 @@ namespace OpenPandora
 	/// </summary>
 	public class Skype : System.Windows.Forms.Form
 	{
-
 		#region Data
 		private const int HWND_BROADCAST = 0xffff;
 		private const int WM_COPYDATA = 0x4a;
@@ -70,6 +69,7 @@ namespace OpenPandora
 		//
 		// Constructor
 		//
+
 		#region public Skype()
 		public Skype()
 		{
@@ -81,6 +81,7 @@ namespace OpenPandora
 		//
 		// Private methods
 		//
+
 		#region private void InitializeComponent()
 		private void InitializeComponent()
 		{
@@ -162,6 +163,7 @@ namespace OpenPandora
 		//
 		// Protected Override methods
 		//
+
 		#region protected override void WndProc(ref System.Windows.Forms.Message m)
 		protected override void WndProc(ref System.Windows.Forms.Message m)
 		{

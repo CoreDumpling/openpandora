@@ -583,8 +583,11 @@ namespace OpenPandora
 				if (menuMiniPlayer.Checked)
 				{
 					configuration.MiniPlayerLocation = this.Location.X + "," + this.Location.Y;
+
 					if (taskbarNotifier.Visible)
+					{
 						taskbarNotifier.Hide();
+					}
 				}
 				else
 				{
@@ -898,10 +901,8 @@ namespace OpenPandora
 					
 					if (configuration.PartyMode && continuesPlayCounter > 30)
 					{
-						Debug.WriteLine("Party");
-						pandora.PlayPause();
-						Thread.Sleep(100);
-						pandora.PlayPause();
+						Debug.WriteLine("Party !!!!!!!!!!!!!!!!!");
+						pandora.NextTrack();
 
 						continuesPlayCounter = 0;
 					}
@@ -1708,7 +1709,7 @@ namespace OpenPandora
 		#region private void taskbarNotifier_OnLocationChanged(Point Location)
 		private void taskbarNotifier_OnLocationChanged(Point Location)
 		{
-			configuration.NotificationWindowLocation = taskbarNotifier.Location.X + "," + taskbarNotifier.Location.Y;
+			configuration.NotificationLocation = taskbarNotifier.Location.X + "," + taskbarNotifier.Location.Y;
 		}
 		#endregion
 
@@ -1983,8 +1984,30 @@ namespace OpenPandora
 				this.Text.IndexOf(PAUSED) == -1 && 
 			    title.IndexOf(PAUSED) == -1)
 			{
-				string[] coordinates = configuration.NotificationWindowLocation.Split(new char[] {','});
-				taskbarNotifier.Show(this.song.Name,this.song.Artist,"",this.song.ArtUrl,this.song.Url,"","",int.Parse(coordinates[0]),int.Parse(coordinates[1]),500,10000,500);
+				string[] coordinates;
+				
+				if (configuration.NotificationLocation != string.Empty)
+				{
+					coordinates = configuration.NotificationLocation.Split(new char[] {','});
+				}
+				else
+				{
+					coordinates = new string[] {"-1", "-1"};
+				}
+
+				taskbarNotifier.Show(
+					this.song.Name,
+					this.song.Artist,
+					string.Empty,
+					this.song.ArtUrl,
+					this.song.Url,
+					string.Empty,
+					string.Empty,
+					int.Parse(coordinates[0]), 
+					int.Parse(coordinates[1]), 
+					500, 
+					10000, 
+					500);
 				//notifyIcon.ShowBalloon(OpenPandora.Interop.BalloonIconStyle.None, "by: " + song.Artist, song.Name, 5000);
 			}
 			

@@ -80,6 +80,8 @@ namespace OpenPandora
 
 			try
 			{
+				aboutForm = new About();
+				aboutForm.HideOnClose = true;
 			
 				this.VScroll = false;
 				this.HScroll = false;
@@ -1425,12 +1427,15 @@ namespace OpenPandora
 		#region private void menuAbout_Click(object sender, System.EventArgs e)
 		private void menuAbout_Click(object sender, System.EventArgs e)
 		{
-			if (!this.Visible)
+			aboutForm.Show();
+
+			/*if (!this.Visible)
 			{
 				RestoreFromTray();
 			}
 			
 			ShowMessage(DEFAULT_TITLE + " " + Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
+			*/
 		}
 		#endregion
 
@@ -2831,6 +2836,7 @@ namespace OpenPandora
 		private int windowHeight;
 		private int windowWidth;
 		private Size radioSize = new Size(0, 0);
+		private About aboutForm;
 		
 		private int playedLength = 0;
 		private DateTime playedStartTime;

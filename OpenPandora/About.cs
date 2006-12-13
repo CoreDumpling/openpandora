@@ -25,9 +25,8 @@ using System.Windows.Forms;
 
 namespace OpenPandora
 {
-	public class About : System.Windows.Forms.Form
+	public class About : BaseForm
 	{
-		private System.Windows.Forms.TextBox txtAbout;
 		private System.ComponentModel.Container components = null;
 
 		//
@@ -42,10 +41,28 @@ namespace OpenPandora
 			//
 			InitializeComponent();
 
-			txtAbout.Text = 
-				"Pandora Player is a windows frontend for the Pandora™ service." + Environment.NewLine +
+			this.SuspendLayout();
+
+			this.Text = "About  " + this.Text + "  " + Manager.CurrentVersion;
+			this.StartPosition = FormStartPosition.CenterScreen;
+
+			Label lblAbout = new Label();
+
+			lblAbout.Dock = DockStyle.Fill;
+			lblAbout.TextAlign = ContentAlignment.MiddleCenter;
+			lblAbout.BackColor = Color.GhostWhite;
+			lblAbout.Text = 
+				"OpenPandora is a windows frontend for the Pandora™ music descovery service." + Environment.NewLine +
 				Environment.NewLine +
-				"Ethan Pogrebizsky, 2006";
+				"Developed by Eitan Pogrebizsky" + Environment.NewLine +
+				Environment.NewLine +
+				"Individual contributors: Dirk Rettschlag" + Environment.NewLine +
+				Environment.NewLine + Environment.NewLine +
+				"Copyright (C) 2006 Eitan Pogrebizsky";
+
+			this.Controls.Add(lblAbout);
+
+			this.ResumeLayout();
 		}
 		#endregion
 
@@ -75,30 +92,19 @@ namespace OpenPandora
 		private void InitializeComponent()
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(About));
-			this.txtAbout = new System.Windows.Forms.TextBox();
-			this.SuspendLayout();
-			// 
-			// txtAbout
-			// 
-			this.txtAbout.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.txtAbout.Location = new System.Drawing.Point(8, 8);
-			this.txtAbout.Multiline = true;
-			this.txtAbout.Name = "txtAbout";
-			this.txtAbout.Size = new System.Drawing.Size(272, 80);
-			this.txtAbout.TabIndex = 0;
-			this.txtAbout.Text = "textBox1";
 			// 
 			// About
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(290, 95);
-			this.Controls.Add(this.txtAbout);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.ClientSize = new System.Drawing.Size(272, 176);
+			this.DockPadding.Bottom = 1;
+			this.DockPadding.Left = 1;
+			this.DockPadding.Right = 1;
+			this.DockPadding.Top = 19;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.Name = "About";
 			this.Text = "Open Pandora";
-			this.ResumeLayout(false);
 
 		}
 		#endregion

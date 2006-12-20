@@ -40,7 +40,6 @@ namespace OpenPandora
 		private System.Windows.Forms.RadioButton rdbTitleTemplate2;
 		private System.Windows.Forms.RadioButton rdbTitleTemplate3;
 		private System.Windows.Forms.TextBox txtTitleTemplate;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.GroupBox grbTitleFormat;
 		private System.Windows.Forms.TabPage tabPageDisplay;
 		private System.Windows.Forms.TabPage tabPageLastFM;
@@ -77,6 +76,7 @@ namespace OpenPandora
 		private System.Windows.Forms.CheckBox chbSendToSkype;
 		private System.Windows.Forms.CheckBox chbSendToXfire;
 		private System.Windows.Forms.CheckBox chbSendToMessenger;
+		private System.Windows.Forms.Label labelFormats;
 		private System.ComponentModel.Container components = null;
 
 		//
@@ -88,6 +88,8 @@ namespace OpenPandora
 		{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
+
+			labelFormats.Text = "%s - song" + Environment.NewLine + "%a - artist" + Environment.NewLine + "%r - radio";
 		}
 		#endregion
 
@@ -127,7 +129,7 @@ namespace OpenPandora
 			this.rdbTitleTemplate3 = new System.Windows.Forms.RadioButton();
 			this.txtTitleTemplate = new System.Windows.Forms.TextBox();
 			this.grbTitleFormat = new System.Windows.Forms.GroupBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this.labelFormats = new System.Windows.Forms.Label();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tabPageDisplay = new System.Windows.Forms.TabPage();
 			this.tabPageGeneral = new System.Windows.Forms.TabPage();
@@ -254,7 +256,7 @@ namespace OpenPandora
 			// 
 			// rdbTitleTemplate2
 			// 
-			this.rdbTitleTemplate2.Location = new System.Drawing.Point(88, 16);
+			this.rdbTitleTemplate2.Location = new System.Drawing.Point(80, 16);
 			this.rdbTitleTemplate2.Name = "rdbTitleTemplate2";
 			this.rdbTitleTemplate2.Size = new System.Drawing.Size(72, 24);
 			this.rdbTitleTemplate2.TabIndex = 1;
@@ -263,7 +265,7 @@ namespace OpenPandora
 			// 
 			// rdbTitleTemplate3
 			// 
-			this.rdbTitleTemplate3.Location = new System.Drawing.Point(168, 16);
+			this.rdbTitleTemplate3.Location = new System.Drawing.Point(152, 16);
 			this.rdbTitleTemplate3.Name = "rdbTitleTemplate3";
 			this.rdbTitleTemplate3.Size = new System.Drawing.Size(64, 24);
 			this.rdbTitleTemplate3.TabIndex = 2;
@@ -275,7 +277,7 @@ namespace OpenPandora
 			this.txtTitleTemplate.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(177)));
 			this.txtTitleTemplate.Location = new System.Drawing.Point(8, 40);
 			this.txtTitleTemplate.Name = "txtTitleTemplate";
-			this.txtTitleTemplate.Size = new System.Drawing.Size(136, 21);
+			this.txtTitleTemplate.Size = new System.Drawing.Size(200, 21);
 			this.txtTitleTemplate.TabIndex = 3;
 			this.txtTitleTemplate.Text = "";
 			// 
@@ -285,22 +287,22 @@ namespace OpenPandora
 			this.grbTitleFormat.Controls.Add(this.rdbTitleTemplate2);
 			this.grbTitleFormat.Controls.Add(this.rdbTitleTemplate3);
 			this.grbTitleFormat.Controls.Add(this.txtTitleTemplate);
-			this.grbTitleFormat.Controls.Add(this.label1);
+			this.grbTitleFormat.Controls.Add(this.labelFormats);
 			this.grbTitleFormat.Location = new System.Drawing.Point(8, 64);
 			this.grbTitleFormat.Name = "grbTitleFormat";
-			this.grbTitleFormat.Size = new System.Drawing.Size(272, 64);
+			this.grbTitleFormat.Size = new System.Drawing.Size(304, 64);
 			this.grbTitleFormat.TabIndex = 15;
 			this.grbTitleFormat.TabStop = false;
 			this.grbTitleFormat.Text = "Title Format";
 			// 
-			// label1
+			// labelFormats
 			// 
-			this.label1.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(59)), ((System.Byte)(59)), ((System.Byte)(59)));
-			this.label1.Location = new System.Drawing.Point(152, 40);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(112, 16);
-			this.label1.TabIndex = 16;
-			this.label1.Text = "%s - song, %a - artist";
+			this.labelFormats.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(59)), ((System.Byte)(59)), ((System.Byte)(59)));
+			this.labelFormats.Location = new System.Drawing.Point(224, 16);
+			this.labelFormats.Name = "labelFormats";
+			this.labelFormats.Size = new System.Drawing.Size(72, 40);
+			this.labelFormats.TabIndex = 16;
+			this.labelFormats.Text = "%s - song %a - artist %r - radio";
 			// 
 			// tabs
 			// 

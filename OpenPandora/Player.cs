@@ -2221,6 +2221,25 @@ namespace OpenPandora
 			
 			songTitle = songTitle.Replace("%s", song.Name);
 			songTitle = songTitle.Replace("%a", song.Artist);
+
+			if (stations != null)
+			{
+				Station currentStation = null;
+			
+				foreach (Station station in stations)
+				{
+					if (station.Code.Equals(currentStationCode))
+					{
+						currentStation = station;
+						break;
+					}
+				}
+
+				if (currentStation != null)
+				{
+					songTitle = songTitle.Replace("%r", currentStation.Name);
+				}
+			}
 			
 			return songTitle;
 		}

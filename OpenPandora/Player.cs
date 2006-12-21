@@ -618,6 +618,7 @@ namespace OpenPandora
 
 			Pen outterPen = new Pen(Color.FromArgb(192, 192, 192));
 			Pen innerPen = new Pen(Color.FromArgb(128, 128, 128));
+			Pen fillerPen = new Pen(BACKGROUND_COLOR);
 
 			titleGraphics.DrawLines(outterPen, 
 				new Point[] {
@@ -633,7 +634,15 @@ namespace OpenPandora
 								new Point(pictureBoxTitle.Width - 2, 1),
 								new Point(pictureBoxTitle.Width - 2, pictureBoxTitle.Height - 1)});
 
-				
+			if (hideTitle)
+			{
+				hideTitle = false;
+				titleTimer.Interval = 120;
+				titleGraphics.DrawRectangle(fillerPen, 0, 0, pictureBoxTitle.Width, pictureBoxTitle.Height);
+				titleTimer.Start();
+				return;
+			}
+
 			string text;
 				
 			if (message != string.Empty)
@@ -652,25 +661,28 @@ namespace OpenPandora
 
 			SizeF textSize = titleGraphics.MeasureString(text, new Font("Tahoma", 8));
 
-			if (pictureBoxTitle.Width < textSize.Width)
+			if (pictureBoxTitle.Width - 3 * 2 < textSize.Width)
 			{
+				text = text + "    ";
+
 				if (titleTimer.Enabled == false)
 				{
-					titleTimer.Start();
 					titlePosition = 3;
+					titleTimer.Interval = 4000;
+					titleTimer.Start();
 				}
-				//toolTip.SetToolTip(this.pictureBoxTitle, text);
+				else if (titlePosition == 3)
+				{
+					titleTimer.Interval = 4000;
+				}
 			}
 			else
 			{
-				titleTimer.Stop();
 				titlePosition = 3;
-				//titlePosition = int.Parse(System.Math.Floor((double)(pictureBoxTitle.Width - textSize.Width)/2).ToString());
-				//toolTip.SetToolTip(this.pictureBoxTitle, string.Empty);
+				titleTimer.Stop();
 			}
 
 			titleGraphics.DrawString(text, new Font("Tahoma", 8), Brushes.WhiteSmoke, new PointF(titlePosition, 3));
-
 		}
 		#endregion
 
@@ -1003,7 +1015,7 @@ namespace OpenPandora
 
 							if (refreshPlayer)
 							{
-								RefreshPlayer();
+								RefreshPlayer(true);
 							}
 						}
 						else if (script.LastIndexOf("StationPlayed") > 0)
@@ -1123,7 +1135,7 @@ namespace OpenPandora
 				
 				loaded2 = true;
 				
-				RefreshPlayer();
+				RefreshPlayer(false);
 			}
 			catch (Exception ex)
 			{
@@ -1362,6 +1374,13 @@ namespace OpenPandora
 		{
 			try
 			{
+				if (hideTitle)
+				{
+					pictureBoxTitle.Refresh();
+					return;
+				}
+
+				titleTimer.Interval = 120;
 
 				string text;
 				
@@ -1382,28 +1401,36 @@ namespace OpenPandora
 				Graphics titleGraphics = pictureBoxTitle.CreateGraphics();
 				SizeF textSize = titleGraphics.MeasureString(text, new Font("Tahoma", 8));
 
-				if ((titlePosition + textSize.Width + 4 >=  pictureBoxTitle.Width) && titlebounce == false)
+				if ((titlePosition + textSize.Width + 4 >=  pictureBoxTitle.Width) && titleBounce == false)
 				{
 					titleDirection = -1;
 				}
 				else 
 				{
-					titlebounce = true;
+					titleBounce = true;
 				}
 					
-				if (titlePosition <= 2 && titlebounce == true)
+				if (titlePosition <= 2 && titleBounce == true)
 				{
 					titleDirection = 1;
 				}
 				else
 				{
-					titlebounce = false;
+					titleBounce = false;
 				}
 
-				titlePosition = titlePosition + 2 * titleDirection;
-				
-				pictureBoxTitle.Refresh();
-
+				if (titleDirection == 1)
+				{
+					titlePosition = 5;
+					titleTimer.Interval = 2500;
+					titleBounce = false;
+					hideTitle = true;
+				}
+				else
+				{
+					titlePosition = titlePosition + 2 * titleDirection;
+					pictureBoxTitle.Refresh();
+				}
 			}
 			catch (Exception ex)
 			{
@@ -1508,9 +1535,11 @@ namespace OpenPandora
 		{
 			this.SuspendLayout();
 
+			menuMiniPlayer.Checked = !menuMiniPlayer.Checked;
+
 			try
 			{
-				if (menuMiniPlayer.Checked)
+				if (!menuMiniPlayer.Checked)
 				{
 					this.Size = new Size(windowWidth, windowHeight);
 
@@ -1571,7 +1600,6 @@ namespace OpenPandora
 				this.ResumeLayout();
 			}
 
-			menuMiniPlayer.Checked = !menuMiniPlayer.Checked;
 			pictureBoxTitle.Refresh();
 		}
 		#endregion
@@ -1794,7 +1822,7 @@ namespace OpenPandora
 			
 					if (refreshPlayer)
 					{
-						RefreshPlayer();
+						RefreshPlayer(false);
 					}
 			
 					//
@@ -1947,7 +1975,7 @@ namespace OpenPandora
 			memoryTimer.Enabled = false;
 
 			titleTimer = new System.Windows.Forms.Timer();
-			titleTimer.Interval = 100;
+			titleTimer.Interval = 120;
 			titleTimer.Tick += new EventHandler(this.titleTimer_Tick);
 			titleTimer.Enabled = false;
 		}
@@ -1971,18 +1999,19 @@ namespace OpenPandora
 		{
 			this.taskbarNotifier = new OpenPandora.Windows.Forms.TaskbarNotifier();	
 
-			this.taskbarNotifier.OnLocationChanged += new OpenPandora.Windows.Forms.TaskbarNotifier.LocationChangedEventDelegate(taskbarNotifier_OnLocationChanged);
+			this.taskbarNotifier.OnLocationChanged += new OpenPandora.Windows.Forms.TaskbarNotifier.LocationChangedEventHandler(taskbarNotifier_OnLocationChanged);
 
 			this.taskbarNotifier.Show();
 		}
 		#endregion
 
-		#region private void RefreshPlayer()
-		private void RefreshPlayer()
+		#region private void RefreshPlayer(bool newSong)
+		private void RefreshPlayer(bool newSong)
 		{
 			BuildTitle();
 
 			if (configuration.NotificationWindow &&
+				newSong &&
 			    this.Text != title &&
 				song.Name != string.Empty &&
 				!this.Focused &&
@@ -2018,7 +2047,11 @@ namespace OpenPandora
 			
 			this.Text = title;
 			this.notifyIcon.Text = BuildToolTipSongTitle();
+
+			title = string.Empty;
+			pictureBoxTitle.Refresh();
 			
+			title = this.Text;
 			pictureBoxTitle.Refresh();
 			
 			RefreshMessenger();
@@ -2445,7 +2478,7 @@ namespace OpenPandora
 			this.menuPlayerStations.Enabled = false;
 			this.menuToolsCopyToClipboard.Enabled = false;
 						
-			RefreshPlayer();
+			RefreshPlayer(false);
 		}
 		#endregion
 		
@@ -2821,6 +2854,7 @@ namespace OpenPandora
 		private bool sentOnceToXfire = false;
         private bool sentOnceToSkype = false;
 
+		private bool hideTitle = false;
 		private bool isFirstTrack = true;
 		private string userUrl;
 		private string user = "Unknown";
@@ -2861,7 +2895,7 @@ namespace OpenPandora
 		private DateTime playedStartTime;
 		private int titlePosition = 0;
 		private int titleDirection = 1;
-		private bool titlebounce = false;
+		private bool titleBounce = false;
 
 		#endregion
 

@@ -49,7 +49,7 @@ namespace OpenPandora
 		private static readonly string INSTALLER_URL = @"http://openpandora.googlepages.com/openpandora.zip";
 		private static readonly string INSTALLER_BETA_URL = @"http://openpandora.googlepages.com/openpandorabeta.zip";
 		
-		private static readonly int MEMORYTIMER_DELAY = 10000;
+		private static readonly int MEMORYTIMER_DELAY = 30000;
 		private static readonly int MEMORYTIMER_PAUSE = 300000;
 
 		private System.ComponentModel.IContainer components;
@@ -213,8 +213,8 @@ namespace OpenPandora
 
 				try
 				{
-					//object url2 = STARTUP_URL2;
-					//browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
+					object url2 = STARTUP_URL2;
+					browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
 			
 					object url = STARTUP_URL;
 					browser.Navigate2(ref url, ref missing, ref missing, ref missing, ref missing);
@@ -553,7 +553,14 @@ namespace OpenPandora
 		#region private void pictureBoxFill_DoubleClick(object sender, System.EventArgs e)
 		private void pictureBoxFill_DoubleClick(object sender, System.EventArgs e)
 		{
-			MinimizeToTray();
+			if (menuMiniPlayer.Checked)
+			{
+				menuMiniPlayer_Click(sender, e);
+			}
+			else
+			{
+				MinimizeToTray();
+			}
 		}
 		#endregion
 
@@ -695,8 +702,6 @@ namespace OpenPandora
 		{
 			try
 			{
-				Debug.WriteLine("Completed: " + e.uRL);
-
 				if (!loaded)
 				{
 					Debug.WriteLine("Radio: timer");
@@ -718,7 +723,7 @@ namespace OpenPandora
 			{	
 				string urlText = HttpUtility.UrlDecode(e.uRL as string);
 
-				Debug.WriteLine("Loading ... " + urlText);
+				//Debug.WriteLine("Loading ... " + urlText);
 
 				try
 				{
@@ -847,12 +852,12 @@ namespace OpenPandora
 					
 					if (tuner.ContainsSkip)
 					{
-						Debug.Write("Skip & ");
+						Debug.WriteLine("Skip");
 					}
 					
 					if (tuner.ContainsPlay)
 					{
-						Debug.WriteLine("Play");
+						/*Debug.WriteLine("Play");
 						
 						OnPlayStart();
 						
@@ -893,11 +898,11 @@ namespace OpenPandora
 						refreshXfire = !paused;
 						refreshSkype = !paused;
 								
-						paused = false;
+						paused = false;*/
 					}
 					else if (tuner.ContainsPause)
 					{
-						Debug.WriteLine("Pause");
+						/*Debug.WriteLine("Pause");
 						this.menuPlayerPlayPause.Text = "Play";
 								
 						paused = true;
@@ -910,7 +915,7 @@ namespace OpenPandora
 						memoryTimer.Interval = MEMORYTIMER_PAUSE;
 						memoryTimer.Start();
 									
-						return;
+						return;*/
 					}
 					
 					if (configuration.PartyMode && continuesPlayCounter > 30)
@@ -962,6 +967,8 @@ namespace OpenPandora
 					{
 						if (script.LastIndexOf("SongPlayed") > 0)
 						{
+							Debug.WriteLine("Play");
+
 							const string SONG_NAME_MARK = "songName:unescape";
 							const string ARTIST_NAME_MARK = "artistName:unescape";
 							const string SONG_URL_MARK = "songURL:unescape";
@@ -992,31 +999,61 @@ namespace OpenPandora
 							songUrl = HttpUtility.UrlDecode(songUrl);
 							artUrl = HttpUtility.UrlDecode(artUrl);
 
-							bool refreshPlayer = false;
-					
-							if (song.Name == string.Empty)
+							OnPlayStart();
+						
+							++continuesPlayCounter;
+								
+							memoryTimer.Interval = MEMORYTIMER_DELAY;
+							memoryTimer.Start();
+								
+							if (taskbarNotifier.Visible)
 							{
-								song.Name = songName;
-								song.Artist = artistName;
-								song.Url = songUrl;
-								song.ArtUrl = artUrl;
+								taskbarNotifier.Hide();
+							}
 
-								refreshPlayer = true;
-							}
-							else
+							if (!paused)
 							{
-								nextSong = new Song(string.Empty, songName, artistName, songUrl, artUrl);
+								playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
+									
+								SubmitSongToLastFM(song.Artist, song.Name, playedLength);
+									
+								playedLength = 0;
 							}
+								
+							playedStartTime = DateTime.Now;
+								
+							refreshMessenger = !paused;
+							refreshXfire = !paused;
+							refreshSkype = !paused;
+
+							paused = false;
+
+							song.Name = songName;
+							song.Artist = artistName;
+							song.Url = songUrl;
+							song.ArtUrl = artUrl;
 					
 							Debug.WriteLine(song.Name + " ~by~ " + song.Artist);
 					
 							submittedToLastFm = false;
 							menuLastFmSubmit.Enabled = true;
 
-							if (refreshPlayer)
-							{
-								RefreshPlayer(true);
-							}
+							RefreshPlayer(true);
+						}
+						else if (script.LastIndexOf("SongPaused") > 0)
+						{
+							Debug.WriteLine("Pause");
+							this.menuPlayerPlayPause.Text = "Play";
+								
+							paused = true;
+							refreshMessenger = false;
+							refreshXfire = false;
+							refreshSkype = false;
+									
+							playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
+									
+							memoryTimer.Interval = MEMORYTIMER_PAUSE;
+							memoryTimer.Start();
 						}
 						else if (script.LastIndexOf("StationPlayed") > 0)
 						{
@@ -1134,6 +1171,8 @@ namespace OpenPandora
 				}
 				
 				loaded2 = true;
+
+				//browser2.Refresh2();
 				
 				RefreshPlayer(false);
 			}
@@ -1282,8 +1321,8 @@ namespace OpenPandora
 				settingsView.BringToFront();
 
 				// Navigate to events page
-				object url2 = STARTUP_URL2;
-				browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
+				//object url2 = STARTUP_URL2;
+				//browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
 					
 				configuration.OffsetLeft = left;
 				configuration.OffsetTop = top;
@@ -1380,7 +1419,7 @@ namespace OpenPandora
 					return;
 				}
 
-				titleTimer.Interval = 120;
+				titleTimer.Interval = 100;
 
 				string text;
 				
@@ -1469,21 +1508,21 @@ namespace OpenPandora
 		#region private void menuRefresh_Click(object sender, System.EventArgs e)
 		private void menuRefresh_Click(object sender, System.EventArgs e)
 		{
-			if (MessageBox.Show(
+			if (true)/*MessageBox.Show(
 					"Do you want to refresh Pandora?", 
 					DEFAULT_TITLE, 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question, 
-					MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+					MessageBoxDefaultButton.Button2) == DialogResult.Yes)*/
 			{
 				Debug.WriteLine("Refreshing ...");
 				
 				try
 				{
-					RestartPlayer();
+					/*RestartPlayer();
 				
 					this.panelBrowser.SendToBack();
-					this.pictureBoxFill.BringToFront();
+					this.pictureBoxFill.BringToFront();*/
 				
 					/*object url2 = STARTUP_URL2;
 					browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
@@ -1492,17 +1531,30 @@ namespace OpenPandora
 					browser.Navigate2(ref url, ref missing, ref missing, ref missing, ref missing);*/
 				
 					browser2.Refresh2(ref missing);
-					browser.Refresh2(ref missing);
+					//browser.Refresh2(ref missing);
 				
-					if (pandora != null)
+					/*if (pandora != null)
 					{
 						pandora.Refresh();
-					}
+					}*/
 				}
 				catch (Exception ex)
 				{
 					Debug.WriteLine(ex.Message);
 					Debug.WriteLine(ex.StackTrace);
+
+					Debug.WriteLine("Reloading ...");
+
+					try
+					{
+						object url2 = STARTUP_URL2;
+						browser2.Navigate2(ref url2, ref missing, ref missing, ref missing, ref missing);
+					}
+					catch (Exception ex2)
+					{
+						Debug.WriteLine(ex2.Message);
+						Debug.WriteLine(ex2.StackTrace);
+					}
 				}
 			}
 		}
@@ -1735,6 +1787,13 @@ namespace OpenPandora
 		}
 		#endregion
 
+		#region private void AudioscrobblerConnected(object sender, EventArgs e)
+		private void AudioscrobblerConnectionFailed(object sender, EventArgs e)
+		{
+			menuRefresh_Click(sender, e);
+		}
+		#endregion
+
 		//
 		// TaskbarNotifier events
 		//
@@ -1840,6 +1899,7 @@ namespace OpenPandora
 						audioscrobbler = new Audioscrobbler("opa", "0.1", configuration.LastFmUser, configuration.LastFmPassword);
 
 						audioscrobbler.Connected += new EventHandler(this.AudioscrobblerConnected);
+						audioscrobbler.ConnectionFailed += new EventHandler(this.AudioscrobblerConnectionFailed);
 						
 						audioscrobbler.Connect(
 							configuration.ProxyHost, 
@@ -1975,7 +2035,7 @@ namespace OpenPandora
 			memoryTimer.Enabled = false;
 
 			titleTimer = new System.Windows.Forms.Timer();
-			titleTimer.Interval = 120;
+			titleTimer.Interval = 100;
 			titleTimer.Tick += new EventHandler(this.titleTimer_Tick);
 			titleTimer.Enabled = false;
 		}
@@ -2010,13 +2070,33 @@ namespace OpenPandora
 		{
 			BuildTitle();
 
+			bool showNotification;
+
 			if (configuration.NotificationWindow &&
 				newSong &&
-			    this.Text != title &&
+				this.Text != title &&
 				song.Name != string.Empty &&
 				!this.Focused &&
 				this.Text.IndexOf(PAUSED) == -1 && 
-			    title.IndexOf(PAUSED) == -1)
+				title.IndexOf(PAUSED) == -1)
+			{
+				showNotification = true;
+			}
+			else
+			{
+				showNotification = false;
+			}
+			
+			this.Text = title;
+			this.notifyIcon.Text = BuildToolTipSongTitle();
+
+			title = string.Empty;
+			pictureBoxTitle.Refresh();
+			
+			title = this.Text;
+			pictureBoxTitle.Refresh();
+
+			if (showNotification)
 			{
 				string[] coordinates;
 				
@@ -2044,15 +2124,6 @@ namespace OpenPandora
 					500);
 				//notifyIcon.ShowBalloon(OpenPandora.Interop.BalloonIconStyle.None, "by: " + song.Artist, song.Name, 5000);
 			}
-			
-			this.Text = title;
-			this.notifyIcon.Text = BuildToolTipSongTitle();
-
-			title = string.Empty;
-			pictureBoxTitle.Refresh();
-			
-			title = this.Text;
-			pictureBoxTitle.Refresh();
 			
 			RefreshMessenger();
 			RefreshXfire();
@@ -2287,8 +2358,9 @@ namespace OpenPandora
 				
 				if (song.Name.Length + song.Artist.Length > 48)
 				{
-					songShortName = song.Name.Substring(0, 48 - song.Artist.Length);
-					songShortName = songShortName.PadRight(3 + 48 - song.Artist.Length, '.');
+					int songNameLength = 48 - song.Artist.Length < 20 ? 20 : 48 - song.Artist.Length;
+					songShortName = song.Name.Substring(0, songNameLength);
+					songShortName = songShortName.PadRight(3 + songNameLength, '.');
 				}
 				else
 				{
@@ -2296,6 +2368,12 @@ namespace OpenPandora
 				}
 				
 				string toolTipTitle = songShortName + Environment.NewLine + song.Artist;
+
+				if (toolTipTitle.Length > 51)
+				{
+					toolTipTitle = toolTipTitle.Substring(0, 51 - 3);
+					toolTipTitle = toolTipTitle.PadRight(51, '.');
+				}
 				
 				if (paused)
 				{

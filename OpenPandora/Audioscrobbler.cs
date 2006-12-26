@@ -196,6 +196,7 @@ namespace OpenPandora
 		//
 
 		public event EventHandler Connected;
+		public event EventHandler ConnectionFailed;
 
 		//
 		// Constructors
@@ -347,6 +348,11 @@ namespace OpenPandora
 			{
 				Debug.WriteLine("AudioscrobblerPlugin.Connect : " + ex.Message);
 				Debug.WriteLine(ex.StackTrace);
+
+				if (ConnectionFailed != null)
+				{
+					ConnectionFailed(this, new EventArgs());
+				}
 			}
 		}
 		#endregion

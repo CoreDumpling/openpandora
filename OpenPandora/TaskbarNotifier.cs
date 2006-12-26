@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2006 Eitan Pogrebizsky <openpandora@gmail.com>, 
+ * and individual contributors.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -9,7 +28,6 @@ using System.Text.RegularExpressions;
 
 namespace OpenPandora.Windows.Forms
 {
-
 	public class TaskbarNotifier : System.Windows.Forms.Form
 	{
 		[DllImport("user32.dll")]
@@ -130,13 +148,13 @@ namespace OpenPandora.Windows.Forms
 			this.linkLabelAlbum.BackColor = System.Drawing.Color.Transparent;
 			this.linkLabelAlbum.DisabledLinkColor = System.Drawing.Color.FromArgb(((System.Byte)(68)), ((System.Byte)(68)), ((System.Byte)(68)));
 			this.linkLabelAlbum.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.linkLabelAlbum.FullText = null;
+			//this.linkLabelAlbum.FullText = null;
 			this.linkLabelAlbum.LinkArea = new System.Windows.Forms.LinkArea(0, 25);
 			this.linkLabelAlbum.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
 			this.linkLabelAlbum.LinkColor = System.Drawing.Color.FromArgb(((System.Byte)(68)), ((System.Byte)(68)), ((System.Byte)(68)));
 			this.linkLabelAlbum.Location = new System.Drawing.Point(32, 50);
 			this.linkLabelAlbum.Name = "linkLabelAlbum";
-			this.linkLabelAlbum.ShortText = null;
+			//this.linkLabelAlbum.ShortText = null;
 			this.linkLabelAlbum.Size = new System.Drawing.Size(80, 14);
 			this.linkLabelAlbum.TabIndex = 1;
 			this.linkLabelAlbum.TabStop = true;
@@ -144,7 +162,6 @@ namespace OpenPandora.Windows.Forms
 			this.linkLabelAlbum.URL = null;
 			this.linkLabelAlbum.UseMnemonic = false;
 			this.linkLabelAlbum.VisitedLinkColor = System.Drawing.Color.FromArgb(((System.Byte)(68)), ((System.Byte)(68)), ((System.Byte)(68)));
-			this.linkLabelAlbum.TextChanged += new System.EventHandler(this.linkLabel_TextChanged);
 			// 
 			// linkLabelArtist
 			// 
@@ -152,13 +169,13 @@ namespace OpenPandora.Windows.Forms
 			this.linkLabelArtist.BackColor = System.Drawing.Color.Transparent;
 			this.linkLabelArtist.DisabledLinkColor = System.Drawing.Color.FromArgb(((System.Byte)(68)), ((System.Byte)(68)), ((System.Byte)(68)));
 			this.linkLabelArtist.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.linkLabelArtist.FullText = null;
+			//this.linkLabelArtist.FullText = null;
 			this.linkLabelArtist.LinkArea = new System.Windows.Forms.LinkArea(0, 25);
 			this.linkLabelArtist.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
 			this.linkLabelArtist.LinkColor = System.Drawing.Color.FromArgb(((System.Byte)(68)), ((System.Byte)(68)), ((System.Byte)(68)));
 			this.linkLabelArtist.Location = new System.Drawing.Point(32, 36);
 			this.linkLabelArtist.Name = "linkLabelArtist";
-			this.linkLabelArtist.ShortText = null;
+			//this.linkLabelArtist.ShortText = null;
 			this.linkLabelArtist.Size = new System.Drawing.Size(80, 14);
 			this.linkLabelArtist.TabIndex = 2;
 			this.linkLabelArtist.TabStop = true;
@@ -166,7 +183,6 @@ namespace OpenPandora.Windows.Forms
 			this.linkLabelArtist.URL = null;
 			this.linkLabelArtist.UseMnemonic = false;
 			this.linkLabelArtist.VisitedLinkColor = System.Drawing.Color.FromArgb(((System.Byte)(68)), ((System.Byte)(68)), ((System.Byte)(68)));
-			this.linkLabelArtist.TextChanged += new System.EventHandler(this.linkLabel_TextChanged);
 			// 
 			// linkLabelSongName
 			// 
@@ -174,13 +190,13 @@ namespace OpenPandora.Windows.Forms
 			this.linkLabelSongName.BackColor = System.Drawing.Color.Transparent;
 			this.linkLabelSongName.DisabledLinkColor = System.Drawing.Color.FromArgb(((System.Byte)(68)), ((System.Byte)(68)), ((System.Byte)(68)));
 			this.linkLabelSongName.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.linkLabelSongName.FullText = null;
+			//this.linkLabelSongName.FullText = null;
 			this.linkLabelSongName.LinkArea = new System.Windows.Forms.LinkArea(0, 25);
 			this.linkLabelSongName.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
 			this.linkLabelSongName.LinkColor = System.Drawing.Color.FromArgb(((System.Byte)(68)), ((System.Byte)(68)), ((System.Byte)(68)));
 			this.linkLabelSongName.Location = new System.Drawing.Point(13, 8);
 			this.linkLabelSongName.Name = "linkLabelSongName";
-			this.linkLabelSongName.ShortText = null;
+			//this.linkLabelSongName.ShortText = null;
 			this.linkLabelSongName.Size = new System.Drawing.Size(100, 28);
 			this.linkLabelSongName.TabIndex = 3;
 			this.linkLabelSongName.TabStop = true;
@@ -189,7 +205,6 @@ namespace OpenPandora.Windows.Forms
 			this.linkLabelSongName.UseMnemonic = false;
 			this.linkLabelSongName.VisitedLinkColor = System.Drawing.Color.FromArgb(((System.Byte)(68)), ((System.Byte)(68)), ((System.Byte)(68)));
 			this.linkLabelSongName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_LinkClicked);
-			this.linkLabelSongName.TextChanged += new System.EventHandler(this.linkLabelSong_TextChanged);
 			// 
 			// lblOnAlbum
 			// 
@@ -257,7 +272,6 @@ namespace OpenPandora.Windows.Forms
 		#region TaskbarNotifier Constructor
 		public TaskbarNotifier()
 		{
-
 			InitializeComponent();
 
 			FormBorderStyle = FormBorderStyle.None;
@@ -311,15 +325,6 @@ namespace OpenPandora.Windows.Forms
 			taskbarState = TaskbarStates.Visible;
 			this.Opacity = 1.0;
 			this.TopMost = true;
-
-			// TODO: move to private and do in new thread
-			//BuildDisplay(songname, artist, album, songarturl, songurl, artisturl, albumurl);
-			//BeginInvoke(new BuildDisplayHandler(BuildDisplay), new object[] {songname, artist, album, songarturl, songurl, artisturl, albumurl});
-			//AsyncCallback
-
-			
-			
-			//ShowWindow(this.Handle, 4);
 
 			Displayer displayer = new Displayer(this, songname, artist, album, songarturl, songurl, artisturl, albumurl);
 
@@ -437,43 +442,6 @@ namespace OpenPandora.Windows.Forms
 		// Private methods
 		//
 
-		#region private void BuildShortText(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
-		private void BuildShortText(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
-		{
-			Graphics textGraphics = linkLabel.CreateGraphics();
-
-			SizeF textSize = textGraphics.MeasureString(linkLabel.Text,linkLabel.Font);
-
-			if (textSize.Width > maxwidth)
-			{
-				linkLabel.ShortText = linkLabel.ShortText.Substring(0,linkLabel.ShortText.Length-1);
-				linkLabel.Text = linkLabel.ShortText + "...";
-			}
-
-			textGraphics.Dispose();
-		}
-		#endregion
-
-		#region private void BuildShortText2Lines(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
-		private void BuildShortText2Lines(OpenPandora.Windows.Forms.LinkLabelNoFocus linkLabel, int maxwidth)
-		{
-			Graphics textGraphics = linkLabel.CreateGraphics();
-
-			StringFormat sf = new StringFormat();
-			sf.FormatFlags = StringFormatFlags.NoWrap;
-
-			SizeF textSize = textGraphics.MeasureString(linkLabel.Text,linkLabel.Font,maxwidth/2,sf);
-
-			if (textSize.Width > maxwidth/2)
-			{
-				linkLabel.ShortText = linkLabel.ShortText.Substring(0,linkLabel.ShortText.Length-1);
-				linkLabel.Text = linkLabel.ShortText + "...";
-			}
-
-			textGraphics.Dispose();
-		}
-		#endregion
-
 		#region private void BuildDisplay(string songname, string artist, string album, string songarturl, string songurl, string artisturl, string albumurl)
 		private void BuildDisplay(string songname, string artist, string album, string songarturl, string songurl, string artisturl, string albumurl)
 		{
@@ -505,8 +473,8 @@ namespace OpenPandora.Windows.Forms
 
 				GetAlbumAndURL(songurl);
 
-				linkLabelSongName.FullText = songname;
-				linkLabelArtist.FullText = artist;
+				linkLabelSongName.Text = songname;
+				linkLabelArtist.Text = artist;
 				linkLabelSongName.URL = songurl;
 			}
 		}
@@ -519,41 +487,44 @@ namespace OpenPandora.Windows.Forms
 			System.IO.Stream stream;
 			stream = wc.OpenRead(url);
 			
-			byte[] buffer = new byte[512];
-			int read=0;
-    
-			int chunk;
-			while ( (chunk = stream.Read(buffer, read, buffer.Length-read)) > 0)
+			try
 			{
-				read += chunk;
-        
-				if (read == buffer.Length)
+				byte[] buffer = new byte[512];
+				int read = 0;
+				int chunk;
+
+				while ((chunk = stream.Read(buffer, read, buffer.Length - read)) > 0)
 				{
-					Application.DoEvents();
-
-					int nextByte = stream.ReadByte();
-            
-					if (nextByte==-1)
+					read += chunk;
+        
+					if (read == buffer.Length)
 					{
-						return buffer;
-					}
+						Application.DoEvents();
+
+						int nextByte = stream.ReadByte();
             
-					byte[] newBuffer = new byte[buffer.Length*2];
-					Array.Copy(buffer, newBuffer, buffer.Length);
-					newBuffer[read]=(byte)nextByte;
-					buffer = newBuffer;
-					read++;
+						if (nextByte==-1)
+						{
+							return buffer;
+						}
+            
+						byte[] newBuffer = new byte[buffer.Length*2];
+						Array.Copy(buffer, newBuffer, buffer.Length);
+						newBuffer[read]=(byte)nextByte;
+						buffer = newBuffer;
+						read++;
+					}
 				}
-			}
 			
-			byte[] ret = new byte[read];
-			Array.Copy(buffer, ret, read);
+				byte[] ret = new byte[read];
+				Array.Copy(buffer, ret, read);
 
-			stream.Close();
-
-			return ret;
-
-
+				return ret;
+			}
+			finally
+			{
+				stream.Close();
+			}
 		}
 
 		#endregion
@@ -630,7 +601,9 @@ namespace OpenPandora.Windows.Forms
 
 				if (match.Success)
 				{
-					linkLabelAlbum.FullText = Regex.Replace(match.Value,"<.*?>","",RegexOptions.Singleline).Replace("\n","").Replace("\t","");
+					string albumText = Regex.Replace(match.Value,"<.*?>","",RegexOptions.Singleline).Replace("\n","").Replace("\t","");
+					albumText = System.Xml.XmlConvert.DecodeName(albumText);
+					linkLabelAlbum.Text = albumText;
 
 					regex = new Regex("href=.*?\".*?\"",RegexOptions.Singleline);
 					match = regex.Match(match.Value);
@@ -660,24 +633,6 @@ namespace OpenPandora.Windows.Forms
         //
 		// Event Handlers
 		//
-
-		#region private void linkLabel_TextChanged(object sender, System.EventArgs e)
-		private void linkLabel_TextChanged(object sender, System.EventArgs e)
-		{
-		
-			BuildShortText((OpenPandora.Windows.Forms.LinkLabelNoFocus)sender, 80);
-
-		}
-		#endregion
-
-		#region private void linkLabelSong_TextChanged(object sender, System.EventArgs e)
-		private void linkLabelSong_TextChanged(object sender, System.EventArgs e)
-		{
-		
-			BuildShortText2Lines((OpenPandora.Windows.Forms.LinkLabelNoFocus)sender, 200);
-
-		}
-		#endregion
 
 		#region private void TaskbarNotifier_Load(object sender, System.EventArgs e)
 		private void TaskbarNotifier_Load(object sender, System.EventArgs e)

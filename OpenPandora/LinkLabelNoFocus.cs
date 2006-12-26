@@ -1,4 +1,7 @@
+using System;
 using System.Windows.Forms; 
+using System.Drawing;
+using System.Diagnostics;
 
 namespace OpenPandora.Windows.Forms
 {
@@ -6,7 +9,6 @@ namespace OpenPandora.Windows.Forms
 	{ 
 		private string url;
 		private string fullText;
-		private string _ShortText;
 
 		protected override bool ShowFocusCues 
 		{ 
@@ -28,32 +30,37 @@ namespace OpenPandora.Windows.Forms
 			}
 		}
 
-		public string FullText
+		public new string Text
 		{
 			get
 			{
-				return fullText;
+				return base.Text;
 			}
 			set
 			{
 				fullText = value;
-				_ShortText = value;
-				this.Text = value;
-				this.LinkArea = new LinkArea(0,this.Text.Length);
+				base.Text = value;
+				BuildText(value);
+				this.LinkArea = new LinkArea(0, this.Text.Length);
 			}
 		}
-		public string ShortText
+
+
+		#region private void BuildText(string text)
+		private void BuildText(string text)
 		{
-			get
+			Graphics textGraphics = this.CreateGraphics();
+
+			SizeF textSize = textGraphics.MeasureString(base.Text, this.Font, this.Size.Width);
+			textGraphics.Dispose();
+
+			if (Math.Round(textSize.Height - 0.5) > this.Size.Height)
 			{
-				return _ShortText;
-			}
-			set
-			{
-				_ShortText = value;
+				string shortText = text.Substring(0, text.Length - 1);
+				base.Text = shortText + "...";
+				BuildText(shortText);
 			}
 		}
-
-
+		#endregion
 	}
 }

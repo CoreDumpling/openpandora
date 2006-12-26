@@ -483,6 +483,7 @@ namespace OpenPandora
 			this.chbSubmitSkipped.Size = new System.Drawing.Size(160, 16);
 			this.chbSubmitSkipped.TabIndex = 17;
 			this.chbSubmitSkipped.Text = "Submit Skipped Tracks";
+			this.chbSubmitSkipped.Visible = false;
 			this.chbSubmitSkipped.CheckedChanged += new System.EventHandler(this.SettingChanged);
 			// 
 			// rdbManual

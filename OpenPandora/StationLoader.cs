@@ -91,7 +91,6 @@ namespace OpenPandora
 				Debug.WriteLine("Stations loading ...");
 			
 				ArrayList stationArray = new ArrayList();
-
 			
 				string filename = "http://feeds.pandora.com/feeds/people/" + user + "/stations.xml";
 				HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(filename);
@@ -114,7 +113,6 @@ namespace OpenPandora
 
 				WebResponse webResponse = webRequest.GetResponse();
 				Stream stream = webResponse.GetResponseStream();
-			
 
 				try
 				{

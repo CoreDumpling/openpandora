@@ -221,7 +221,7 @@ namespace OpenPandora
 			// 
 			this.chbShowCloseButton.Location = new System.Drawing.Point(8, 8);
 			this.chbShowCloseButton.Name = "chbShowCloseButton";
-			this.chbShowCloseButton.Size = new System.Drawing.Size(120, 24);
+			this.chbShowCloseButton.Size = new System.Drawing.Size(176, 24);
 			this.chbShowCloseButton.TabIndex = 5;
 			this.chbShowCloseButton.Text = "Show Close Button";
 			this.chbShowCloseButton.CheckedChanged += new System.EventHandler(this.SettingChanged);
@@ -230,7 +230,7 @@ namespace OpenPandora
 			// 
 			this.chbMinimizeToTrayOnClose.Location = new System.Drawing.Point(8, 32);
 			this.chbMinimizeToTrayOnClose.Name = "chbMinimizeToTrayOnClose";
-			this.chbMinimizeToTrayOnClose.Size = new System.Drawing.Size(160, 24);
+			this.chbMinimizeToTrayOnClose.Size = new System.Drawing.Size(208, 24);
 			this.chbMinimizeToTrayOnClose.TabIndex = 6;
 			this.chbMinimizeToTrayOnClose.Text = "Minimize To Tray On Close";
 			this.chbMinimizeToTrayOnClose.CheckedChanged += new System.EventHandler(this.SettingChanged);
@@ -277,7 +277,7 @@ namespace OpenPandora
 			this.txtTitleTemplate.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(177)));
 			this.txtTitleTemplate.Location = new System.Drawing.Point(8, 40);
 			this.txtTitleTemplate.Name = "txtTitleTemplate";
-			this.txtTitleTemplate.Size = new System.Drawing.Size(200, 21);
+			this.txtTitleTemplate.Size = new System.Drawing.Size(200, 24);
 			this.txtTitleTemplate.TabIndex = 3;
 			this.txtTitleTemplate.Text = "";
 			// 
@@ -307,11 +307,11 @@ namespace OpenPandora
 			// tabs
 			// 
 			this.tabs.Controls.Add(this.tabPageDisplay);
+			this.tabs.Controls.Add(this.tabProxy);
 			this.tabs.Controls.Add(this.tabPageGeneral);
 			this.tabs.Controls.Add(this.tabPageSendSongInfo);
 			this.tabs.Controls.Add(this.tabPageControl);
 			this.tabs.Controls.Add(this.tabPageLastFM);
-			this.tabs.Controls.Add(this.tabProxy);
 			this.tabs.Location = new System.Drawing.Point(0, 0);
 			this.tabs.Name = "tabs";
 			this.tabs.Padding = new System.Drawing.Point(0, 0);
@@ -325,9 +325,9 @@ namespace OpenPandora
 			this.tabPageDisplay.Controls.Add(this.grbTitleFormat);
 			this.tabPageDisplay.Controls.Add(this.chbShowCloseButton);
 			this.tabPageDisplay.Controls.Add(this.chbMinimizeToTrayOnClose);
-			this.tabPageDisplay.Location = new System.Drawing.Point(4, 22);
+			this.tabPageDisplay.Location = new System.Drawing.Point(4, 25);
 			this.tabPageDisplay.Name = "tabPageDisplay";
-			this.tabPageDisplay.Size = new System.Drawing.Size(320, 134);
+			this.tabPageDisplay.Size = new System.Drawing.Size(320, 131);
 			this.tabPageDisplay.TabIndex = 0;
 			this.tabPageDisplay.Text = "Display";
 			// 
@@ -337,9 +337,9 @@ namespace OpenPandora
 			this.tabPageGeneral.Controls.Add(this.chbPopupNotificationWindow);
 			this.tabPageGeneral.Controls.Add(this.chbPartyMode);
 			this.tabPageGeneral.Controls.Add(this.chbKeepOnTop);
-			this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
+			this.tabPageGeneral.Location = new System.Drawing.Point(4, 25);
 			this.tabPageGeneral.Name = "tabPageGeneral";
-			this.tabPageGeneral.Size = new System.Drawing.Size(320, 134);
+			this.tabPageGeneral.Size = new System.Drawing.Size(320, 131);
 			this.tabPageGeneral.TabIndex = 2;
 			this.tabPageGeneral.Text = "General";
 			// 
@@ -366,7 +366,7 @@ namespace OpenPandora
 			// 
 			this.chbKeepOnTop.Location = new System.Drawing.Point(8, 8);
 			this.chbKeepOnTop.Name = "chbKeepOnTop";
-			this.chbKeepOnTop.Size = new System.Drawing.Size(192, 24);
+			this.chbKeepOnTop.Size = new System.Drawing.Size(240, 24);
 			this.chbKeepOnTop.TabIndex = 17;
 			this.chbKeepOnTop.Text = "Keep On Top Of Other Windows";
 			this.chbKeepOnTop.CheckedChanged += new System.EventHandler(this.SettingChanged);
@@ -377,9 +377,9 @@ namespace OpenPandora
 			this.tabPageSendSongInfo.Controls.Add(this.chbSendToSkype);
 			this.tabPageSendSongInfo.Controls.Add(this.chbSendToXfire);
 			this.tabPageSendSongInfo.Controls.Add(this.chbSendToMessenger);
-			this.tabPageSendSongInfo.Location = new System.Drawing.Point(4, 22);
+			this.tabPageSendSongInfo.Location = new System.Drawing.Point(4, 25);
 			this.tabPageSendSongInfo.Name = "tabPageSendSongInfo";
-			this.tabPageSendSongInfo.Size = new System.Drawing.Size(320, 134);
+			this.tabPageSendSongInfo.Size = new System.Drawing.Size(320, 131);
 			this.tabPageSendSongInfo.TabIndex = 5;
 			this.tabPageSendSongInfo.Text = "Plugins";
 			// 
@@ -403,7 +403,7 @@ namespace OpenPandora
 			// 
 			this.chbSendToMessenger.Location = new System.Drawing.Point(8, 8);
 			this.chbSendToMessenger.Name = "chbSendToMessenger";
-			this.chbSendToMessenger.Size = new System.Drawing.Size(176, 24);
+			this.chbSendToMessenger.Size = new System.Drawing.Size(248, 24);
 			this.chbSendToMessenger.TabIndex = 22;
 			this.chbSendToMessenger.Text = "Send Song Info To Messenger";
 			// 
@@ -413,16 +413,16 @@ namespace OpenPandora
 			this.tabPageControl.Controls.Add(this.linkHelpGlobalShortcuts);
 			this.tabPageControl.Controls.Add(this.chbGlobalShortcuts);
 			this.tabPageControl.Controls.Add(this.chbKeyboardMediaKeys);
-			this.tabPageControl.Location = new System.Drawing.Point(4, 22);
+			this.tabPageControl.Location = new System.Drawing.Point(4, 25);
 			this.tabPageControl.Name = "tabPageControl";
-			this.tabPageControl.Size = new System.Drawing.Size(320, 134);
+			this.tabPageControl.Size = new System.Drawing.Size(320, 131);
 			this.tabPageControl.TabIndex = 4;
 			this.tabPageControl.Text = "Control";
 			// 
 			// linkHelpGlobalShortcuts
 			// 
 			this.linkHelpGlobalShortcuts.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
-			this.linkHelpGlobalShortcuts.Location = new System.Drawing.Point(112, 38);
+			this.linkHelpGlobalShortcuts.Location = new System.Drawing.Point(128, 38);
 			this.linkHelpGlobalShortcuts.Name = "linkHelpGlobalShortcuts";
 			this.linkHelpGlobalShortcuts.Size = new System.Drawing.Size(40, 16);
 			this.linkHelpGlobalShortcuts.TabIndex = 21;
@@ -434,7 +434,7 @@ namespace OpenPandora
 			// 
 			this.chbGlobalShortcuts.Location = new System.Drawing.Point(8, 32);
 			this.chbGlobalShortcuts.Name = "chbGlobalShortcuts";
-			this.chbGlobalShortcuts.Size = new System.Drawing.Size(112, 24);
+			this.chbGlobalShortcuts.Size = new System.Drawing.Size(128, 24);
 			this.chbGlobalShortcuts.TabIndex = 10;
 			this.chbGlobalShortcuts.Text = "Global Shortcuts";
 			this.chbGlobalShortcuts.CheckedChanged += new System.EventHandler(this.SettingChanged);
@@ -460,9 +460,9 @@ namespace OpenPandora
 			this.tabPageLastFM.Controls.Add(this.txtLastFmUser);
 			this.tabPageLastFM.Controls.Add(this.label4);
 			this.tabPageLastFM.Controls.Add(this.label3);
-			this.tabPageLastFM.Location = new System.Drawing.Point(4, 22);
+			this.tabPageLastFM.Location = new System.Drawing.Point(4, 25);
 			this.tabPageLastFM.Name = "tabPageLastFM";
-			this.tabPageLastFM.Size = new System.Drawing.Size(320, 134);
+			this.tabPageLastFM.Size = new System.Drawing.Size(320, 131);
 			this.tabPageLastFM.TabIndex = 1;
 			this.tabPageLastFM.Text = "Last.FM";
 			// 
@@ -518,7 +518,7 @@ namespace OpenPandora
 			this.txtLastFmPassword.Location = new System.Drawing.Point(88, 64);
 			this.txtLastFmPassword.Name = "txtLastFmPassword";
 			this.txtLastFmPassword.PasswordChar = '*';
-			this.txtLastFmPassword.Size = new System.Drawing.Size(96, 20);
+			this.txtLastFmPassword.Size = new System.Drawing.Size(96, 22);
 			this.txtLastFmPassword.TabIndex = 13;
 			this.txtLastFmPassword.Text = "";
 			this.txtLastFmPassword.Validating += new System.ComponentModel.CancelEventHandler(this.txtLastFmPassword_Validating);
@@ -527,7 +527,7 @@ namespace OpenPandora
 			// 
 			this.txtLastFmUser.Location = new System.Drawing.Point(88, 40);
 			this.txtLastFmUser.Name = "txtLastFmUser";
-			this.txtLastFmUser.Size = new System.Drawing.Size(96, 20);
+			this.txtLastFmUser.Size = new System.Drawing.Size(96, 22);
 			this.txtLastFmUser.TabIndex = 12;
 			this.txtLastFmUser.Text = "";
 			// 
@@ -560,9 +560,9 @@ namespace OpenPandora
 			this.tabProxy.Controls.Add(this.txtProxyHost);
 			this.tabProxy.Controls.Add(this.label2);
 			this.tabProxy.Controls.Add(this.label5);
-			this.tabProxy.Location = new System.Drawing.Point(4, 22);
+			this.tabProxy.Location = new System.Drawing.Point(4, 25);
 			this.tabProxy.Name = "tabProxy";
-			this.tabProxy.Size = new System.Drawing.Size(320, 134);
+			this.tabProxy.Size = new System.Drawing.Size(320, 131);
 			this.tabProxy.TabIndex = 3;
 			this.tabProxy.Text = "Proxy";
 			// 
@@ -571,7 +571,7 @@ namespace OpenPandora
 			this.txtProxyPassword.Location = new System.Drawing.Point(72, 112);
 			this.txtProxyPassword.Name = "txtProxyPassword";
 			this.txtProxyPassword.PasswordChar = '*';
-			this.txtProxyPassword.Size = new System.Drawing.Size(120, 20);
+			this.txtProxyPassword.Size = new System.Drawing.Size(120, 22);
 			this.txtProxyPassword.TabIndex = 23;
 			this.txtProxyPassword.Text = "";
 			// 
@@ -579,7 +579,7 @@ namespace OpenPandora
 			// 
 			this.txtProxyUser.Location = new System.Drawing.Point(72, 84);
 			this.txtProxyUser.Name = "txtProxyUser";
-			this.txtProxyUser.Size = new System.Drawing.Size(120, 20);
+			this.txtProxyUser.Size = new System.Drawing.Size(120, 22);
 			this.txtProxyUser.TabIndex = 22;
 			this.txtProxyUser.Text = "";
 			// 
@@ -612,7 +612,7 @@ namespace OpenPandora
 			// 
 			this.rdbProxyAuto.Location = new System.Drawing.Point(8, 8);
 			this.rdbProxyAuto.Name = "rdbProxyAuto";
-			this.rdbProxyAuto.Size = new System.Drawing.Size(176, 24);
+			this.rdbProxyAuto.Size = new System.Drawing.Size(208, 24);
 			this.rdbProxyAuto.TabIndex = 18;
 			this.rdbProxyAuto.Text = "Automatic Proxy Detection";
 			this.rdbProxyAuto.CheckedChanged += new System.EventHandler(this.rdbProxy_CheckedChanged);
@@ -621,7 +621,7 @@ namespace OpenPandora
 			// 
 			this.txtProxyPort.Location = new System.Drawing.Point(232, 56);
 			this.txtProxyPort.Name = "txtProxyPort";
-			this.txtProxyPort.Size = new System.Drawing.Size(48, 20);
+			this.txtProxyPort.Size = new System.Drawing.Size(48, 22);
 			this.txtProxyPort.TabIndex = 17;
 			this.txtProxyPort.Text = "";
 			// 
@@ -629,7 +629,7 @@ namespace OpenPandora
 			// 
 			this.txtProxyHost.Location = new System.Drawing.Point(72, 56);
 			this.txtProxyHost.Name = "txtProxyHost";
-			this.txtProxyHost.Size = new System.Drawing.Size(120, 20);
+			this.txtProxyHost.Size = new System.Drawing.Size(120, 22);
 			this.txtProxyHost.TabIndex = 16;
 			this.txtProxyHost.Text = "";
 			// 

@@ -80,6 +80,7 @@ namespace OpenPandora.Windows.Forms
 		public delegate void LocationChangedEventHandler(Point Location);
 		public new event LocationChangedEventHandler OnLocationChanged;
 
+		#region private class Displayer
 		private class Displayer
 		{
 			private TaskbarNotifier notifier;
@@ -117,6 +118,7 @@ namespace OpenPandora.Windows.Forms
 				ShowWindow(notifier.Handle, 4);
 			}
 		}
+		#endregion
 
 		#region private void InitializeComponent()
 		private void InitializeComponent()
@@ -274,22 +276,21 @@ namespace OpenPandora.Windows.Forms
 		{
 			InitializeComponent();
 
+			ShowInTaskbar = false;
+			MaximizeBox = false;
+			MinimizeBox = false;
+			ControlBox = false;
 			FormBorderStyle = FormBorderStyle.None;
 			WindowState = FormWindowState.Minimized;
 			base.Show();
 			base.Hide();
 			WindowState = FormWindowState.Normal;
-			ShowInTaskbar = false;
 			TopMost = true;
-			MaximizeBox = false;
-			MinimizeBox = false;
-			ControlBox = false;
 
 			wc = new System.Net.WebClient();
 
 			timer.Enabled = true;
 			timer.Tick += new EventHandler(OnTimer);
-
 		}
 		#endregion
 
@@ -386,6 +387,7 @@ namespace OpenPandora.Windows.Forms
 					taskbarState = TaskbarStates.Appearing;
 					timer.Interval = ShowEvents;
 					timer.Start();
+					TopMost = true;
 					ShowWindow(this.Handle, 4);
 					break;
 

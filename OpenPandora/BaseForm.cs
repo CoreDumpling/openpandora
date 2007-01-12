@@ -44,7 +44,13 @@ namespace OpenPandora
 			this.DockPadding.All = BORDER_WIDTH;
 			this.DockPadding.Top = TITLE_HEIGHT;
 
+			Graphics g = this.CreateGraphics();
+			xRatio = 96.0 / g.DpiX;
+			yRatio = 96.0 / g.DpiY;
+
 			btnClose.ForeColor = Player.BACKGROUND_COLOR;
+			btnClose.Width = (int)(btnClose.Width * xRatio);
+			btnClose.Height = (int)(btnClose.Height * yRatio);
 			btnClose.Location = new Point(this.Width - btnClose.Width - 2, 2);
 		}
 		#endregion
@@ -90,19 +96,21 @@ namespace OpenPandora
 			this.btnClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClose.BackgroundImage")));
 			this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnClose.ForeColor = System.Drawing.Color.White;
-			this.btnClose.Location = new System.Drawing.Point(272, 0);
+			this.btnClose.Location = new System.Drawing.Point(326, 0);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(16, 16);
 			this.btnClose.TabIndex = 0;
+			this.btnClose.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
 			this.btnClose.MouseEnter += new System.EventHandler(this.btnClose_MouseEnter);
 			this.btnClose.MouseLeave += new System.EventHandler(this.btnClose_MouseLeave);
 			// 
 			// BaseForm
 			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.AutoScale = false;
+			this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
 			this.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(51)), ((System.Byte)(102)), ((System.Byte)(153)));
-			this.ClientSize = new System.Drawing.Size(292, 273);
+			this.ClientSize = new System.Drawing.Size(350, 314);
 			this.ControlBox = false;
 			this.Controls.Add(this.btnClose);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -240,5 +248,7 @@ namespace OpenPandora
 
 		private Point mouseOffset;
 		private bool hideOnClose = false;
+		private double xRatio;
+		private double yRatio;
 	}
 }

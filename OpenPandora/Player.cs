@@ -167,12 +167,10 @@ namespace OpenPandora
 				browser.Silent = true;
 				browser.Size = new Size(this.Size.Width + configuration.OffsetLeft + 40, this.Size.Height + configuration.OffsetTop + 40);
 
-				//Graphics g = this.CreateGraphics();
-				//int x = -2 - (int)(configuration.OffsetLeft * 96.0 / g.DpiX);
-				//int y = -2 - (int)(configuration.OffsetTop);
-				//browser.Location = new Point(x, y);
-
-				pictureBoxFill.Left = 0;
+				Graphics g = this.CreateGraphics();
+				xRatio = 96.0 / g.DpiX;
+				yRatio = 96.0 / g.DpiY;
+				this.Width = pictureBoxFill.Image.Width;
 			
 				//
 				// Windows hook
@@ -228,6 +226,9 @@ namespace OpenPandora
 			finally
 			{
 				this.ResumeLayout();
+
+				this.panelBrowser.Left = 0;
+				this.pictureBoxFill.Left = 0;
 			}
 		}
 		#endregion
@@ -331,7 +332,7 @@ namespace OpenPandora
 			this.browser2.Enabled = true;
 			this.browser2.Location = new System.Drawing.Point(96, 72);
 			this.browser2.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("browser2.OcxState")));
-			this.browser2.Size = new System.Drawing.Size(300, 150);
+			this.browser2.Size = new System.Drawing.Size(312, 163);
 			this.browser2.TabIndex = 10;
 			this.browser2.StatusTextChange += new AxSHDocVw.DWebBrowserEvents2_StatusTextChangeEventHandler(this.browser2_StatusTextChange);
 			this.browser2.DocumentComplete += new AxSHDocVw.DWebBrowserEvents2_DocumentCompleteEventHandler(this.browser2_DocumentComplete);
@@ -390,7 +391,7 @@ namespace OpenPandora
 			// Player
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(640, 268);
+			this.ClientSize = new System.Drawing.Size(639, 267);
 			this.Controls.Add(this.btnMinimize);
 			this.Controls.Add(this.btnClose);
 			this.Controls.Add(this.pictureBoxTitle);
@@ -1308,9 +1309,8 @@ namespace OpenPandora
 					parent = parent.offsetParent;
 				}
 
-				Graphics g = this.CreateGraphics();
-				int x = -2 - (int)(left * 96.0 / g.DpiX);
-				int y = -2 - (int)(top);
+				int x = -2 - (int)(left * 1/*dpiXRatio*/);
+				int y = -2 - top;
 
 				browser.Size = new Size(element.offsetWidth + left + 40, element.offsetHeight + top + 40);
 				browser.Location = new Point(x, y);
@@ -2921,6 +2921,8 @@ namespace OpenPandora
 
 		private object missing = System.Type.Missing;
 
+		private double yRatio = 1;
+		private double xRatio = 1;
 		private Bitmap pandora16;
 		private Point mouseOffset;
 		private bool loaded = false;

@@ -23,13 +23,14 @@ using System.Security;
 using System.Threading;
 using System.Security.Permissions;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace OpenPandora
 {
 	/// <summary>
 	/// Summary description for Skype.
 	/// </summary>
-	public class Skype : System.Windows.Forms.Form
+	public class Skype : BaseForm
 	{
 		#region Data
 		private const int HWND_BROADCAST = 0xffff;
@@ -73,6 +74,12 @@ namespace OpenPandora
 		#region public Skype()
 		public Skype()
 		{
+			this.ControlBox = false;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.Name = "Skype";
+			this.Text = "Skype";
+			this.ShowInTaskbar = false;
+
 			WM_SKYPECONTROLAPIDISCOVER = RegisterWindowMessageA(skypeControlAPIDiscover);
 			WM_SKYPECONTROLAPIATTACH = RegisterWindowMessageA(skypeControlAPIAttach);
 		}
@@ -85,10 +92,16 @@ namespace OpenPandora
 		#region private void InitializeComponent()
 		private void InitializeComponent()
 		{
+			// 
+			// Skype
+			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(292, 271);
+			this.ControlBox = false;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "Skype";
 			this.ShowInTaskbar = false;
+
 		}
 		#endregion
 
@@ -103,19 +116,31 @@ namespace OpenPandora
 
 			skypeHandler = 0;
 
-			IntPtr ptr = Marshal.StringToHGlobalAnsi(param);            
-			COPYDATASTRUCT cds = new COPYDATASTRUCT();            
-			cds.dwData = IntPtr.Zero;            
-			cds.cbData = param.Length;
-			cds.lpData = ptr;				
-		
-			reply = SendMessage(HWND_BROADCAST, WM_SKYPECONTROLAPIDISCOVER, this.Handle.ToInt32(),ref cds );
-
-			if (reply == WM_FAILURE) 
-				return false;
-			else
+			try
 			{
-				return true;
+				IntPtr ptr = Marshal.StringToHGlobalAnsi(param);            
+				COPYDATASTRUCT cds = new COPYDATASTRUCT();            
+				cds.dwData = IntPtr.Zero;            
+				cds.cbData = param.Length;
+				cds.lpData = ptr;				
+		
+				reply = SendMessage(HWND_BROADCAST, WM_SKYPECONTROLAPIDISCOVER, this.Handle.ToInt32(),ref cds );
+
+				if (reply == WM_FAILURE)
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				Debug.WriteLine(ex.StackTrace);
+
+				return false;
 			}
 		}
 		#endregion
@@ -123,34 +148,43 @@ namespace OpenPandora
 		#region public bool SetMessage(string message)
 		public bool SetMessage(string message)
 		{
-			int reply = 0;
-
 			if (message != string.Empty)
 			{
+				try
+				{
+					message = "SET PROFILE MOOD_TEXT " + message;
 
-				message = "SET PROFILE MOOD_TEXT " + message;
+					IntPtr ptr = Marshal.StringToHGlobalAnsi(message);            
+					COPYDATASTRUCT cds = new COPYDATASTRUCT();            
+					cds.dwData = IntPtr.Zero;            
+					cds.cbData = message.Length + 1;
+					cds.lpData = ptr;
 
-				IntPtr ptr = Marshal.StringToHGlobalAnsi(message);            
-				COPYDATASTRUCT cds = new COPYDATASTRUCT();            
-				cds.dwData = IntPtr.Zero;            
-				cds.cbData = message.Length + 1;
-				cds.lpData = ptr;
-
-				if (skypeHandler == 0)
-					return false;
-				else
-				{			
-					reply = SendMessage(skypeHandler, WM_COPYDATA, this.Handle.ToInt32(),ref cds);
-
-					if (reply == WM_FAILURE)
+					if (skypeHandler == 0)
 					{
-						skypeHandler = 0;
 						return false;
 					}
 					else
-					{
-						return true;
+					{			
+						int reply = SendMessage(skypeHandler, WM_COPYDATA, this.Handle.ToInt32(),ref cds);
+
+						if (reply == WM_FAILURE)
+						{
+							skypeHandler = 0;
+							return false;
+						}
+						else
+						{
+							return true;
+						}
 					}
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine(ex.Message);
+					Debug.WriteLine(ex.StackTrace);
+
+					return false;
 				}
 			}
 			else
@@ -167,41 +201,52 @@ namespace OpenPandora
 		#region protected override void WndProc(ref System.Windows.Forms.Message m)
 		protected override void WndProc(ref System.Windows.Forms.Message m)
 		{
-			if (m.Msg == WM_SKYPECONTROLAPIDISCOVER)
+			try
 			{
-				m.Result = (IntPtr)1;
-			}
-			else if (m.Msg == WM_SKYPECONTROLAPIATTACH)
-			{
-				switch (m.LParam.ToInt32())
+				if (m.Msg == WM_SKYPECONTROLAPIDISCOVER)
 				{
-					case SKYPECONTROLAPI_ATTACH_SUCCESS:
-						if (m.WParam.ToInt32() != 0)
-							skypeHandler = m.WParam.ToInt32();
-						break;
-					case SKYPECONTROLAPI_ATTACH_PENDING_AUTHORIZATION:
-						break;
-					case SKYPECONTROLAPI_ATTACH_REFUSED:
-						break;
-					case SKYPECONTROLAPI_ATTACH_NOT_AVAILABLE:
-						break;
+					m.Result = (IntPtr)1;
 				}
-				m.Result = (IntPtr)1;
-			}
+				else if (m.Msg == WM_SKYPECONTROLAPIATTACH)
+				{
+					switch (m.LParam.ToInt32())
+					{
+						case SKYPECONTROLAPI_ATTACH_SUCCESS:
+							if (m.WParam.ToInt32() != 0)
+							{
+								skypeHandler = m.WParam.ToInt32();
+							}
+							break;
+						case SKYPECONTROLAPI_ATTACH_PENDING_AUTHORIZATION:
+							break;
+						case SKYPECONTROLAPI_ATTACH_REFUSED:
+							break;
+						case SKYPECONTROLAPI_ATTACH_NOT_AVAILABLE:
+							break;
+					}
 
-			else if (m.Msg == WM_COPYDATA)
+					m.Result = (IntPtr)1;
+				}
+				else if (m.Msg == WM_COPYDATA)
+				{
+					string newMessage = string.Empty;
+					COPYDATASTRUCT cds = new COPYDATASTRUCT(); 
+
+					cds = (COPYDATASTRUCT) Marshal.PtrToStructure(m.LParam, typeof(COPYDATASTRUCT));                    
+					newMessage = "<- " + Marshal.PtrToStringAnsi(cds.lpData);
+					m.Result = (IntPtr)1;
+				}
+				else
+				{
+					base.WndProc(ref m); 	
+				}
+			}
+			catch (Exception ex)
 			{
-				string newMessage = string.Empty;
-				COPYDATASTRUCT cds = new COPYDATASTRUCT(); 
-
-				cds = (COPYDATASTRUCT) Marshal.PtrToStructure(m.LParam, typeof(COPYDATASTRUCT));                    
-				newMessage = "<- " + Marshal.PtrToStringAnsi(cds.lpData);
-				m.Result = (IntPtr)1;
+				Debug.WriteLine(ex.Message);
+				Debug.WriteLine(ex.StackTrace);
 			}
-			else
-				base.WndProc(ref m); 	
 		}
 		#endregion
-
 	}
 }

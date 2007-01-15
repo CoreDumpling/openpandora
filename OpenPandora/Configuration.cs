@@ -51,6 +51,7 @@ namespace OpenPandora
 			KeepOnTop,
 			PartyMode,
 			NotificationWindow,
+			NotificationWindowBalloon,
 			ProxyHost,
 			ProxyPort,
 			ProxyUser,
@@ -62,7 +63,9 @@ namespace OpenPandora
 			MiniPlayerLocation,
 			SendToXfire,
 			SendToSkype,
-			NotificationLocation
+			NotificationLocation,
+			NewVersion,
+			NewVersionReport
 		}
 		#endregion
 
@@ -426,6 +429,19 @@ namespace OpenPandora
 			}
 		}
 		#endregion
+
+		[XmlElement("notificationWindowBalloon")]
+		#region public bool NotificationWindowBalloon
+		public bool NotificationWindowBalloon
+		{
+			get { return (bool)items[ConfigurationItemType.NotificationWindowBalloon].Value; }
+			set
+			{
+				items[ConfigurationItemType.NotificationWindowBalloon].Value = value;
+				Refresh();
+			}
+		}
+		#endregion
 		
 		[XmlElement("proxyHost")]
 		#region public string ProxyHost
@@ -583,6 +599,32 @@ namespace OpenPandora
 		}
 		#endregion
 
+		[XmlElement("newVersion")]
+		#region public string NewVersion
+		public string NewVersion
+		{
+			get { return items[ConfigurationItemType.NewVersion].Value as string; }
+			set
+			{
+				items[ConfigurationItemType.NewVersion].Value = value;
+				Refresh();
+			}
+		}
+		#endregion
+
+		[XmlElement("newVersionReport")]
+		#region public bool NewVersionReport
+		public bool NewVersionReport
+		{
+			get { return (bool)items[ConfigurationItemType.NewVersionReport].Value; }
+			set
+			{
+				items[ConfigurationItemType.NewVersionReport].Value = value;
+				Refresh();
+			}
+		}
+		#endregion
+
 		//
 		// Public methods
 		//
@@ -732,6 +774,15 @@ namespace OpenPandora
 			{
 				items[ConfigurationItemType.LastFmSubmitSkipped].Enabled = false;
 			}
+
+			if (!(bool)items[ConfigurationItemType.NotificationWindow].Value)
+			{
+				items[ConfigurationItemType.NotificationWindowBalloon].Enabled = false;
+			}
+			else
+			{
+				items[ConfigurationItemType.NotificationWindowBalloon].Enabled = true;
+			}
 		}
 		#endregion
 
@@ -778,6 +829,8 @@ namespace OpenPandora
 				new ConfigurationItem("Party Mode (prevent from stop playing if left alone)", false, true);
 			items[ConfigurationItemType.NotificationWindow] = 
 				new ConfigurationItem("Show notification window", false, true);
+			items[ConfigurationItemType.NotificationWindowBalloon] = 
+				new ConfigurationItem("Show notification window bolloon", false, false);
 			items[ConfigurationItemType.ProxyHost] = 
 				new ConfigurationItem("Proxy host name", string.Empty, true);
 			items[ConfigurationItemType.ProxyPort] = 
@@ -802,6 +855,10 @@ namespace OpenPandora
 				new ConfigurationItem("Send song info to Skype", false, true);
 			items[ConfigurationItemType.NotificationLocation] = 
 				new ConfigurationItem("Notification window location", string.Empty, true);
+			items[ConfigurationItemType.NewVersion] = 
+				new ConfigurationItem("Last run version", "0.0.0.0", true);
+			items[ConfigurationItemType.NewVersionReport] = 
+				new ConfigurationItem("Report about new version", true, true);
 
 			return items;
 		}

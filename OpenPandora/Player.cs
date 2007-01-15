@@ -124,6 +124,8 @@ namespace OpenPandora
 				settingsForm.HideOnClose = true;
 				settingsForm.Size = new Size(settingsView.Width + 2, settingsView.Height + 19);
 				settingsForm.Controls.Add(settingsView);
+				settingsForm.Show();
+				settingsForm.Hide();
 				
 				//
 				// Configuration
@@ -167,9 +169,6 @@ namespace OpenPandora
 				browser.Silent = true;
 				browser.Size = new Size(this.Size.Width + configuration.OffsetLeft + 40, this.Size.Height + configuration.OffsetTop + 40);
 
-				Graphics g = this.CreateGraphics();
-				xRatio = 96.0 / g.DpiX;
-				yRatio = 96.0 / g.DpiY;
 				this.Width = pictureBoxFill.Image.Width;
 			
 				//
@@ -594,7 +593,7 @@ namespace OpenPandora
 				{
 					configuration.MiniPlayerLocation = this.Location.X + "," + this.Location.Y;
 
-					if (taskbarNotifier.Visible)
+					if (taskbarNotifier != null && taskbarNotifier.Visible)
 					{
 						taskbarNotifier.Hide();
 					}
@@ -1007,7 +1006,7 @@ namespace OpenPandora
 							memoryTimer.Interval = MEMORYTIMER_DELAY;
 							memoryTimer.Start();
 								
-							if (taskbarNotifier.Visible)
+							if (taskbarNotifier != null && taskbarNotifier.Visible)
 							{
 								taskbarNotifier.Hide();
 							}
@@ -1131,6 +1130,14 @@ namespace OpenPandora
 				
 				int currentVersionNumber = int.Parse(Manager.CurrentVersion.Replace(".", ""));
 				int latestVersionNumber = int.Parse(latestVersion.Replace(".", ""));
+				int lastNewVersionNumber = int.Parse(configuration.NewVersion.Replace(".", ""));
+
+				if (latestVersionNumber > lastNewVersionNumber)
+				{
+					configuration.NewVersion = latestVersion;
+					configuration.NewVersionReport = true;
+					configuration.Save();
+				}
 
 				latestVersionNumber = latestVersionNumber * (int)Math.Pow(10, 4 - latestVersion.Split(new char[] {'.'}).Length);
 			
@@ -1160,7 +1167,7 @@ namespace OpenPandora
 						}
 					}
 				}
-				else
+				else if (configuration.NewVersionReport)
 				{
 					if (MessageBox.Show(
 						"New version " + latestVersion + " is available." + Environment.NewLine + Environment.NewLine +
@@ -1168,6 +1175,16 @@ namespace OpenPandora
 					{
 						Shell32.ShellExecute(0, "Open", INSTALLER_URL, "", Application.StartupPath, 1);
 						this.Close();
+					}
+					else
+					{
+						if (MessageBox.Show(
+							"New version " + latestVersion + " is available." + Environment.NewLine + Environment.NewLine +
+							"Remind you later?", "OpenPandora", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+						{
+							configuration.NewVersionReport = false;
+							configuration.Save();
+						}
 					}
 				}
 				
@@ -1309,7 +1326,7 @@ namespace OpenPandora
 					parent = parent.offsetParent;
 				}
 
-				int x = -2 - (int)(left * 1/*dpiXRatio*/);
+				int x = -2 - left;
 				int y = -2 - top;
 
 				browser.Size = new Size(element.offsetWidth + left + 40, element.offsetHeight + top + 40);
@@ -2057,11 +2074,19 @@ namespace OpenPandora
 		#region private void InitializeTaskbarNotifier(
 		private void InitializeTaskbarNotifier()
 		{
-			this.taskbarNotifier = new OpenPandora.Windows.Forms.TaskbarNotifier();	
+			try
+			{
+				this.taskbarNotifier = new OpenPandora.Windows.Forms.TaskbarNotifier();	
 
-			this.taskbarNotifier.OnLocationChanged += new OpenPandora.Windows.Forms.TaskbarNotifier.LocationChangedEventHandler(taskbarNotifier_OnLocationChanged);
+				this.taskbarNotifier.OnLocationChanged += new OpenPandora.Windows.Forms.TaskbarNotifier.LocationChangedEventHandler(taskbarNotifier_OnLocationChanged);
 
-			this.taskbarNotifier.Show();
+				//this.taskbarNotifier.Show();
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				Debug.WriteLine(ex.StackTrace);
+			}
 		}
 		#endregion
 
@@ -2098,31 +2123,37 @@ namespace OpenPandora
 
 			if (showNotification)
 			{
-				string[] coordinates;
-				
-				if (configuration.NotificationLocation != string.Empty)
+				if (configuration.NotificationWindowBalloon || taskbarNotifier == null)
 				{
-					coordinates = configuration.NotificationLocation.Split(new char[] {','});
+					NotifyIconBaloon.Show(song.Name, "by: " + song.Artist, notifyIcon);
 				}
 				else
 				{
-					coordinates = new string[] {"-1", "-1"};
-				}
+					string[] coordinates;
+				
+					if (configuration.NotificationLocation != string.Empty)
+					{
+						coordinates = configuration.NotificationLocation.Split(new char[] {','});
+					}
+					else
+					{
+						coordinates = new string[] {"-1", "-1"};
+					}
 
-				taskbarNotifier.Show(
-					this.song.Name,
-					this.song.Artist,
-					string.Empty,
-					this.song.ArtUrl,
-					this.song.Url,
-					string.Empty,
-					string.Empty,
-					int.Parse(coordinates[0]), 
-					int.Parse(coordinates[1]), 
-					500, 
-					10000, 
-					500);
-				//notifyIcon.ShowBalloon(OpenPandora.Interop.BalloonIconStyle.None, "by: " + song.Artist, song.Name, 5000);
+					taskbarNotifier.Show(
+						this.song.Name,
+						this.song.Artist,
+						string.Empty,
+						this.song.ArtUrl,
+						this.song.Url,
+						string.Empty,
+						string.Empty,
+						int.Parse(coordinates[0]), 
+						int.Parse(coordinates[1]), 
+						500, 
+						10000, 
+						500);
+				}
 			}
 			
 			RefreshMessenger();
@@ -2674,17 +2705,41 @@ namespace OpenPandora
 		#region private void MinimizeToTray()
 		private void MinimizeToTray()
 		{
-			this.Hide();
-			NotifyIconBaloon.AnimateMinimizeToTray(this);
+			try
+			{
+				this.Hide();
+
+				if (taskbarNotifier != null)
+				{
+					NotifyIconBaloon.AnimateMinimizeToTray(this);
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				Debug.WriteLine(ex.StackTrace);
+			}
 		}
 		#endregion
 
 		#region private void RestoreFromTray()
 		private void RestoreFromTray()
 		{
-			NotifyIconBaloon.AnimateRestoreFromTray(this);
-			this.Show();
-			this.Activate();
+			try
+			{
+				if (taskbarNotifier != null)
+				{
+					NotifyIconBaloon.AnimateRestoreFromTray(this);
+				}
+
+				this.Show();
+				this.Activate();
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				Debug.WriteLine(ex.StackTrace);
+			}
 		}
 		#endregion
 
@@ -2921,8 +2976,6 @@ namespace OpenPandora
 
 		private object missing = System.Type.Missing;
 
-		private double yRatio = 1;
-		private double xRatio = 1;
 		private Bitmap pandora16;
 		private Point mouseOffset;
 		private bool loaded = false;

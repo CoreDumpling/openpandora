@@ -22,6 +22,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace OpenPandora
 {
@@ -44,14 +45,22 @@ namespace OpenPandora
 			this.DockPadding.All = BORDER_WIDTH;
 			this.DockPadding.Top = TITLE_HEIGHT;
 
-			Graphics g = this.CreateGraphics();
-			xRatio = 96.0 / g.DpiX;
-			yRatio = 96.0 / g.DpiY;
-
 			btnClose.ForeColor = Player.BACKGROUND_COLOR;
-			btnClose.Width = (int)(btnClose.Width * xRatio);
-			btnClose.Height = (int)(btnClose.Height * yRatio);
 			btnClose.Location = new Point(this.Width - btnClose.Width - 2, 2);
+
+			try
+			{
+				Graphics g = this.CreateGraphics();
+				double xRatio = 96.0 / g.DpiX;
+				double yRatio = 96.0 / g.DpiY;
+				btnClose.Width = (int)(btnClose.Width * xRatio);
+				btnClose.Height = (int)(btnClose.Height * yRatio);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				Debug.WriteLine(ex.StackTrace);
+			}
 		}
 		#endregion
 
@@ -248,7 +257,5 @@ namespace OpenPandora
 
 		private Point mouseOffset;
 		private bool hideOnClose = false;
-		private double xRatio;
-		private double yRatio;
 	}
 }

@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -28,6 +29,12 @@ namespace OpenPandora
 		// Imports
 		//
 		
+		[DllImport("user32.dll")]
+		public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+		[DllImport("user32.dll")]
+		public static extern bool SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
 		[DllImport("user32", EntryPoint="SendMessageA")]
 		public static extern int SendMessage(int hwnd, int wMsg, int wParam, int lParam);
 

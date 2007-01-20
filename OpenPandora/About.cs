@@ -41,8 +41,6 @@ namespace OpenPandora
 			//
 			InitializeComponent();
 
-			this.SuspendLayout();
-
 			this.Text = "About  " + this.Text + "  " + Manager.CurrentVersion;
 			this.StartPosition = FormStartPosition.CenterScreen;
 
@@ -61,8 +59,6 @@ namespace OpenPandora
 				"Copyright (C) 2006 Eitan Pogrebizsky";
 
 			this.Controls.Add(lblAbout);
-
-			this.ResumeLayout();
 		}
 		#endregion
 

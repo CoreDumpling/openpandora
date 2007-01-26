@@ -49,7 +49,7 @@ namespace OpenPandora
 		private static readonly string INSTALLER_URL = @"http://openpandora.googlepages.com/openpandora.zip";
 		private static readonly string INSTALLER_BETA_URL = @"http://openpandora.googlepages.com/openpandorabeta.zip";
 		
-		private static readonly int MEMORYTIMER_DELAY = 30000;
+		private static readonly int MEMORYTIMER_DELAY = 20000;
 		private static readonly int MEMORYTIMER_PAUSE = 300000;
 
 		private System.ComponentModel.IContainer components;
@@ -59,8 +59,7 @@ namespace OpenPandora
 		private System.Windows.Forms.PictureBox pictureBoxTitle;
 		private System.Windows.Forms.Button btnClose;
 		private System.Windows.Forms.ToolTip toolTip;
-		private SettingsView settingsView;
-		private BaseForm settingsForm;
+		private SettingsForm settingsForm;
 		private AxSHDocVw.AxWebBrowser browser2;
 		private System.Windows.Forms.Button btnMinimize;
 		private System.Windows.Forms.NotifyIcon notifyIcon;
@@ -116,16 +115,9 @@ namespace OpenPandora
 				// Settings
 				//
 			
-				settingsView = new SettingsView();
-				settingsView.Player = this;
-				settingsView.Dock = DockStyle.Fill;
-
-				settingsForm = new BaseForm("Settings");
+				settingsForm = new SettingsForm();
 				settingsForm.HideOnClose = true;
-				settingsForm.Size = new Size(settingsView.Width + 2, settingsView.Height + 19);
-				settingsForm.Controls.Add(settingsView);
-				settingsForm.Show();
-				settingsForm.Hide();
+				settingsForm.SettingsView.Player = this;
 				
 				//
 				// Configuration
@@ -261,7 +253,12 @@ namespace OpenPandora
 			get
 			{
 				CreateParams cp = base.CreateParams;
-				cp.ClassStyle = CS_DROPSHADOW;
+				
+				if (Manager.IsWindowsXpOrHigher())
+				{
+					cp.ClassStyle |= CS_DROPSHADOW;
+				}
+
 				return cp;
 			}
 		}
@@ -541,7 +538,6 @@ namespace OpenPandora
 			{
 				panelBrowser.Show();
 				panelBrowser.BringToFront();
-				settingsView.BringToFront();
 			}
 		}
 		#endregion
@@ -723,8 +719,6 @@ namespace OpenPandora
 			{	
 				string urlText = HttpUtility.UrlDecode(e.uRL as string);
 
-				//Debug.WriteLine("Loading ... " + urlText);
-
 				try
 				{
 					if (!loaded && browserTimer != null)
@@ -774,7 +768,6 @@ namespace OpenPandora
 						}
 						
 						panelBrowser.BringToFront();
-						settingsView.BringToFront();
 					}
 					
 					if (tuner.ContainsLogout)
@@ -1043,14 +1036,15 @@ namespace OpenPandora
 						else if (script.LastIndexOf("SongPaused") > 0)
 						{
 							Debug.WriteLine("Pause");
+							playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
 							this.menuPlayerPlayPause.Text = "Play";
 								
 							paused = true;
 							refreshMessenger = false;
 							refreshXfire = false;
 							refreshSkype = false;
-									
-							playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
+
+							RefreshPlayer(false);
 									
 							memoryTimer.Interval = MEMORYTIMER_PAUSE;
 							memoryTimer.Start();
@@ -1335,7 +1329,6 @@ namespace OpenPandora
 				Debug.WriteLine("Radio: left " + left + ", top " + top);
 
 				panelBrowser.BringToFront();
-				settingsView.BringToFront();
 
 				// Navigate to events page
 				//object url2 = STARTUP_URL2;
@@ -1580,6 +1573,9 @@ namespace OpenPandora
 		#region private void menuSettings_Click(object sender, System.EventArgs e)
 		private void menuSettings_Click(object sender, System.EventArgs e)
 		{
+			settingsForm.Location = new Point(
+				this.Location.X + this.Width / 2 - settingsForm.Width / 2,
+				this.Location.Y + pictureBoxTitle.Height + (this.Height - pictureBoxTitle.Height) / 2 - settingsForm.Height / 2);
 			settingsForm.Show();
 			settingsForm.Activate();
 		}
@@ -1800,7 +1796,7 @@ namespace OpenPandora
 		#region private void AudioscrobblerConnected(object sender, EventArgs e)
 		private void AudioscrobblerConnected(object sender, EventArgs e)
 		{
-			settingsView.SetLastFmAvatar(audioscrobbler.AvatarBitmap);
+			settingsForm.SettingsView.SetLastFmAvatar(audioscrobbler.AvatarBitmap);
 		}
 		#endregion
 
@@ -2385,25 +2381,33 @@ namespace OpenPandora
 		{
 			if (song.Name != string.Empty)
 			{
-				string songShortName;
+				string toolTipTitle;
 				
-				if (song.Name.Length + song.Artist.Length > 48)
+				if (song.Name.Length + song.Artist.Length > 50)
 				{
-					int songNameLength = 48 - song.Artist.Length < 20 ? 20 : 48 - song.Artist.Length;
-					songShortName = song.Name.Substring(0, songNameLength);
-					songShortName = songShortName.PadRight(3 + songNameLength, '.');
+					if (song.Name.Length > 25)
+					{
+						toolTipTitle = song.Name.Substring(0, 22).PadRight(3, '.');
+					}
+					else
+					{
+						toolTipTitle = song.Name;
+					}
+
+					toolTipTitle = toolTipTitle + Environment.NewLine;
+
+					if (song.Artist.Length > 25)
+					{
+						toolTipTitle = toolTipTitle + song.Artist.Substring(0, 22).PadRight(3, '.');
+					}
+					else
+					{
+						toolTipTitle = toolTipTitle + song.Artist;
+					}
 				}
 				else
 				{
-					songShortName = song.Name;
-				}
-				
-				string toolTipTitle = songShortName + Environment.NewLine + song.Artist;
-
-				if (toolTipTitle.Length > 51)
-				{
-					toolTipTitle = toolTipTitle.Substring(0, 51 - 3);
-					toolTipTitle = toolTipTitle.PadRight(51, '.');
+					toolTipTitle = song.Name + Environment.NewLine + song.Artist;
 				}
 				
 				if (paused)

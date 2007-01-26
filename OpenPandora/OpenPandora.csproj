@@ -210,6 +210,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "SettingsForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SettingsForm.resx"
+                    DependentUpon = "SettingsForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "SettingsView.cs"
                     SubType = "UserControl"
                     BuildAction = "Compile"

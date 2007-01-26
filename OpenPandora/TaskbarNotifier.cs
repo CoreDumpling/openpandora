@@ -32,18 +32,6 @@ namespace OpenPandora.Windows.Forms
 	{
 		const int CS_DROPSHADOW = 0x20000;
 
-		#region protected override CreateParams CreateParams
-		protected override CreateParams CreateParams
-		{
-			get
-			{
-				CreateParams cp = base.CreateParams;
-				cp.ClassStyle = CS_DROPSHADOW;
-				return cp;
-			}
-		}
-		#endregion
-
 		private Timer timer = new Timer();
 		private TaskbarStates taskbarState = TaskbarStates.Hidden;
 		private int ShowEvents;
@@ -300,6 +288,28 @@ namespace OpenPandora.Windows.Forms
 		#endregion
 
 		//
+		// Public properties
+		//
+
+		#region protected override CreateParams CreateParams
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+
+				if (Manager.IsWindowsXpOrHigher())
+				{
+					cp.ClassStyle |= CS_DROPSHADOW;
+				}
+
+				cp.ExStyle |= 0x80; // Turn on WS_EX_TOOLWINDOW style bit
+				return cp;
+			}
+		}
+		#endregion
+
+		//
 		// Public Methods
 		//
 
@@ -329,19 +339,20 @@ namespace OpenPandora.Windows.Forms
 		#region public void Show(string songname, string artist, string album, string albumArtUrl, string songurl, string artisturl, string albumurl, int x, int y, int timetoshow, int timetostay, int timetohide)
 		public void Show(string songname, string artist, string album, string albumArtUrl, string songurl, string artisturl, string albumurl, int x, int y, int timetoshow, int timetostay, int timetohide)
 		{
-			//BuildDisplay(songname, artist, album, albumArtUrl, songurl, artisturl, albumurl);
-
-			this.Width = 128;
-			this.Height = 179;
-
-			if (x < 0 || y < 0)
+			lock(this)
 			{
-				SetDefaultLocation();
-			}
-			else
-			{
-				this.Left = x;
-				this.Top = y;
+				this.Width = 128;
+				this.Height = 179;
+
+				if (x < 0 || y < 0)
+				{
+					SetDefaultLocation();
+				}
+				else
+				{
+					this.Left = x;
+					this.Top = y;
+				}
 			}
 	
 			VisibleEvents = timetostay;
@@ -379,8 +390,6 @@ namespace OpenPandora.Windows.Forms
 					taskbarState = TaskbarStates.Appearing;
 					timer.Interval = ShowEvents;
 					timer.Start();
-					//User32.SetWindowPos(this.Handle, -1, Left, Top, Width, Height, 0x0010);
-					//User32.ShowWindow(this.Handle, 4);
 					StartDisplayer(songname, artist, album, albumArtUrl, songurl, artisturl, albumurl);
 					break;
 
@@ -724,7 +733,6 @@ namespace OpenPandora.Windows.Forms
 		#region private void TransparentPanelMouse_MouseEnter(object sender, System.EventArgs e)
 		private void TransparentPanelMouse_MouseEnter(object sender, System.EventArgs e)
 		{
-			Debug.WriteLine("MouseEnter");
 			IsMouseOverPopup = true;
 		}
 		#endregion
@@ -732,7 +740,6 @@ namespace OpenPandora.Windows.Forms
 		#region private void TransparentPanelMouse_MouseLeave(object sender, System.EventArgs e)
 		private void TransparentPanelMouse_MouseLeave(object sender, System.EventArgs e)
 		{
-			Debug.WriteLine("MouseLeave");
 			IsMouseOverPopup = false;
 			ResetLinks();
 		}

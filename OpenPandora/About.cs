@@ -56,7 +56,7 @@ namespace OpenPandora
 				Environment.NewLine +
 				"Individual contributors: Dirk Rettschlag" + Environment.NewLine +
 				Environment.NewLine + Environment.NewLine +
-				"Copyright (C) 2006 Eitan Pogrebizsky";
+				"Copyright © 2006-" + DateTime.Now.Year + " Eitan Pogrebizsky";
 
 			this.Controls.Add(lblAbout);
 		}
@@ -102,6 +102,22 @@ namespace OpenPandora
 			this.Name = "About";
 			this.Text = "Open Pandora";
 
+		}
+		#endregion
+
+		//
+		// Public properties
+		//
+
+		#region protected override CreateParams CreateParams
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+				cp.ExStyle |= 0x80; // Turn on WS_EX_TOOLWINDOW style bit
+				return cp;
+			}
 		}
 		#endregion
 	}

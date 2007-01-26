@@ -70,6 +70,24 @@ namespace OpenPandora
 			}
 		}
 		#endregion
+
+		#region public static bool IsWindowsXpOrHigher()
+		public static bool IsWindowsXpOrHigher()
+		{
+			System.OperatingSystem os = System.Environment.OSVersion;
+
+			if (os.Platform == PlatformID.Win32NT && 
+				((os.Version.Major == 5 && os.Version.Minor >= 1) || 
+				os.Version.Major > 5))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		#endregion
 		
 		//
 		// Private methods

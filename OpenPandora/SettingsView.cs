@@ -309,11 +309,11 @@ namespace OpenPandora
 			// tabs
 			// 
 			this.tabs.Controls.Add(this.tabPageDisplay);
-			this.tabs.Controls.Add(this.tabProxy);
 			this.tabs.Controls.Add(this.tabPageGeneral);
-			this.tabs.Controls.Add(this.tabPageSendSongInfo);
 			this.tabs.Controls.Add(this.tabPageControl);
+			this.tabs.Controls.Add(this.tabPageSendSongInfo);
 			this.tabs.Controls.Add(this.tabPageLastFM);
+			this.tabs.Controls.Add(this.tabProxy);
 			this.tabs.Location = new System.Drawing.Point(0, 0);
 			this.tabs.Name = "tabs";
 			this.tabs.Padding = new System.Drawing.Point(0, 0);

@@ -719,6 +719,8 @@ namespace OpenPandora
 			{	
 				string urlText = HttpUtility.UrlDecode(e.uRL as string);
 
+				Debug.WriteLine(urlText);
+
 				try
 				{
 					if (!loaded && browserTimer != null)
@@ -832,12 +834,6 @@ namespace OpenPandora
 						}
 					}
 					
-					if (tuner.ContainsStation)
-					{
-						Debug.WriteLine("Changed station to " + tuner.StationCode);
-						song = new Song(string.Empty, string.Empty, string.Empty);
-					}
-					
 					if (tuner.ContainsOpen)
 					{
 						lastBookmark = DateTime.Now;
@@ -846,69 +842,6 @@ namespace OpenPandora
 					if (tuner.ContainsSkip)
 					{
 						Debug.WriteLine("Skip");
-					}
-					
-					if (tuner.ContainsPlay)
-					{
-						/*Debug.WriteLine("Play");
-						
-						OnPlayStart();
-						
-						++continuesPlayCounter;
-								
-						memoryTimer.Interval = MEMORYTIMER_DELAY;
-						memoryTimer.Start();
-								
-						if (taskbarNotifier.Visible)
-							taskbarNotifier.Hide();
-
-						if (!paused)
-						{
-							playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
-									
-							if ((!tuner.ContainsSkip && !tuner.ContainsStation) ||
-							    configuration.LastFmSubmitSkipped)
-							{
-								SubmitSongToLastFM(song.Artist, song.Name, playedLength);
-							}
-									
-							playedLength = 0;
-						}
-								
-						playedStartTime = DateTime.Now;
-						
-						this.song = new Song(tuner.SongID, string.Empty, string.Empty);
-						
-						if (nextSong != null)
-						{
-							song.Name = nextSong.Name;
-							song.Artist = nextSong.Artist;
-							
-							nextSong = null;
-						}
-								
-						refreshMessenger = !paused;
-						refreshXfire = !paused;
-						refreshSkype = !paused;
-								
-						paused = false;*/
-					}
-					else if (tuner.ContainsPause)
-					{
-						/*Debug.WriteLine("Pause");
-						this.menuPlayerPlayPause.Text = "Play";
-								
-						paused = true;
-						refreshMessenger = false;
-						refreshXfire = false;
-						refreshSkype = false;
-									
-						playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
-									
-						memoryTimer.Interval = MEMORYTIMER_PAUSE;
-						memoryTimer.Start();
-									
-						return;*/
 					}
 					
 					if (configuration.PartyMode && continuesPlayCounter > 30)
@@ -949,6 +882,8 @@ namespace OpenPandora
 		private void browser2_BeforeNavigate2(object sender, AxSHDocVw.DWebBrowserEvents2_BeforeNavigate2Event e)
 		{	
 			string url = (string)e.uRL;
+
+			Debug.WriteLine(url);
 			
 			try
 			{	
@@ -1021,10 +956,11 @@ namespace OpenPandora
 
 							paused = false;
 
-							song.Name = songName;
+							song = new Song(string.Empty, songName, artistName, songUrl, artUrl);
+							/*song.Name = songName;
 							song.Artist = artistName;
 							song.Url = songUrl;
-							song.ArtUrl = artUrl;
+							song.ArtUrl = artUrl;*/
 					
 							Debug.WriteLine(song.Name + " ~by~ " + song.Artist);
 					
@@ -2125,30 +2061,7 @@ namespace OpenPandora
 				}
 				else
 				{
-					string[] coordinates;
-				
-					if (configuration.NotificationLocation != string.Empty)
-					{
-						coordinates = configuration.NotificationLocation.Split(new char[] {','});
-					}
-					else
-					{
-						coordinates = new string[] {"-1", "-1"};
-					}
-
-					taskbarNotifier.Show(
-						this.song.Name,
-						this.song.Artist,
-						string.Empty,
-						this.song.ArtUrl,
-						this.song.Url,
-						string.Empty,
-						string.Empty,
-						int.Parse(coordinates[0]), 
-						int.Parse(coordinates[1]), 
-						500, 
-						10000, 
-						500);
+					RefreshTaskbarNotifier();
 				}
 			}
 			
@@ -2271,6 +2184,30 @@ namespace OpenPandora
 					sentOnceToSkype = false;
 				}
 			}
+		}
+		#endregion
+
+		#region private void RefreshTaskbarNotifier()
+		private void RefreshTaskbarNotifier()
+		{
+			string[] coordinates;
+				
+			if (configuration.NotificationLocation != string.Empty)
+			{
+				coordinates = configuration.NotificationLocation.Split(new char[] {','});
+			}
+			else
+			{
+				coordinates = new string[] {"-1", "-1"};
+			}
+
+			taskbarNotifier.Show(
+				song,
+				int.Parse(coordinates[0]), 
+				int.Parse(coordinates[1]), 
+				500, 
+				10000, 
+				500);
 		}
 		#endregion
 		
@@ -2825,6 +2762,17 @@ namespace OpenPandora
 					{
 						notifyIcon_DoubleClick(this, new EventArgs());
 						e.Handled = true;
+					}
+					else if (e.KeyCode == Keys.Enter)
+					{
+						if (taskbarNotifier != null)
+						{
+							e.Handled = taskbarNotifier.Show(
+								song,
+								500, 
+								10000, 
+								500);;
+						}
 					}
 					
 					// Release pressed keys

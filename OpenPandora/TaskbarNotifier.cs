@@ -61,6 +61,8 @@ namespace OpenPandora.Windows.Forms
 		private string songsource;
 		private System.Text.RegularExpressions.Regex regex;
 		private System.Text.RegularExpressions.Match match;
+
+		private Song lastSong;
 	
 		public delegate void LocationChangedEventHandler(Point Location);
 		public new event LocationChangedEventHandler OnLocationChanged;
@@ -77,37 +79,21 @@ namespace OpenPandora.Windows.Forms
 		private class Displayer
 		{
 			private TaskbarNotifier notifier;
-			private string songName;
-			private string artist;
-			private string album;
-			private string albumArtUrl;
-			private string songUrl;
-			private string artistUrl;
-			private string albumUrl;
+			private Song song;
 
-			public Displayer(
-				TaskbarNotifier notifier,
-				string songName, 
-				string artist, 
-				string album, 
-				string albumArtUrl, 
-				string songUrl, 
-				string artistUrl, 
-				string albumUrl)
+			public Displayer(TaskbarNotifier notifier, Song song)
 			{
 				this.notifier = notifier;
-				this.songName = songName;
-				this.artist = artist;
-				this.album = album;
-				this.albumArtUrl = albumArtUrl;
-				this.songUrl = songUrl;
-				this.artistUrl = artistUrl;
-				this.albumUrl = albumUrl;
+				this.song = song;
 			}
 
 			public void Show()
 			{
-				notifier.BuildDisplay(songName, artist, album, albumArtUrl, songUrl, artistUrl, albumUrl);
+				if (song != null)
+				{
+					notifier.BuildDisplay(song);
+				}
+
 				User32.SetWindowPos(notifier.Handle, -1, notifier.Left, notifier.Top, notifier.Width, notifier.Height, 0x0010);
 				User32.ShowWindow(notifier.Handle, 4);
 			}
@@ -313,8 +299,8 @@ namespace OpenPandora.Windows.Forms
 		// Public Methods
 		//
 
-		#region public void Show(string songname, string artist, string album, string albumArtUrl, string songurl, string artisturl, string albumurl, int x, int y)
-		public void Show(string songname, string artist, string album, string albumArtUrl, string songurl, string artisturl, string albumurl, int x, int y)
+		#region public void Show(Song song, int x, int y)
+		public void Show(Song song, int x, int y)
 		{
 			this.Width = 128;
 			this.Height = 179;
@@ -332,13 +318,16 @@ namespace OpenPandora.Windows.Forms
 			taskbarState = TaskbarStates.Visible;
 			this.Opacity = 1.0;
 
-			StartDisplayer(songname, artist, album, albumArtUrl, songurl, artisturl, albumurl);
+			StartDisplayer(song);
 		}
 		#endregion
 
-		#region public void Show(string songname, string artist, string album, string albumArtUrl, string songurl, string artisturl, string albumurl, int x, int y, int timetoshow, int timetostay, int timetohide)
-		public void Show(string songname, string artist, string album, string albumArtUrl, string songurl, string artisturl, string albumurl, int x, int y, int timetoshow, int timetostay, int timetohide)
+		#region public void Show(Song song, int x, int y, int timeToShow, int timeToStay, int timeToHide)
+		public void Show(Song song, int x, int y, int timeToShow, int timeToStay, int timeToHide)
 		{
+			lastSong = null;
+			lastSong = song;
+
 			lock(this)
 			{
 				this.Width = 128;
@@ -355,14 +344,14 @@ namespace OpenPandora.Windows.Forms
 				}
 			}
 	
-			VisibleEvents = timetostay;
+			VisibleEvents = timeToStay;
 
 			int Events;
 
-			if (timetoshow > 10)
+			if (timeToShow > 10)
 			{
-				Events = Math.Min((timetoshow / 10), 100);
-				ShowEvents = timetoshow / Events;
+				Events = Math.Min((timeToShow / 10), 100);
+				ShowEvents = timeToShow / Events;
 				IncrementShow = 100 / Events;
 			}
 			else
@@ -371,10 +360,10 @@ namespace OpenPandora.Windows.Forms
 				IncrementShow = 10;
 			}
 
-			if (timetohide > 10)
+			if (timeToHide > 10)
 			{
-				Events = Math.Min((timetohide / 10), 100);
-				HideEvents = timetohide / Events;
+				Events = Math.Min((timeToHide / 10), 100);
+				HideEvents = timeToHide / Events;
 				IncrementHide = 100 / Events;
 			}
 			else
@@ -390,7 +379,7 @@ namespace OpenPandora.Windows.Forms
 					taskbarState = TaskbarStates.Appearing;
 					timer.Interval = ShowEvents;
 					timer.Start();
-					StartDisplayer(songname, artist, album, albumArtUrl, songurl, artisturl, albumurl);
+					StartDisplayer(song);
 					break;
 
 				case TaskbarStates.Appearing:
@@ -414,6 +403,79 @@ namespace OpenPandora.Windows.Forms
 			}
 		}
 		#endregion
+
+		#region public bool Show(Song song, int timeToShow, int timeToStay, int timeToHide)
+		public bool Show(Song song, int timeToShow, int timeToStay, int timeToHide)
+		{
+			if (lastSong == null ||
+				lastSong.Name != song.Name ||
+				lastSong.Artist != song.Artist)
+			{
+				return false;
+			}
+
+			VisibleEvents = timeToStay;
+
+			int Events;
+
+			if (timeToShow > 10)
+			{
+				Events = Math.Min((timeToShow / 10), 100);
+				ShowEvents = timeToShow / Events;
+				IncrementShow = 100 / Events;
+			}
+			else
+			{
+				ShowEvents = 10;
+				IncrementShow = 10;
+			}
+
+			if (timeToHide > 10)
+			{
+				Events = Math.Min((timeToHide / 10), 100);
+				HideEvents = timeToHide / Events;
+				IncrementHide = 100 / Events;
+			}
+			else
+			{
+				HideEvents = 10;
+				IncrementHide = 10;
+			}
+
+			switch (taskbarState)
+			{
+				case TaskbarStates.Hidden:
+					this.Opacity = 0;
+					taskbarState = TaskbarStates.Appearing;
+					timer.Interval = ShowEvents;
+					timer.Start();
+					StartDisplayer(null);
+					break;
+
+				case TaskbarStates.Appearing:
+					Refresh();
+					break;
+
+				case TaskbarStates.Visible:
+					timer.Stop();
+					timer.Interval = VisibleEvents;
+					timer.Start();
+					Refresh();
+					break;
+
+				case TaskbarStates.Disappearing:
+					timer.Stop();
+					taskbarState = TaskbarStates.Visible;
+					timer.Interval = VisibleEvents;
+					timer.Start();
+					Refresh();
+					break;
+			}
+
+			return true;
+		}
+		#endregion
+
 
 		#region public new void Hide()
 		public new void Hide()
@@ -445,28 +507,35 @@ namespace OpenPandora.Windows.Forms
 		// Private methods
 		//
 
-		#region private void BuildDisplay(string songname, string artist, string album, string albumArtUrl, string songurl, string artisturl, string albumurl)
-		private void BuildDisplay(string songname, string artist, string album, string albumArtUrl, string songurl, string artisturl, string albumurl)
+		#region private void BuildDisplay(Song song)
+		private void BuildDisplay(Song song)
 		{
 			ResetLinks();
 
-			if (linkLabelSongName.URL != songurl)
+			if (linkLabelSongName.URL != song.Url)
 			{
-            
-				if (albumArtUrl == null || albumArtUrl == "")
+				if (song.ArtUrl == null || song.ArtUrl == "")
 				{
 					Debug.WriteLine("TaskbarNotifier: No ArtURL");
 					this.pictureBoxAlbumArt.Image = ((System.Drawing.Image)(resourcesBackGround.GetObject("pictureBoxAlbumArt.Image")));
 				}
 				else
 				{
-            
 					try
 					{
-						buffer = DownloadData(albumArtUrl);
+						buffer = DownloadData(song.ArtUrl);
 
 						stream = new System.IO.MemoryStream(buffer);
-						pictureBoxAlbumArt.Image = Image.FromStream(stream);
+
+						try
+						{
+							pictureBoxAlbumArt.Image = Image.FromStream(stream);
+						}
+						finally
+						{
+							stream.Close();
+							stream = null;
+						}
 					}
 					catch (Exception ex)
 					{
@@ -474,11 +543,11 @@ namespace OpenPandora.Windows.Forms
 					}
 				}
 
-				GetAlbumAndURL(songurl);
+				GetAlbumAndURL(song);
 
-				linkLabelSongName.Text = songname;
-				linkLabelArtist.Text = artist;
-				linkLabelSongName.URL = songurl;
+				linkLabelSongName.Text = song.Name;
+				linkLabelArtist.Text = song.Artist;
+				linkLabelSongName.URL = song.Url;
 			}
 		}
 		#endregion
@@ -486,8 +555,7 @@ namespace OpenPandora.Windows.Forms
 		#region private byte[] DownloadData(string url)
 		private byte[] DownloadData(string url)
 		{
-			System.IO.Stream stream;
-			stream = wc.OpenRead(url);
+			System.IO.Stream stream = wc.OpenRead(url);
 			
 			try
 			{
@@ -526,22 +594,15 @@ namespace OpenPandora.Windows.Forms
 			finally
 			{
 				stream.Close();
+				stream = null;
 			}
 		}
-
 		#endregion
 
-		#region private void StartDisplayer()
-		private void StartDisplayer(
-			string songName, 
-			string artist, 
-			string album, 
-			string albumArtUrl, 
-			string songUrl, 
-			string artistUrl, 
-			string albumUrl)
+		#region private void StartDisplayer(Song song)
+		private void StartDisplayer(Song song)
 		{
-			Displayer displayer = new Displayer(this, songName, artist, album, albumArtUrl, songUrl, artistUrl, albumUrl);
+			Displayer displayer = new Displayer(this, song);
 
 			System.Threading.Thread dsiplayerThread = new System.Threading.Thread(new System.Threading.ThreadStart(displayer.Show));
 			dsiplayerThread.IsBackground = true;
@@ -593,12 +654,12 @@ namespace OpenPandora.Windows.Forms
 		}
 		#endregion
 
-		#region private void GetAlbumAndURL(string songurl)
-		private void GetAlbumAndURL(string songurl)
+		#region private void GetAlbumAndURL(Song song)
+		private void GetAlbumAndURL(Song song)
 		{
 			try
 			{
-				buffer = DownloadData(songurl);
+				buffer = DownloadData(song.Url);
 				
 				songsource = encoder.GetString(buffer);
 
@@ -612,7 +673,8 @@ namespace OpenPandora.Windows.Forms
 
 					if (match.Success)
 					{
-						linkLabelArtist.URL = match.Value.Replace("href=\"","").Replace("\"","");
+						song.ArtistUrl = match.Value.Replace("href=\"","").Replace("\"","");;
+						linkLabelArtist.URL = song.ArtistUrl;
 					}
 				}
 
@@ -630,7 +692,8 @@ namespace OpenPandora.Windows.Forms
 
 					if (match.Success)
 					{
-						linkLabelAlbum.URL = match.Value.Replace("href=\"","").Replace("\"","");
+						song.AlbumUrl = match.Value.Replace("href=\"","").Replace("\"","");
+						linkLabelAlbum.URL = song.AlbumUrl;
 					}
 				}
 			}

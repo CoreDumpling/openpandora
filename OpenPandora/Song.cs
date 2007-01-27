@@ -43,11 +43,26 @@ namespace OpenPandora
 		// Public properties
 		//
 
+		#region public string ID
+		public string ID
+		{
+			get { return id; }
+		}
+		#endregion
+
 		#region public string Name
 		public string Name
 		{
 			get { return this.name; }
 			set { this.name = value; }
+		}
+		#endregion
+
+		#region public string Url
+		public string Url
+		{
+			get { return this.url; }
+			set { this.url = value; }
 		}
 		#endregion
 
@@ -59,11 +74,27 @@ namespace OpenPandora
 		}
 		#endregion
 
-		#region public string Url
-		public string Url
+		#region public string ArtistUrl
+		public string ArtistUrl
 		{
-			get { return this.url; }
-			set { this.url = value; }
+			get { return this.artistUrl; }
+			set { this.artistUrl = value; }
+		}
+		#endregion
+
+		#region public string Album
+		public string Album
+		{
+			get { return album; }
+			set { album = value; }
+		}
+		#endregion
+
+		#region public string AlbumUrl
+		public string AlbumUrl
+		{
+			get { return albumUrl; }
+			set { albumUrl = value; }
 		}
 		#endregion
 
@@ -104,10 +135,13 @@ namespace OpenPandora
 		// Private data
 		//
 
-		private string name;
-		private string artist;
 		private string id;
+		private string name;
 		private string url;
+		private string artist;
+		private string artistUrl;
+		private string album;
+		private string albumUrl;
 		private string artUrl;
 	}
 }

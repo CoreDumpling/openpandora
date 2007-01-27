@@ -90,8 +90,8 @@ namespace OpenPandora
 					}
 					
 					Debug.WriteLine("AudioscrobblerPlugin.Submitting");
-					Debug.WriteLine("	Artist - " + artist);
 					Debug.WriteLine("	Song   - " + song);
+					Debug.WriteLine("	Artist - " + artist);
 					Debug.WriteLine("	Album  - " + album);
 					Debug.WriteLine("	MB ID  - " + musicBrainzId);
 					Debug.WriteLine("	Length - " + length);

@@ -1615,7 +1615,19 @@ namespace OpenPandora
 		#region private void menuToolsCopyToClipboard_Click(object sender, EventArgs e)
 		private void menuToolsCopyToClipboard_Click(object sender, EventArgs e)
 		{
-			Clipboard.SetDataObject(title, true);
+			if (song.Name == null)
+			{
+				return;
+			}
+
+			string songData = song.Name + Environment.NewLine + song.Artist;
+
+			if (song.Album != null && song.Album != string.Empty)
+			{
+				songData += Environment.NewLine + song.Album;
+			}
+
+			Clipboard.SetDataObject(songData, true);
 		}
 		#endregion
 		

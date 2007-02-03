@@ -684,8 +684,8 @@ namespace OpenPandora.Windows.Forms
 				if (match.Success)
 				{
 					string albumText = Regex.Replace(match.Value,"<.*?>","",RegexOptions.Singleline).Replace("\n","").Replace("\t","");
-					albumText = System.Xml.XmlConvert.DecodeName(albumText);
-					linkLabelAlbum.Text = albumText;
+					song.Album = System.Xml.XmlConvert.DecodeName(albumText);
+					linkLabelAlbum.Text = song.Album;
 
 					regex = new Regex("href=.*?\".*?\"",RegexOptions.Singleline);
 					match = regex.Match(match.Value);

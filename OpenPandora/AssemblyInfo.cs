@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Eitan Pogrebizsky <openpandora@gmail.com>, 
+ * Copyright (C) 2007 Eitan Pogrebizsky <openpandora@gmail.com>, 
  * and individual contributors.
  *
  * This program is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Eitan Pogrebizsky")]
 [assembly: AssemblyProduct("OpenPandora")]
-[assembly: AssemblyCopyright("Copyright (C) 2006 Eitan Pogrebizsky")]
+[assembly: AssemblyCopyright("Copyright (C) 2007 Eitan Pogrebizsky")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -51,7 +51,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("0.6.8.6")]
+[assembly: AssemblyVersion("0.6.8.7")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

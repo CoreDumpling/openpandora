@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Eitan Pogrebizsky <openpandora@gmail.com>, 
+ * Copyright (C) 2007 Eitan Pogrebizsky <openpandora@gmail.com>, 
  * and individual contributors.
  *
  * This program is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ namespace OpenPandora
 				Environment.NewLine +
 				"Individual contributors: Dirk Rettschlag" + Environment.NewLine +
 				Environment.NewLine + Environment.NewLine +
-				"Copyright © 2006-" + DateTime.Now.Year + " Eitan Pogrebizsky";
+				"Copyright © 2007-" + DateTime.Now.Year + " Eitan Pogrebizsky";
 
 			this.Controls.Add(lblAbout);
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Eitan Pogrebizsky <openpandora@gmail.com>, 
+ * Copyright (C) 2007 Eitan Pogrebizsky <openpandora@gmail.com>, 
  * and individual contributors.
  *
  * This program is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@
   VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" " "
   VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "Eitan Pogrebizsky"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" " "
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2006 Eitan Pogrebizsky"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2007 Eitan Pogrebizsky"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "OpenPandora Setup"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${OPEN_PANDORA_VERSION}"
   

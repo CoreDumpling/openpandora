@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Eitan Pogrebizsky <openpandora@gmail.com>, 
+ * Copyright (C) 2007 Eitan Pogrebizsky <openpandora@gmail.com>, 
  * and individual contributors.
  *
  * This program is free software; you can redistribute it and/or
@@ -170,6 +170,7 @@ namespace OpenPandora
 					retry);
 			
 				Thread submitThread = new Thread(new ThreadStart(submittor.Execute));
+				submitThread.IsBackground = true;
 				submitThread.Start();
 			}
 			#endregion
@@ -274,6 +275,7 @@ namespace OpenPandora
 				userProxy);
 			
 			Thread submitThread = new Thread(new ThreadStart(submittor.Execute));
+			submitThread.IsBackground = true;
 			submitThread.Start();
 		}
 		#endregion

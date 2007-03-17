@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Eitan Pogrebizsky <openpandora@gmail.com>, 
+ * Copyright (C) 2007 Eitan Pogrebizsky <openpandora@gmail.com>, 
  * and individual contributors.
  *
  * This program is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@ namespace OpenPandora
 	public class Player : System.Windows.Forms.Form
 	{
 		const int CS_DROPSHADOW = 0x20000;
+		const int CS_GLOBALCLASS = 0x4000;
 
 		public static readonly Color BACKGROUND_COLOR = Color.FromArgb(49, 49, 49);
 		public static readonly Color PANDORA_COLOR = Color.FromArgb(51, 102, 153);
@@ -46,8 +47,8 @@ namespace OpenPandora
 		private static readonly string STARTUP_URL2 = @"http://openpandora.googlepages.com/pandoraevents6.htm";
 		public static readonly string CONTROLLER_URL = @"http://openpandora.googlepages.com/controller.xml";
 		private static readonly string WEBSITE_URL = @"http://openpandora.googlepages.com/";
-		private static readonly string INSTALLER_URL = @"http://openpandora.googlepages.com/openpandora.zip";
-		private static readonly string INSTALLER_BETA_URL = @"http://openpandora.googlepages.com/openpandorabeta.zip";
+		private static readonly string INSTALLER_URL = @"http://openpandora.googlepages.com/download/";
+		private static readonly string INSTALLER_BETA_URL = @"http://openpandora.googlepages.com/download/";
 		
 		private static readonly int MEMORYTIMER_DELAY = 20000;
 		private static readonly int MEMORYTIMER_PAUSE = 300000;

@@ -894,7 +894,17 @@ namespace OpenPandora
 
 					foreach (string script in scripts)
 					{
-						if (script.LastIndexOf("SongPlayed") > 0)
+						if (script.LastIndexOf("PandoraStarted") > 0)
+						{
+							//loaded = true;
+							//loginTime = DateTime.Now;
+						
+							if (pandora == null)
+							{
+								pandora = new Pandora(browser);
+							}
+						}
+						else if (script.LastIndexOf("SongPlayed") > 0)
 						{
 							Debug.WriteLine("Play");
 

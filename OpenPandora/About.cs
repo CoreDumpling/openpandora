@@ -56,7 +56,7 @@ namespace OpenPandora
 				Environment.NewLine +
 				"Individual contributors: Dirk Rettschlag" + Environment.NewLine +
 				Environment.NewLine + Environment.NewLine +
-				"Copyright © 2007-" + DateTime.Now.Year + " Eitan Pogrebizsky";
+				"Copyright © 2006-" + DateTime.Now.Year + " Eitan Pogrebizsky";
 
 			this.Controls.Add(lblAbout);
 		}

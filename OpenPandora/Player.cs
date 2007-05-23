@@ -1242,6 +1242,7 @@ namespace OpenPandora
 				}
 
 				IHTMLElement element = (IHTMLElement)document.all.item("radio", 0);
+				IHTMLElement element2 = (IHTMLElement)document.all.item("TunerContainer", 0);
 
 				if (element == null)
 				{
@@ -1256,7 +1257,10 @@ namespace OpenPandora
 				radioSize.Height = element.offsetHeight;
 				radioSize.Width = element.offsetWidth;
 
-				int left = element.offsetLeft;
+				//int left = (int)(element2.offsetLeft + element.offsetLeft) / 2;
+				int left = 48;
+				int top = element2.offsetTop;
+				/*int left = element.offsetLeft;
 				int top = element.offsetTop;
 				IHTMLElement parent = element.offsetParent;
 
@@ -1265,7 +1269,7 @@ namespace OpenPandora
 					left += parent.offsetLeft;
 					top += parent.offsetTop;
 					parent = parent.offsetParent;
-				}
+				}*/
 
 				int x = -2 - left;
 				int y = -2 - top;

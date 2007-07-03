@@ -673,7 +673,7 @@ namespace OpenPandora.Windows.Forms
 
 					if (match.Success)
 					{
-						song.ArtistUrl = match.Value.Replace("href=\"","").Replace("\"","");;
+						song.ArtistUrl = match.Value.Replace("href=\"","").Replace("\"","");
 						linkLabelArtist.URL = song.ArtistUrl;
 					}
 				}

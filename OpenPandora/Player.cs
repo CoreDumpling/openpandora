@@ -47,8 +47,8 @@ namespace OpenPandora
 		private static readonly string STARTUP_URL2 = @"http://openpandora.googlepages.com/pandoraevents6.htm";
 		public static readonly string CONTROLLER_URL = @"http://openpandora.googlepages.com/controller.xml";
 		private static readonly string WEBSITE_URL = @"http://openpandora.googlepages.com/";
-		private static readonly string INSTALLER_URL = @"http://openpandora.googlepages.com/download/";
-		private static readonly string INSTALLER_BETA_URL = @"http://openpandora.googlepages.com/download/";
+		private static readonly string INSTALLER_URL = @"http://openpandora.googlepages.com/download";
+		private static readonly string INSTALLER_BETA_URL = @"http://openpandora.googlepages.com/download";
 		
 		private static readonly int MEMORYTIMER_DELAY = 20000;
 		private static readonly int MEMORYTIMER_PAUSE = 300000;
@@ -933,8 +933,8 @@ namespace OpenPandora
 							string songUrl = songUrlPart.Substring(songNamePart.IndexOf("'") + 1, songUrlPart.LastIndexOf("'") - songUrlPart.IndexOf("'") - 1);
 							string artUrl = artUrlPart.Substring(artUrlPart.IndexOf("'") + 1, artUrlPart.LastIndexOf("'") - artUrlPart.IndexOf("'") - 1);
 					
-							songName = HttpUtility.UrlDecode(songName.Replace("%25%32%37", "%27"));
-							artistName = HttpUtility.UrlDecode(artistName.Replace("%25%32%37", "%27"));
+							songName = HttpUtility.UrlDecode(songName.Replace("%25%32%37", "%27").Replace("%22", "\""));
+							artistName = HttpUtility.UrlDecode(artistName.Replace("%25%32%37", "%27").Replace("%22", "\""));
 							songUrl = HttpUtility.UrlDecode(songUrl);
 							artUrl = HttpUtility.UrlDecode(artUrl);
 
@@ -1258,7 +1258,7 @@ namespace OpenPandora
 				radioSize.Width = element.offsetWidth;
 
 				//int left = (int)(element2.offsetLeft + element.offsetLeft) / 2;
-				int left = 48;
+				int left = element2.offsetLeft;
 				int top = element2.offsetTop;
 				/*int left = element.offsetLeft;
 				int top = element.offsetTop;
@@ -2758,7 +2758,7 @@ namespace OpenPandora
 							pandora.VolumeDown();
 							e.Handled = true;
 						}
-						else if (e.KeyCode == Keys.Add)
+						else if (e.KeyCode == Keys.Add || e.KeyCode == Keys.Oemplus)
 						{
 							pandora.Like();
 							e.Handled = true;

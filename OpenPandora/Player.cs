@@ -43,7 +43,7 @@ namespace OpenPandora
 
 		private static readonly string DEFAULT_TITLE = "OpenPandora";
 		private static readonly string PAUSED = "[Paused]";
-		private static readonly string STARTUP_URL = @"http://www.pandora.com/?cmd=mini";
+		private static readonly string STARTUP_URL = @"http://www.pandora.com/";
 		private static readonly string STARTUP_URL2 = @"http://openpandora.googlepages.com/pandoraevents6.htm";
 		public static readonly string CONTROLLER_URL = @"http://openpandora.googlepages.com/controller.xml";
 		private static readonly string WEBSITE_URL = @"http://openpandora.googlepages.com/";
@@ -342,7 +342,7 @@ namespace OpenPandora
 			this.pictureBoxTitle.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
 			this.pictureBoxTitle.Location = new System.Drawing.Point(0, 0);
 			this.pictureBoxTitle.Name = "pictureBoxTitle";
-			this.pictureBoxTitle.Size = new System.Drawing.Size(640, 18);
+			this.pictureBoxTitle.Size = new System.Drawing.Size(636, 18);
 			this.pictureBoxTitle.TabIndex = 6;
 			this.pictureBoxTitle.TabStop = false;
 			this.pictureBoxTitle.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBoxTitle_Paint);
@@ -358,7 +358,7 @@ namespace OpenPandora
 			this.btnClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClose.BackgroundImage")));
 			this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnClose.ForeColor = System.Drawing.Color.White;
-			this.btnClose.Location = new System.Drawing.Point(622, 2);
+			this.btnClose.Location = new System.Drawing.Point(618, 2);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(16, 16);
 			this.btnClose.TabIndex = 7;
@@ -375,7 +375,7 @@ namespace OpenPandora
 			this.btnMinimize.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnMinimize.BackgroundImage")));
 			this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnMinimize.ForeColor = System.Drawing.Color.White;
-			this.btnMinimize.Location = new System.Drawing.Point(606, 2);
+			this.btnMinimize.Location = new System.Drawing.Point(602, 2);
 			this.btnMinimize.Name = "btnMinimize";
 			this.btnMinimize.Size = new System.Drawing.Size(16, 16);
 			this.btnMinimize.TabIndex = 8;
@@ -388,7 +388,7 @@ namespace OpenPandora
 			// Player
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(639, 267);
+			this.ClientSize = new System.Drawing.Size(635, 267);
 			this.Controls.Add(this.btnMinimize);
 			this.Controls.Add(this.btnClose);
 			this.Controls.Add(this.pictureBoxTitle);
@@ -1257,10 +1257,9 @@ namespace OpenPandora
 				radioSize.Height = element.offsetHeight;
 				radioSize.Width = element.offsetWidth;
 
-				//int left = (int)(element2.offsetLeft + element.offsetLeft) / 2;
-				int left = element2.offsetLeft;
-				int top = element2.offsetTop;
-				/*int left = element.offsetLeft;
+				/*int left = element2.offsetLeft;
+				int top = element2.offsetTop;*/
+				int left = element.offsetLeft;
 				int top = element.offsetTop;
 				IHTMLElement parent = element.offsetParent;
 
@@ -1269,10 +1268,10 @@ namespace OpenPandora
 					left += parent.offsetLeft;
 					top += parent.offsetTop;
 					parent = parent.offsetParent;
-				}*/
+				}
 
 				int x = -2 - left;
-				int y = -2 - top;
+				int y = -2 - top - 75;
 
 				browser.Size = new Size(element.offsetWidth + left + 40, element.offsetHeight + top + 40);
 				browser.Location = new Point(x, y);
@@ -1582,7 +1581,7 @@ namespace OpenPandora
 				}
 				else
 				{
-					this.Size = new Size(240, pictureBoxTitle.Height + 22);
+					this.Size = new Size(172, pictureBoxTitle.Height + 27);
 
 					if (configuration.MiniPlayerLocation != string.Empty)
 					{

@@ -32,7 +32,7 @@
   ; TODO: Install for current or all users SetShellVarContext
 
   ;Version
-  !define OPEN_PANDORA_VERSION "0.6.9"
+  !define OPEN_PANDORA_VERSION "0.7.0.0"
 
   ;Name and file
   Name "OpenPandora"
@@ -40,13 +40,13 @@
   BrandingText " "
   
   VIProductVersion "${OPEN_PANDORA_VERSION}.0"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "OpenPandora"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" " "
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "Eitan Pogrebizsky"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" " "
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2007 Eitan Pogrebizsky"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "OpenPandora Setup"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${OPEN_PANDORA_VERSION}"
+  VIAddVersionKey "ProductName" "OpenPandora"
+  VIAddVersionKey "Comments" " "
+  VIAddVersionKey "CompanyName" "Eitan Pogrebizsky"
+  VIAddVersionKey "LegalTrademarks" " "
+  VIAddVersionKey "LegalCopyright" "© 2009 Eitan Pogrebizsky"
+  VIAddVersionKey "FileDescription" "OpenPandora Setup"
+  VIAddVersionKey "FileVersion" "${OPEN_PANDORA_VERSION}"
   
   SetCompressor /SOLID LZMA
 
@@ -166,9 +166,9 @@ SectionEnd
 
 Section "Start Menu Group" StartMenu
 SectionIn 1
-  CreateDirectory "$STARTMENU\Programs\OpenPandora"
-  CreateShortCut "$STARTMENU\Programs\OpenPandora\OpenPandora.lnk" "$INSTDIR\OpenPandora.exe" "" "$INSTDIR\OpenPandora.exe" 0
-  CreateShortCut "$STARTMENU\Programs\OpenPandora\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
+  CreateDirectory "$SMPROGRAMS\OpenPandora"
+  CreateShortCut "$SMPROGRAMS\OpenPandora\OpenPandora.lnk" "$INSTDIR\OpenPandora.exe" "" "$INSTDIR\OpenPandora.exe" 0
+  CreateShortCut "$SMPROGRAMS\OpenPandora\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
 SectionEnd
 
 Section "Desktop Shortcut" DesktopShortcut
@@ -187,17 +187,6 @@ SectionIn 1
 SectionEnd
 
 ;--------------------------------
-;Descriptions
-
-  ;Language strings
-;  LangString DESC_SecDummy ${LANG_ENGLISH} "A test section."
-
-  ;Assign language strings to sections
-;  !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-;    !insertmacro MUI_DESCRIPTION_TEXT ${SecDummy} $(DESC_SecDummy)
-;  !insertmacro MUI_FUNCTION_DESCRIPTION_END
-
-;--------------------------------
 ;Uninstaller Section
 
 Section "Uninstall"
@@ -213,10 +202,10 @@ Section "Uninstall"
   Delete "$DESKTOP\OpenPandora.lnk"
   Delete "$QUICKLAUNCH\OpenPandora.lnk"
   
-  Delete "$STARTMENU\Programs\OpenPandora\OpenPandora.lnk"
-  Delete "$STARTMENU\Programs\OpenPandora\Uninstall.lnk"
+  Delete "$SMPROGRAMS\OpenPandora\OpenPandora.lnk"
+  Delete "$SMPROGRAMS\OpenPandora\Uninstall.lnk"
   Delete "$SMSTARTUP\OpenPandora.lnk"
-  RMDir "$STARTMENU\Programs\OpenPandora"
+  RMDir "$SMPROGRAMS\OpenPandora"
 
   RMDir "$INSTDIR"
 

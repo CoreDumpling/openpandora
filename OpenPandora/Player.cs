@@ -73,7 +73,9 @@ namespace OpenPandora
 
 		#region public Player()
 		public Player()
-		{			
+		{
+			User32.ShowWindow(this.Handle, 0);
+
 			InitializeComponent();
 
 			this.SuspendLayout();
@@ -133,10 +135,11 @@ namespace OpenPandora
 				// Window
 				//
 			
-				this.Size = new Size(640, 268);
-
-				this.windowHeight = this.Height;
-				this.windowWidth = this.Width;
+				Size playerSize = new Size(640, 250);
+				
+				ResizeFromContent(playerSize);
+				pictureBoxFill.Size = playerSize;
+				pictureBoxFill.Location = new Point(2, 18);
 			
 				if (configuration.Location != string.Empty)
 				{
@@ -160,9 +163,6 @@ namespace OpenPandora
 				//
 
 				browser.Silent = true;
-				browser.Size = new Size(this.Size.Width + configuration.OffsetLeft + 40, this.Size.Height + configuration.OffsetTop + 40);
-
-				this.Width = pictureBoxFill.Image.Width;
 			
 				//
 				// Windows hook
@@ -217,10 +217,9 @@ namespace OpenPandora
 			}
 			finally
 			{
-				this.ResumeLayout();
-
-				this.panelBrowser.Left = 0;
-				this.pictureBoxFill.Left = 0;
+				this.ResumeLayout(true);
+				Application.DoEvents();
+				User32.ShowWindow(this.Handle, 9);
 			}
 		}
 		#endregion
@@ -291,9 +290,9 @@ namespace OpenPandora
 			// 
 			this.pictureBoxFill.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureBoxFill.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxFill.Image")));
-			this.pictureBoxFill.Location = new System.Drawing.Point(0, 18);
+			this.pictureBoxFill.Location = new System.Drawing.Point(2, 18);
 			this.pictureBoxFill.Name = "pictureBoxFill";
-			this.pictureBoxFill.Size = new System.Drawing.Size(650, 300);
+			this.pictureBoxFill.Size = new System.Drawing.Size(620, 230);
 			this.pictureBoxFill.TabIndex = 2;
 			this.pictureBoxFill.TabStop = false;
 			this.pictureBoxFill.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxFill_MouseUp);
@@ -307,20 +306,20 @@ namespace OpenPandora
 			this.browser.Enabled = true;
 			this.browser.Location = new System.Drawing.Point(-2, -2);
 			this.browser.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("browser.OcxState")));
-			this.browser.Size = new System.Drawing.Size(800, 300);
+			this.browser.Size = new System.Drawing.Size(800, 800);
 			this.browser.TabIndex = 3;
 			this.browser.NewWindow3 += new AxSHDocVw.DWebBrowserEvents2_NewWindow3EventHandler(this.browser_NewWindow3);
-			this.browser.DocumentComplete += new AxSHDocVw.DWebBrowserEvents2_DocumentCompleteEventHandler(this.browser_DocumentComplete);
 			this.browser.BeforeNavigate2 += new AxSHDocVw.DWebBrowserEvents2_BeforeNavigate2EventHandler(this.browser_BeforeNavigate2);
+			this.browser.DocumentComplete += new AxSHDocVw.DWebBrowserEvents2_DocumentCompleteEventHandler(this.browser_DocumentComplete);
 			// 
 			// panelBrowser
 			// 
 			this.panelBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelBrowser.Controls.Add(this.browser);
 			this.panelBrowser.Controls.Add(this.browser2);
-			this.panelBrowser.Location = new System.Drawing.Point(0, 18);
+			this.panelBrowser.Location = new System.Drawing.Point(2, 18);
 			this.panelBrowser.Name = "panelBrowser";
-			this.panelBrowser.Size = new System.Drawing.Size(800, 464);
+			this.panelBrowser.Size = new System.Drawing.Size(640, 250);
 			this.panelBrowser.TabIndex = 4;
 			// 
 			// browser2
@@ -331,9 +330,9 @@ namespace OpenPandora
 			this.browser2.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("browser2.OcxState")));
 			this.browser2.Size = new System.Drawing.Size(312, 163);
 			this.browser2.TabIndex = 10;
-			this.browser2.StatusTextChange += new AxSHDocVw.DWebBrowserEvents2_StatusTextChangeEventHandler(this.browser2_StatusTextChange);
-			this.browser2.DocumentComplete += new AxSHDocVw.DWebBrowserEvents2_DocumentCompleteEventHandler(this.browser2_DocumentComplete);
 			this.browser2.BeforeNavigate2 += new AxSHDocVw.DWebBrowserEvents2_BeforeNavigate2EventHandler(this.browser2_BeforeNavigate2);
+			this.browser2.DocumentComplete += new AxSHDocVw.DWebBrowserEvents2_DocumentCompleteEventHandler(this.browser2_DocumentComplete);
+			this.browser2.StatusTextChange += new AxSHDocVw.DWebBrowserEvents2_StatusTextChangeEventHandler(this.browser2_StatusTextChange);
 			// 
 			// pictureBoxTitle
 			// 
@@ -342,7 +341,7 @@ namespace OpenPandora
 			this.pictureBoxTitle.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
 			this.pictureBoxTitle.Location = new System.Drawing.Point(0, 0);
 			this.pictureBoxTitle.Name = "pictureBoxTitle";
-			this.pictureBoxTitle.Size = new System.Drawing.Size(636, 18);
+			this.pictureBoxTitle.Size = new System.Drawing.Size(644, 18);
 			this.pictureBoxTitle.TabIndex = 6;
 			this.pictureBoxTitle.TabStop = false;
 			this.pictureBoxTitle.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBoxTitle_Paint);
@@ -358,7 +357,7 @@ namespace OpenPandora
 			this.btnClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClose.BackgroundImage")));
 			this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnClose.ForeColor = System.Drawing.Color.White;
-			this.btnClose.Location = new System.Drawing.Point(618, 2);
+			this.btnClose.Location = new System.Drawing.Point(620, 2);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(16, 16);
 			this.btnClose.TabIndex = 7;
@@ -375,7 +374,7 @@ namespace OpenPandora
 			this.btnMinimize.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnMinimize.BackgroundImage")));
 			this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnMinimize.ForeColor = System.Drawing.Color.White;
-			this.btnMinimize.Location = new System.Drawing.Point(602, 2);
+			this.btnMinimize.Location = new System.Drawing.Point(604, 2);
 			this.btnMinimize.Name = "btnMinimize";
 			this.btnMinimize.Size = new System.Drawing.Size(16, 16);
 			this.btnMinimize.TabIndex = 8;
@@ -388,7 +387,7 @@ namespace OpenPandora
 			// Player
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(635, 267);
+			this.ClientSize = new System.Drawing.Size(644, 252);
 			this.Controls.Add(this.btnMinimize);
 			this.Controls.Add(this.btnClose);
 			this.Controls.Add(this.pictureBoxTitle);
@@ -404,6 +403,7 @@ namespace OpenPandora
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.formPandora_Closing);
 			this.Load += new System.EventHandler(this.formPandora_Load);
 			this.Activated += new System.EventHandler(this.formPandora_Activated);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.Player_Paint);
 			((System.ComponentModel.ISupportInitialize)(this.browser)).EndInit();
 			this.panelBrowser.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.browser2)).EndInit();
@@ -506,14 +506,7 @@ namespace OpenPandora
 		{
 			this.Hide();
 
-			if (menuMiniPlayer.Checked)
-			{
-				configuration.MiniPlayerLocation = this.Location.X + "," + this.Location.Y;
-			}
-			else
-			{
-				configuration.Location = this.Location.X + "," + this.Location.Y;
-			}
+			configuration.Location = this.Location.X + "," + this.Location.Y;
 
 			configuration.Save();
 			
@@ -543,6 +536,29 @@ namespace OpenPandora
 		}
 		#endregion
 
+		private void Player_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			Graphics graphics = e.Graphics;
+
+			Pen outterPen = new Pen(Color.FromArgb(192, 192, 192));
+			Pen innerPen = new Pen(Color.FromArgb(128, 128, 128));
+			
+			graphics.DrawLines(outterPen, 
+				new Point[] {
+								new Point(0, 0),
+								new Point(0, this.Height - 1),
+								new Point(this.Width - 1, this.Height - 1),
+								new Point(this.Width - 1, 0)});
+
+			graphics.DrawLines(innerPen, 
+				new Point[] {
+								new Point(1, 1),
+								new Point(1, this.Height - 2),
+								new Point(this.Width - 2, this.Height - 2),
+								new Point(this.Width - 2, 1)});
+
+		}
+
 		//
 		// pictureBoxFill event handlers
 		//
@@ -550,14 +566,7 @@ namespace OpenPandora
 		#region private void pictureBoxFill_DoubleClick(object sender, System.EventArgs e)
 		private void pictureBoxFill_DoubleClick(object sender, System.EventArgs e)
 		{
-			if (menuMiniPlayer.Checked)
-			{
-				menuMiniPlayer_Click(sender, e);
-			}
-			else
-			{
-				MinimizeToTray();
-			}
+			MinimizeToTray();
 		}
 		#endregion
 
@@ -586,19 +595,7 @@ namespace OpenPandora
 					this.Location = mousePosition;
 				}
 
-				if (menuMiniPlayer.Checked)
-				{
-					configuration.MiniPlayerLocation = this.Location.X + "," + this.Location.Y;
-
-					if (taskbarNotifier != null && taskbarNotifier.Visible)
-					{
-						taskbarNotifier.Hide();
-					}
-				}
-				else
-				{
-					configuration.Location = this.Location.X + "," + this.Location.Y;
-				}
+				configuration.Location = this.Location.X + "," + this.Location.Y;
 			}
 		}
 		#endregion
@@ -702,7 +699,7 @@ namespace OpenPandora
 				if (!loaded)
 				{
 					Debug.WriteLine("Radio: timer");
-					browserTimer.Start();					
+					browserTimer.Start();
 				}
 			}
 			catch (Exception ex)
@@ -720,7 +717,7 @@ namespace OpenPandora
 			{	
 				string urlText = HttpUtility.UrlDecode(e.uRL as string);
 
-				Debug.WriteLine(urlText);
+				Debug.WriteLine("browser_BeforeNavigate2: " + urlText);
 
 				try
 				{
@@ -734,7 +731,6 @@ namespace OpenPandora
 				catch (Exception ex)
 				{
 					Debug.WriteLine(ex.Message);
-					Debug.WriteLine("Url: " + urlText);
 					Debug.WriteLine(ex.StackTrace);
 				}
 
@@ -757,7 +753,12 @@ namespace OpenPandora
 					if ((loginTime - DateTime.Now).TotalHours == 6)
 					{
 						loginTime = DateTime.Now;
-						Manager.Login(user);
+						Manager.Login(listenerID);
+					}
+
+					if (tuner.ContainsRegistration)
+					{
+						ResizeFromContent(radioSize);
 					}
 					
 					if (tuner.ContainsLogin)
@@ -772,6 +773,47 @@ namespace OpenPandora
 						
 						panelBrowser.BringToFront();
 					}
+
+					if (tuner.ContainsPlay)
+					{
+						OnPlayStart();
+
+						++continuesPlayCounter;
+								
+						memoryTimer.Interval = MEMORYTIMER_DELAY;
+						memoryTimer.Start();
+								
+						if (taskbarNotifier != null && taskbarNotifier.Visible)
+						{
+							taskbarNotifier.Hide();
+						}
+
+						if (!paused)
+						{
+							playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
+									
+							SubmitSongToLastFM(song.Artist, song.Name, playedLength);
+									
+							playedLength = 0;
+						}
+								
+						playedStartTime = DateTime.Now;
+					} 
+					else if (tuner.ContainsPause)
+					{
+						playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
+						this.menuPlayerPlayPause.Text = "Play";
+								
+						paused = true;
+						refreshMessenger = false;
+						refreshXfire = false;
+						refreshSkype = false;
+
+						RefreshPlayer(false);
+									
+						memoryTimer.Interval = MEMORYTIMER_PAUSE;
+						memoryTimer.Start();
+					}
 					
 					if (tuner.ContainsLogout)
 					{
@@ -780,11 +822,12 @@ namespace OpenPandora
 					
 					if (tuner.ContainsUser)
 					{
-						userUrl = tuner.UserUrl;
-						user = tuner.User;
+						authToken = tuner.AuthToken;
+						listenerID = tuner.ListenerID;
 
-						Manager.Login(user);						
+						Manager.Login(listenerID);						
 						LoadStations();
+						ResizeFromContent(new Size(radioSize.Width, radioSize.Height - 200));
 					}
 					
 					if (tuner.ContainsCreateStation)
@@ -792,8 +835,7 @@ namespace OpenPandora
 						LoadStations();
 					}
 					
-					if (!tuner.ContainsDeleteStation && 
-						deleteStation)
+					if (!tuner.ContainsDeleteStation && deleteStation)
 					{
 						if (tuner.ContainsStation)
 						{
@@ -808,8 +850,7 @@ namespace OpenPandora
 						deleteStation = true;
 					}
 					
-					if (!tuner.ContainsSharedStation && 
-						sharedStation)
+					if (!tuner.ContainsSharedStation && sharedStation)
 					{
 						if (tuner.ContainsStation)
 						{
@@ -867,8 +908,18 @@ namespace OpenPandora
 		{
 			try
 			{
+				if (e.bstrUrl.StartsWith("http://www.pandora.com/?cmd=mini") || e.bstrUrl.StartsWith("http://www.pandora.com/?cmd=indexmini"))
+				{
+					// prevent opening pandora mini player
+				}
+				else
+				{
+					Debug.WriteLine("new window: " + e.bstrUrl + " | " + e.bstrUrlContext);
+					
+					Shell32.ShellExecute(0, "Open", e.bstrUrl, "", Application.StartupPath, 1);
+				}
+
 				e.cancel = true;
-				Shell32.ShellExecute(0, "Open", e.bstrUrl, "", Application.StartupPath, 1);
 			}
 			catch (Exception ex)
 			{
@@ -884,7 +935,7 @@ namespace OpenPandora
 		{	
 			string url = (string)e.uRL;
 
-			Debug.WriteLine(url);
+			Debug.WriteLine("browser2_BeforeNavigate2: " + url);
 			
 			try
 			{	
@@ -902,6 +953,7 @@ namespace OpenPandora
 							if (pandora == null)
 							{
 								pandora = new Pandora(browser);
+								browserTimer.Start();
 							}
 						}
 						else if (script.LastIndexOf("SongPlayed") > 0)
@@ -937,29 +989,6 @@ namespace OpenPandora
 							artistName = HttpUtility.UrlDecode(artistName.Replace("%25%32%37", "%27").Replace("%22", "\""));
 							songUrl = HttpUtility.UrlDecode(songUrl);
 							artUrl = HttpUtility.UrlDecode(artUrl);
-
-							OnPlayStart();
-						
-							++continuesPlayCounter;
-								
-							memoryTimer.Interval = MEMORYTIMER_DELAY;
-							memoryTimer.Start();
-								
-							if (taskbarNotifier != null && taskbarNotifier.Visible)
-							{
-								taskbarNotifier.Hide();
-							}
-
-							if (!paused)
-							{
-								playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
-									
-								SubmitSongToLastFM(song.Artist, song.Name, playedLength);
-									
-								playedLength = 0;
-							}
-								
-							playedStartTime = DateTime.Now;
 								
 							refreshMessenger = !paused;
 							refreshXfire = !paused;
@@ -968,10 +997,6 @@ namespace OpenPandora
 							paused = false;
 
 							song = new Song(string.Empty, songName, artistName, songUrl, artUrl);
-							/*song.Name = songName;
-							song.Artist = artistName;
-							song.Url = songUrl;
-							song.ArtUrl = artUrl;*/
 					
 							Debug.WriteLine(song.Name + " ~by~ " + song.Artist);
 					
@@ -1248,8 +1273,8 @@ namespace OpenPandora
 				{
 					Debug.WriteLine("Radio: missing");
 
-					browserRefreshTimer.Interval = 30000;
-					browserRefreshTimer.Start();
+					//browserRefreshTimer.Interval = 30000;
+					//browserRefreshTimer.Start();
 
 					return;
 				}
@@ -1271,9 +1296,9 @@ namespace OpenPandora
 				}
 
 				int x = -2 - left;
-				int y = -2 - top - 75;
+				int y = -2 - top;// - 75;
 
-				browser.Size = new Size(element.offsetWidth + left + 40, element.offsetHeight + top + 40);
+				browser.Size = new Size(radioSize.Width - x + 40, radioSize.Height - y + 40);
 				browser.Location = new Point(x, y);
 					
 				Debug.WriteLine("Radio: left " + left + ", top " + top);
@@ -1288,7 +1313,9 @@ namespace OpenPandora
 				configuration.OffsetTop = top;
 				configuration.Save();
 					
-				loaded = true;	
+				loaded = true;
+
+				ResizeFromContent(new Size(radioSize.Width, radioSize.Height - 200));
 			}
 			catch (Exception ex)
 			{
@@ -1544,80 +1571,6 @@ namespace OpenPandora
 			Shell32.ShellExecute(0, "Open", WEBSITE_URL, "", Application.StartupPath, 1);
 		}
 		#endregion
-
-		#region private void menuMiniPlayer_Click(object sender, EventArgs e)
-		private void menuMiniPlayer_Click(object sender, EventArgs e)
-		{
-			this.SuspendLayout();
-
-			menuMiniPlayer.Checked = !menuMiniPlayer.Checked;
-
-			try
-			{
-				if (!menuMiniPlayer.Checked)
-				{
-					this.Size = new Size(windowWidth, windowHeight);
-
-					this.TopMost = this.configuration.KeepOnTop;
-
-					if (configuration.Location != string.Empty)
-					{
-						try
-						{
-							string[] coordinates = configuration.Location.Split(new char[] {','});
-
-							this.Location = new Point(int.Parse(coordinates[0]), int.Parse(coordinates[1]));
-						}
-						catch (Exception ex)
-						{
-							Debug.WriteLine(ex.Message);
-							Debug.WriteLine(ex.StackTrace);
-						}
-					}
-
-					MoveToWorkingArea();
-
-					ApplyConfiguration(configuration, false);
-				}
-				else
-				{
-					this.Size = new Size(172, pictureBoxTitle.Height + 27);
-
-					if (configuration.MiniPlayerLocation != string.Empty)
-					{
-						try
-						{
-							string[] coordinates = configuration.MiniPlayerLocation.Split(new char[] {','});
-
-							this.Location = new Point(int.Parse(coordinates[0]), int.Parse(coordinates[1]));
-						}
-						catch (Exception ex)
-						{
-							Debug.WriteLine(ex.Message);
-							Debug.WriteLine(ex.StackTrace);
-						}
-					}
-
-					MoveToWorkingArea();
-
-					this.TopMost = true;
-					btnMinimize.Hide();
-					btnClose.Hide();
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex.Message);
-				Debug.WriteLine(ex.StackTrace);
-			}
-			finally
-			{
-				this.ResumeLayout();
-			}
-
-			pictureBoxTitle.Refresh();
-		}
-		#endregion
 		
 		#region private void menuLastFmSubmit_Click(object sender, EventArgs e)
 		private void menuLastFmSubmit_Click(object sender, EventArgs e)
@@ -1650,8 +1603,9 @@ namespace OpenPandora
 		{
 			string artistName = HttpUtility.UrlEncode(song.Artist);
 			string songName = HttpUtility.UrlEncode(song.Name);
+			string q = HttpUtility.UrlEncode("\"" + song.Artist + "\" \"" + song.Name + "\"");
 			
-			string url = "http://www.leoslyrics.com/advanced.php?artistmode=0&artist=" + artistName + "&albummode=0&album=&songmode=0&song=" + songName + "&mode=0";
+			string url = @"http://www.google.com/cse?cx=partner-pub-9043696466675135:r9109a-t7id&q=" + q + "&sa=Search";
 			Shell32.ShellExecute(0, "Open", url, "", Application.StartupPath, 1);
 		}
 		#endregion
@@ -1814,14 +1768,11 @@ namespace OpenPandora
 			
 				try
 				{
-					if (!menuMiniPlayer.Checked)
-					{
-						//
-						// Title buttons
+					//
+					// Title buttons
 			
-						this.btnClose.Visible = this.configuration.CloseButtonVisible;
-						this.btnMinimize.Visible = this.configuration.MinimizeButtonVisible;
-					}
+					this.btnClose.Visible = this.configuration.CloseButtonVisible;
+					this.btnMinimize.Visible = this.configuration.MinimizeButtonVisible;
 					
 					//
 					// Window
@@ -1917,6 +1868,25 @@ namespace OpenPandora
 		// Private methods
 		//
 
+		#region private void ResizeFromContent(Size size)
+		private void ResizeFromContent(Size size)
+		{
+			this.Size = new Size(size.Width + 4, size.Height + 18 + 2);
+			
+			pictureBoxTitle.Size = new Size(this.Width, 18);
+			pictureBoxTitle.Location = new Point(0, 0);
+
+			btnClose.Location = new Point(pictureBoxTitle.Width - 2 - btnClose.Width, 2);
+			btnMinimize.Location = new Point(btnClose.Left - btnMinimize.Width, 2);
+			
+			panelBrowser.Size = new Size(this.Width - 4, this.Height - pictureBoxTitle.Height - 2);
+			panelBrowser.Location = new Point(2, 18);
+
+			this.windowHeight = this.Height;
+			this.windowWidth = this.Width;
+		}
+		#endregion
+
 		#region private void InitializeMenus()
 		private void InitializeMenus()
 		{
@@ -1926,8 +1896,6 @@ namespace OpenPandora
 			this.menuRefresh = new MenuItem("Refresh", new EventHandler(this.menuRefresh_Click));
 			this.menuOpenHide = new MenuItem("Open/Hide", new EventHandler(this.menuOpenHide_Click));
 			this.menuOpenHide.DefaultItem = true;
-
-			this.menuMiniPlayer = new MenuItem("Mini Player", new EventHandler(this.menuMiniPlayer_Click));
 			
 			this.menuLastFmSubmit = new MenuItem("Submit to Last.fm", new EventHandler(this.menuLastFmSubmit_Click));
 			this.menuLastFmSubmit.Visible = false; 
@@ -1954,8 +1922,7 @@ namespace OpenPandora
 			this.menuToolsLocateRadio = new MenuItem("Focus on Pandora Radio", new EventHandler(this.menuToolsLocateRadio_Click));
 			this.menuTools = new MenuItem("Tools");
 			this.menuTools.MenuItems.Add(menuToolsLocateRadio);
-			this.menuTools.MenuItems.Add(menuToolsCopyToClipboard);
-			this.menuTools.MenuItems.Add(menuToolsLyrics);
+			this.menuTools.MenuItems.Add(menuToolsCopyToClipboard);			
 
 			//
 			// Construct menu
@@ -1970,8 +1937,8 @@ namespace OpenPandora
 			this.contextMenu.MenuItems.Add(menuPlayerLike);
 			this.contextMenu.MenuItems.Add(menuPlayerHate);
 			this.contextMenu.MenuItems.Add(menuPlayerStations);
+			this.contextMenu.MenuItems.Add(menuToolsLyrics);
 			this.contextMenu.MenuItems.Add("-");
-			this.contextMenu.MenuItems.Add(menuMiniPlayer);
 			this.contextMenu.MenuItems.Add(menuSettings);
 			this.contextMenu.MenuItems.Add(menuTools);
 			this.contextMenu.MenuItems.Add("-");
@@ -2530,7 +2497,8 @@ namespace OpenPandora
 		private void LoadStations()
 		{
 			StationLoader.Load(
-				user, 
+				authToken,
+				listenerID, 
 				configuration.ProxyHost, 
 				configuration.ProxyPort,
 				configuration.ProxyUser,
@@ -2938,7 +2906,6 @@ namespace OpenPandora
 		private MenuItem menuAbout;
 		private MenuItem menuSettings;
 		private MenuItem menuWebsite;
-		private MenuItem menuMiniPlayer;
 		private MenuItem menuLastFmSubmit;
 		private MenuItem menuPlayerPlayPause;
 		private MenuItem menuPlayerSkip;
@@ -2967,8 +2934,8 @@ namespace OpenPandora
 
 		private bool hideTitle = false;
 		private bool isFirstTrack = true;
-		private string userUrl;
-		private string user = "Unknown";
+		private string authToken;
+		private string listenerID = "NoID";
 		private string currentStationCode = string.Empty;
 		private Station[] stations = new Station[0];
 		private bool isPayingUser = false;
@@ -3035,6 +3002,8 @@ namespace OpenPandora
 				string stationId = (stationIdElement != null ? stationIdElement.innerText : string.Empty);
 				string stationIsShared = (stationIsSharedElement != null ? stationIsSharedElement.innerText : string.Empty);
 				string stationIsQuickMix = (stationIsQuickMixElement != null ? stationIsQuickMixElement.innerText : string.Empty);
+
+
 
 				if (e.text.StartsWith("Pandora.SongPlayed"))
 				{

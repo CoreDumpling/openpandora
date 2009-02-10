@@ -49,15 +49,15 @@ namespace OpenPandora
 		// Public methods
 		//
 		
-		#region public static void Login(string user)
-		public static void Login(string user)
+		#region public static void Login(string listenerID)
+		public static void Login(string listenerID)
 		{
 			try
 			{
 				webForm = new WebForm();
 				
 				object missing = System.Type.Missing;
-				object url = CreateLoginUrl(user);
+				object url = CreateLoginUrl(listenerID);
 				
 				webForm.Browser.Navigate2(ref url, ref missing, ref missing, ref missing, ref missing);
 				
@@ -93,10 +93,10 @@ namespace OpenPandora
 		// Private methods
 		//
 		
-		#region private static string CreateLoginUrl(string user)
-		private static string CreateLoginUrl(string user)
+		#region private static string CreateLoginUrl(string listenerID)
+		private static string CreateLoginUrl(string listenerID)
 		{
-			return loginUrl + "?utm_source=version&utm_medium=" + currentVersion + "&utm_term=user&utm_content=" + user;
+			return loginUrl + "?utm_source=version&utm_medium=" + currentVersion + "&utm_term=user&utm_content=" + listenerID;
 		}
 		#endregion
 		

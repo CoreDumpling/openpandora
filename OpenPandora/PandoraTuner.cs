@@ -39,12 +39,14 @@ namespace OpenPandora
 			this.containsCreateStation = false;
 			this.containsDeleteStation = false;
 			this.containsSharedStation = false;
+			this.containsRegistration = false;
 			
 			this.isPayingUser = false;
 			
 			try
 			{
 				this.functions = urlText.Remove(0, "javascript:".Length).Split(';');
+				//javascript:onTunerEvent('onAdInteraction', 'userIdentification')
 			
 				foreach (string function in functions)
 				{
@@ -64,9 +66,15 @@ namespace OpenPandora
 					{
 						parameters[i] = parameters[i].Trim(new char[] {' ', '\''});
 					}
-				
-					// onCheckConnection
-					if (parameters[0].Equals("hasLoggedIn"))
+
+					if (parameters[0].Equals("onAdInteraction"))
+					{
+						if (parameters[1].Equals("userIdentification"))
+						{
+							this.containsRegistration = true;
+						}
+					}
+					else if (parameters[0].Equals("hasLoggedIn"))
 					{
 						containsLogin = true;
 					}
@@ -80,9 +88,8 @@ namespace OpenPandora
 						{
 							containsUser = true;
 						
-							userUrl = HttpUtility.UrlDecode(parameters[1]);
-							userUrl = userUrl.TrimEnd(new char[] {'/'});
-							user = userUrl.Substring(userUrl.LastIndexOf('/') + 1, userUrl.Length - userUrl.LastIndexOf('/') - 1);
+							authToken = parameters[1];
+							listenerID = parameters[2];
 						}
 					}
 					else if (parameters[0].Equals("adStateChange"))
@@ -223,16 +230,16 @@ namespace OpenPandora
 		#endregion
 
 		#region public string UserUrl
-		public string UserUrl
+		public string AuthToken
 		{
-			get { return userUrl; }
+			get { return authToken; }
 		}
 		#endregion
 
-		#region public string User
-		public string User
+		#region public string ListenerID
+		public string ListenerID
 		{
-			get { return user; }
+			get { return listenerID; }
 		}
 		#endregion
 
@@ -285,6 +292,13 @@ namespace OpenPandora
 		}
 		#endregion
 		
+		#region public bool ContainsRegistration
+		public bool ContainsRegistration
+		{
+			get { return this.containsRegistration; }
+		}
+		#endregion
+
 		//
 		// Public methods
 		//
@@ -312,8 +326,8 @@ namespace OpenPandora
 		private bool containsLogout;
 		private bool containsUser;
 		private bool containsAds;
-		private string userUrl;
-		private string user;
+		private string authToken;
+		private string listenerID;
 		private bool isPayingUser;
 		private bool containsPlay;
 		private bool containsPause;
@@ -325,5 +339,6 @@ namespace OpenPandora
 		private bool containsCreateStation;
 		private bool containsDeleteStation;
 		private bool containsSharedStation;
+		private bool containsRegistration;
 	}
 }

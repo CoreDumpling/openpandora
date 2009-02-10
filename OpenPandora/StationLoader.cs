@@ -29,15 +29,11 @@ namespace OpenPandora
 {
 	public class StationLoader
 	{
-		#region private StationLoader(string user)
-		private StationLoader(
-			string user, 
-			string proxyHost,
-			int proxyPort,
-			string proxyUser,
-			string proxyPassword)
+		#region private StationLoader(string authToken, string listenerID, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
+		private StationLoader(string authToken, string listenerID, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
 		{
-			this.user = user;
+			this.authToken = authToken;
+			this.listenerID = listenerID;
 			this.proxyHost = proxyHost;
 			this.proxyPort = proxyPort;
 			this.proxyUser = proxyUser;
@@ -66,12 +62,12 @@ namespace OpenPandora
 		// Public methods
 		//
 		
-		#region public static void Load(string user, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
-		public static void Load(string user, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
+		#region public static void Load(string AuthToken, string listenerID, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
+		public static void Load(string authToken, string listenerID, string proxyHost, int proxyPort, string proxyUser, string proxyPassword)
 		{
 			Debug.WriteLine("Stations initiate loading ...");
 			
-			StationLoader loader = new StationLoader(user, proxyHost, proxyPort, proxyUser, proxyPassword);
+			StationLoader loader = new StationLoader(authToken, listenerID, proxyHost, proxyPort, proxyUser, proxyPassword);
 			
 			Thread loaderThread = new Thread(new ThreadStart(loader.Load));
 			loaderThread.IsBackground = true;
@@ -90,7 +86,7 @@ namespace OpenPandora
 			{
 				Debug.WriteLine("Stations loading ...");
 			
-				ArrayList stationArray = new ArrayList();
+				/*ArrayList stationArray = new ArrayList();
 			
 				string filename = "http://feeds.pandora.com/feeds/people/" + user + "/stations.xml";
 				HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(filename);
@@ -169,7 +165,7 @@ namespace OpenPandora
 				if (Loaded != null)
 				{
 					Loaded(this, new EventArgs());
-				}
+				}*/
 			}
 			catch (Exception ex)
 			{
@@ -184,7 +180,8 @@ namespace OpenPandora
 		//
 		
 		private static Station[] stations = new Station[0];
-		private string user;
+		private string authToken;
+		private string listenerID;
 		private string proxyHost;
 		private int proxyPort;
 		private string proxyUser;

@@ -44,11 +44,11 @@ namespace OpenPandora
 		private static readonly string DEFAULT_TITLE = "OpenPandora";
 		private static readonly string PAUSED = "[Paused]";
 		private static readonly string STARTUP_URL = @"http://www.pandora.com/";
-		private static readonly string STARTUP_URL2 = @"http://openpandora.googlepages.com/pandoraevents6.htm";
-		public static readonly string CONTROLLER_URL = @"http://openpandora.googlepages.com/controller.xml";
-		private static readonly string WEBSITE_URL = @"http://openpandora.googlepages.com/";
-		private static readonly string INSTALLER_URL = @"http://openpandora.googlepages.com/download";
-		private static readonly string INSTALLER_BETA_URL = @"http://openpandora.googlepages.com/download";
+		private static readonly string STARTUP_URL2 = @"http://getopenpandora.appspot.com/pandoraevents.html";
+		//public static readonly string CONTROLLER_URL = @"http://openpandora.googlepages.com/controller.xml";
+		private static readonly string WEBSITE_URL = @"http://getopenpandora.appspot.com/";
+		private static readonly string INSTALLER_URL = @"http://getopenpandora.appspot.com/download";
+		private static readonly string INSTALLER_BETA_URL = @"http://getopenpandora.appspot.com/download";
 		
 		private static readonly int MEMORYTIMER_DELAY = 20000;
 		private static readonly int MEMORYTIMER_PAUSE = 300000;
@@ -504,14 +504,14 @@ namespace OpenPandora
 		#region private void formPandora_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		private void formPandora_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			this.Hide();
-
-			configuration.Location = this.Location.X + "," + this.Location.Y;
-
-			configuration.Save();
-			
 			try
 			{
+				this.Hide();
+
+				configuration.Location = this.Location.X + "," + this.Location.Y;
+
+				configuration.Save();
+			
 				if (windowsHook != null)
 				{
 					windowsHook.Dispose();
@@ -696,7 +696,15 @@ namespace OpenPandora
 		{
 			try
 			{
-				if (!loaded)
+				string urlText = HttpUtility.UrlDecode(e.uRL as string);
+
+				if (urlText == "http://www.pandora.com/restricted") 
+				{
+					MessageBox.Show(this, "We are sorry, but Pandora blocked you from using their service.\nOnly users from inside U.S. are allowed.", "OpenPandora", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					Shell32.ShellExecute(0, "Open", urlText, "", Application.StartupPath, 1);
+					this.Close();
+				}
+				else if (!loaded)
 				{
 					Debug.WriteLine("Radio: timer");
 					browserTimer.Start();
@@ -718,6 +726,14 @@ namespace OpenPandora
 				string urlText = HttpUtility.UrlDecode(e.uRL as string);
 
 				Debug.WriteLine("browser_BeforeNavigate2: " + urlText);
+
+				if (urlText.StartsWith("res://ieframe.dll/navcancl.htm"))
+				{
+					textMessageCode = 1;
+					textMessageTimer.Start();
+					e.cancel = true;
+					return;
+				}
 
 				try
 				{
@@ -1466,6 +1482,29 @@ namespace OpenPandora
 		}
 		#endregion
 		
+		#region private void textMessageTimer_Tick(object sender, System.EventArgs e)
+		private void textMessageTimer_Tick(object sender, System.EventArgs e)
+		{
+			try
+			{
+				textMessageTimer.Stop();
+
+				if (textMessageCode == 1)
+				{
+					MessageBox.Show(this, "Your Internet connection or your Proxy application (e.g. Tor) is turned off.\nRun OpenPandora again when you fix the problem.", "OpenPandora", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					this.Close();
+				}
+
+				textMessageCode = -1;
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				Debug.WriteLine(ex.StackTrace);
+			}
+		}
+		#endregion
+
 		//
 		// Menu event handlers
 		//
@@ -1936,7 +1975,7 @@ namespace OpenPandora
 			this.contextMenu.MenuItems.Add(menuPlayerSkip);
 			this.contextMenu.MenuItems.Add(menuPlayerLike);
 			this.contextMenu.MenuItems.Add(menuPlayerHate);
-			this.contextMenu.MenuItems.Add(menuPlayerStations);
+			//this.contextMenu.MenuItems.Add(menuPlayerStations);
 			this.contextMenu.MenuItems.Add(menuToolsLyrics);
 			this.contextMenu.MenuItems.Add("-");
 			this.contextMenu.MenuItems.Add(menuSettings);
@@ -1980,6 +2019,11 @@ namespace OpenPandora
 			titleTimer.Interval = 100;
 			titleTimer.Tick += new EventHandler(this.titleTimer_Tick);
 			titleTimer.Enabled = false;
+
+			textMessageTimer = new System.Windows.Forms.Timer();
+			textMessageTimer.Interval = 100;
+			textMessageTimer.Tick += new EventHandler(this.textMessageTimer_Tick);
+			textMessageTimer.Enabled = false;
 		}
 		#endregion
 		
@@ -2950,10 +2994,12 @@ namespace OpenPandora
 		private string message = string.Empty;
 		private string title = string.Empty;
 		private System.Windows.Forms.Timer messageTimer;
+		private System.Windows.Forms.Timer textMessageTimer;
 		private System.Windows.Forms.Timer browserTimer;
 		private System.Windows.Forms.Timer browserRefreshTimer;
 		private System.Windows.Forms.Timer memoryTimer;
         private System.Windows.Forms.Timer titleTimer;
+		private int textMessageCode = -1;
 		private Audioscrobbler audioscrobbler;
 		private bool submittedToLastFm = false;
 		private Pandora pandora;

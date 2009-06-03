@@ -124,7 +124,7 @@ namespace OpenPandora
 				cds.cbData = param.Length;
 				cds.lpData = ptr;				
 		
-				reply = SendMessage(HWND_BROADCAST, WM_SKYPECONTROLAPIDISCOVER, this.Handle.ToInt32(),ref cds );
+				reply = SendMessage(HWND_BROADCAST, WM_SKYPECONTROLAPIDISCOVER, this.Handle.ToInt32(), ref cds);
 
 				if (reply == WM_FAILURE)
 				{
@@ -166,7 +166,7 @@ namespace OpenPandora
 					}
 					else
 					{			
-						int reply = SendMessage(skypeHandler, WM_COPYDATA, this.Handle.ToInt32(),ref cds);
+						int reply = SendMessage(skypeHandler, WM_COPYDATA, this.Handle.ToInt32(), ref cds);
 
 						if (reply == WM_FAILURE)
 						{

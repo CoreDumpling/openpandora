@@ -163,7 +163,7 @@ namespace OpenPandora
 				
 				hKeyboardHook = 0;
 
-				if (retKeyboard == 0 && disposing)
+				if (retKeyboard == 0 && !disposing)
 				{
 					int errorCode = Marshal.GetLastWin32Error();
 					throw new Win32Exception(errorCode);

@@ -63,7 +63,7 @@ namespace OpenPandora
 			this.DockPadding.Top = 19;
 			this.Location = new System.Drawing.Point(0, 0);
 			this.Name = "SettingsForm";
-			this.Text = "Settings";
+			this.Text = "Settings ";
 			this.Controls.SetChildIndex(this.settingsView, 0);
 			this.ResumeLayout(false);
 

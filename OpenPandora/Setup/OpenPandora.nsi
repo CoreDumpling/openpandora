@@ -32,7 +32,7 @@
   ; TODO: Install for current or all users SetShellVarContext
 
   ;Version
-  !define OPEN_PANDORA_VERSION "0.7.0.5"
+  !define OPEN_PANDORA_VERSION "0.7.0.6"
 
   ;Name and file
   Name "OpenPandora"

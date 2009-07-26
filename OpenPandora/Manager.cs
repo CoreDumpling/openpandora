@@ -25,7 +25,7 @@ namespace OpenPandora
 {
 	public class Manager
 	{
-		private static readonly string loginUrl = @"http://openpandora.googlepages.com/login.htm";
+		private static readonly string loginUrl = @"http://getopenpandora.appspot.com/login.htm";
 		
 		#region static Manager()
 		static Manager()

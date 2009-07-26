@@ -34,7 +34,6 @@ namespace OpenPandora
 		private System.Windows.Forms.Button btnClose;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.CheckBox chbShowCloseButton;
-		private System.Windows.Forms.CheckBox chbMinimizeToTrayOnClose;
 		private System.Windows.Forms.CheckBox chbOpenLinksInDefaultBrowser;
 		private System.Windows.Forms.RadioButton rdbTitleTemplate1;
 		private System.Windows.Forms.RadioButton rdbTitleTemplate2;
@@ -77,6 +76,9 @@ namespace OpenPandora
 		private System.Windows.Forms.CheckBox chbSendToMessenger;
 		private System.Windows.Forms.Label labelFormats;
 		private System.Windows.Forms.CheckBox chbNotificationBalloon;
+		private System.Windows.Forms.CheckBox chbMinimizeToTray;
+		private System.Windows.Forms.CheckBox chbMinimizeToTrayOnClose;
+		private System.Windows.Forms.CheckBox chbSendToG15;
 		private System.ComponentModel.Container components = null;
 
 		//
@@ -122,7 +124,7 @@ namespace OpenPandora
 			this.btnClose = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.chbShowCloseButton = new System.Windows.Forms.CheckBox();
-			this.chbMinimizeToTrayOnClose = new System.Windows.Forms.CheckBox();
+			this.chbMinimizeToTray = new System.Windows.Forms.CheckBox();
 			this.chbOpenLinksInDefaultBrowser = new System.Windows.Forms.CheckBox();
 			this.rdbTitleTemplate1 = new System.Windows.Forms.RadioButton();
 			this.rdbTitleTemplate2 = new System.Windows.Forms.RadioButton();
@@ -132,18 +134,7 @@ namespace OpenPandora
 			this.labelFormats = new System.Windows.Forms.Label();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tabPageDisplay = new System.Windows.Forms.TabPage();
-			this.tabPageGeneral = new System.Windows.Forms.TabPage();
-			this.chbNotificationBalloon = new System.Windows.Forms.CheckBox();
-			this.chbPopupNotificationWindow = new System.Windows.Forms.CheckBox();
-			this.chbKeepOnTop = new System.Windows.Forms.CheckBox();
-			this.tabPageControl = new System.Windows.Forms.TabPage();
-			this.linkHelpGlobalShortcuts = new System.Windows.Forms.LinkLabel();
-			this.chbGlobalShortcuts = new System.Windows.Forms.CheckBox();
-			this.chbKeyboardMediaKeys = new System.Windows.Forms.CheckBox();
-			this.tabPageSendSongInfo = new System.Windows.Forms.TabPage();
-			this.chbSendToSkype = new System.Windows.Forms.CheckBox();
-			this.chbSendToXfire = new System.Windows.Forms.CheckBox();
-			this.chbSendToMessenger = new System.Windows.Forms.CheckBox();
+			this.chbMinimizeToTrayOnClose = new System.Windows.Forms.CheckBox();
 			this.tabPageLastFM = new System.Windows.Forms.TabPage();
 			this.pictureBoxLastFmAvatar = new System.Windows.Forms.PictureBox();
 			this.chbSubmitSkipped = new System.Windows.Forms.CheckBox();
@@ -154,6 +145,18 @@ namespace OpenPandora
 			this.txtLastFmUser = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
+			this.tabPageSendSongInfo = new System.Windows.Forms.TabPage();
+			this.chbSendToSkype = new System.Windows.Forms.CheckBox();
+			this.chbSendToXfire = new System.Windows.Forms.CheckBox();
+			this.chbSendToMessenger = new System.Windows.Forms.CheckBox();
+			this.tabPageControl = new System.Windows.Forms.TabPage();
+			this.linkHelpGlobalShortcuts = new System.Windows.Forms.LinkLabel();
+			this.chbGlobalShortcuts = new System.Windows.Forms.CheckBox();
+			this.chbKeyboardMediaKeys = new System.Windows.Forms.CheckBox();
+			this.tabPageGeneral = new System.Windows.Forms.TabPage();
+			this.chbNotificationBalloon = new System.Windows.Forms.CheckBox();
+			this.chbPopupNotificationWindow = new System.Windows.Forms.CheckBox();
+			this.chbKeepOnTop = new System.Windows.Forms.CheckBox();
 			this.tabProxy = new System.Windows.Forms.TabPage();
 			this.txtProxyPassword = new System.Windows.Forms.TextBox();
 			this.txtProxyUser = new System.Windows.Forms.TextBox();
@@ -165,13 +168,14 @@ namespace OpenPandora
 			this.txtProxyHost = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
+			this.chbSendToG15 = new System.Windows.Forms.CheckBox();
 			this.grbTitleFormat.SuspendLayout();
 			this.tabs.SuspendLayout();
 			this.tabPageDisplay.SuspendLayout();
-			this.tabPageGeneral.SuspendLayout();
-			this.tabPageControl.SuspendLayout();
-			this.tabPageSendSongInfo.SuspendLayout();
 			this.tabPageLastFM.SuspendLayout();
+			this.tabPageSendSongInfo.SuspendLayout();
+			this.tabPageControl.SuspendLayout();
+			this.tabPageGeneral.SuspendLayout();
 			this.tabProxy.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -180,7 +184,7 @@ namespace OpenPandora
 			this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnApply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnApply.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(177)));
-			this.btnApply.Location = new System.Drawing.Point(8, 168);
+			this.btnApply.Location = new System.Drawing.Point(8, 192);
 			this.btnApply.Name = "btnApply";
 			this.btnApply.Size = new System.Drawing.Size(48, 21);
 			this.btnApply.TabIndex = 0;
@@ -194,7 +198,7 @@ namespace OpenPandora
 			this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnClose.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(177)));
-			this.btnClose.Location = new System.Drawing.Point(274, 168);
+			this.btnClose.Location = new System.Drawing.Point(288, 192);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(48, 21);
 			this.btnClose.TabIndex = 1;
@@ -208,7 +212,7 @@ namespace OpenPandora
 			this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnSave.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(177)));
-			this.btnSave.Location = new System.Drawing.Point(64, 168);
+			this.btnSave.Location = new System.Drawing.Point(64, 192);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(48, 21);
 			this.btnSave.TabIndex = 2;
@@ -226,14 +230,15 @@ namespace OpenPandora
 			this.chbShowCloseButton.Text = "Show Close Button";
 			this.chbShowCloseButton.CheckedChanged += new System.EventHandler(this.SettingChanged);
 			// 
-			// chbMinimizeToTrayOnClose
+			// chbMinimizeToTray
 			// 
-			this.chbMinimizeToTrayOnClose.Location = new System.Drawing.Point(8, 32);
-			this.chbMinimizeToTrayOnClose.Name = "chbMinimizeToTrayOnClose";
-			this.chbMinimizeToTrayOnClose.Size = new System.Drawing.Size(208, 24);
-			this.chbMinimizeToTrayOnClose.TabIndex = 6;
-			this.chbMinimizeToTrayOnClose.Text = "Minimize To Tray On Close";
-			this.chbMinimizeToTrayOnClose.CheckedChanged += new System.EventHandler(this.SettingChanged);
+			this.chbMinimizeToTray.Location = new System.Drawing.Point(232, 32);
+			this.chbMinimizeToTray.Name = "chbMinimizeToTray";
+			this.chbMinimizeToTray.Size = new System.Drawing.Size(208, 24);
+			this.chbMinimizeToTray.TabIndex = 6;
+			this.chbMinimizeToTray.Text = "Minimize To Tray";
+			this.chbMinimizeToTray.Visible = false;
+			this.chbMinimizeToTray.CheckedChanged += new System.EventHandler(this.SettingChanged);
 			// 
 			// chbOpenLinksInDefaultBrowser
 			// 
@@ -288,7 +293,7 @@ namespace OpenPandora
 			this.grbTitleFormat.Controls.Add(this.rdbTitleTemplate3);
 			this.grbTitleFormat.Controls.Add(this.txtTitleTemplate);
 			this.grbTitleFormat.Controls.Add(this.labelFormats);
-			this.grbTitleFormat.Location = new System.Drawing.Point(8, 64);
+			this.grbTitleFormat.Location = new System.Drawing.Point(8, 88);
 			this.grbTitleFormat.Name = "grbTitleFormat";
 			this.grbTitleFormat.Size = new System.Drawing.Size(304, 64);
 			this.grbTitleFormat.TabIndex = 15;
@@ -312,139 +317,33 @@ namespace OpenPandora
 			this.tabs.Controls.Add(this.tabPageControl);
 			this.tabs.Controls.Add(this.tabPageGeneral);
 			this.tabs.Controls.Add(this.tabProxy);
-			this.tabs.Location = new System.Drawing.Point(0, 0);
+			this.tabs.Location = new System.Drawing.Point(2, 0);
 			this.tabs.Name = "tabs";
 			this.tabs.Padding = new System.Drawing.Point(0, 0);
 			this.tabs.SelectedIndex = 0;
-			this.tabs.Size = new System.Drawing.Size(328, 160);
+			this.tabs.Size = new System.Drawing.Size(344, 184);
 			this.tabs.TabIndex = 17;
 			// 
 			// tabPageDisplay
 			// 
 			this.tabPageDisplay.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
+			this.tabPageDisplay.Controls.Add(this.chbMinimizeToTrayOnClose);
 			this.tabPageDisplay.Controls.Add(this.grbTitleFormat);
 			this.tabPageDisplay.Controls.Add(this.chbShowCloseButton);
-			this.tabPageDisplay.Controls.Add(this.chbMinimizeToTrayOnClose);
+			this.tabPageDisplay.Controls.Add(this.chbMinimizeToTray);
 			this.tabPageDisplay.Location = new System.Drawing.Point(4, 22);
 			this.tabPageDisplay.Name = "tabPageDisplay";
-			this.tabPageDisplay.Size = new System.Drawing.Size(320, 134);
+			this.tabPageDisplay.Size = new System.Drawing.Size(336, 158);
 			this.tabPageDisplay.TabIndex = 0;
 			this.tabPageDisplay.Text = "Display";
 			// 
-			// tabPageGeneral
+			// chbMinimizeToTrayOnClose
 			// 
-			this.tabPageGeneral.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
-			this.tabPageGeneral.Controls.Add(this.chbNotificationBalloon);
-			this.tabPageGeneral.Controls.Add(this.chbPopupNotificationWindow);
-			this.tabPageGeneral.Controls.Add(this.chbKeepOnTop);
-			this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
-			this.tabPageGeneral.Name = "tabPageGeneral";
-			this.tabPageGeneral.Size = new System.Drawing.Size(320, 134);
-			this.tabPageGeneral.TabIndex = 2;
-			this.tabPageGeneral.Text = "General";
-			// 
-			// chbNotificationBalloon
-			// 
-			this.chbNotificationBalloon.Location = new System.Drawing.Point(32, 56);
-			this.chbNotificationBalloon.Name = "chbNotificationBalloon";
-			this.chbNotificationBalloon.Size = new System.Drawing.Size(208, 24);
-			this.chbNotificationBalloon.TabIndex = 20;
-			this.chbNotificationBalloon.Text = "Show Classic Balloon";
-			// 
-			// chbPopupNotificationWindow
-			// 
-			this.chbPopupNotificationWindow.Location = new System.Drawing.Point(8, 32);
-			this.chbPopupNotificationWindow.Name = "chbPopupNotificationWindow";
-			this.chbPopupNotificationWindow.Size = new System.Drawing.Size(192, 24);
-			this.chbPopupNotificationWindow.TabIndex = 19;
-			this.chbPopupNotificationWindow.Text = "Popup Notification Window";
-			this.chbPopupNotificationWindow.CheckedChanged += new System.EventHandler(this.SettingChanged);
-			// 
-			// chbKeepOnTop
-			// 
-			this.chbKeepOnTop.Location = new System.Drawing.Point(8, 8);
-			this.chbKeepOnTop.Name = "chbKeepOnTop";
-			this.chbKeepOnTop.Size = new System.Drawing.Size(240, 24);
-			this.chbKeepOnTop.TabIndex = 17;
-			this.chbKeepOnTop.Text = "Keep On Top Of Other Windows";
-			this.chbKeepOnTop.CheckedChanged += new System.EventHandler(this.SettingChanged);
-			// 
-			// tabPageControl
-			// 
-			this.tabPageControl.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
-			this.tabPageControl.Controls.Add(this.linkHelpGlobalShortcuts);
-			this.tabPageControl.Controls.Add(this.chbGlobalShortcuts);
-			this.tabPageControl.Controls.Add(this.chbKeyboardMediaKeys);
-			this.tabPageControl.Location = new System.Drawing.Point(4, 22);
-			this.tabPageControl.Name = "tabPageControl";
-			this.tabPageControl.Size = new System.Drawing.Size(320, 134);
-			this.tabPageControl.TabIndex = 4;
-			this.tabPageControl.Text = "Control";
-			// 
-			// linkHelpGlobalShortcuts
-			// 
-			this.linkHelpGlobalShortcuts.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
-			this.linkHelpGlobalShortcuts.Location = new System.Drawing.Point(128, 38);
-			this.linkHelpGlobalShortcuts.Name = "linkHelpGlobalShortcuts";
-			this.linkHelpGlobalShortcuts.Size = new System.Drawing.Size(40, 16);
-			this.linkHelpGlobalShortcuts.TabIndex = 21;
-			this.linkHelpGlobalShortcuts.TabStop = true;
-			this.linkHelpGlobalShortcuts.Text = "?";
-			this.linkHelpGlobalShortcuts.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkHelpGlobalShortcuts_LinkClicked);
-			// 
-			// chbGlobalShortcuts
-			// 
-			this.chbGlobalShortcuts.Location = new System.Drawing.Point(8, 32);
-			this.chbGlobalShortcuts.Name = "chbGlobalShortcuts";
-			this.chbGlobalShortcuts.Size = new System.Drawing.Size(128, 24);
-			this.chbGlobalShortcuts.TabIndex = 10;
-			this.chbGlobalShortcuts.Text = "Global Shortcuts";
-			this.chbGlobalShortcuts.CheckedChanged += new System.EventHandler(this.SettingChanged);
-			// 
-			// chbKeyboardMediaKeys
-			// 
-			this.chbKeyboardMediaKeys.Location = new System.Drawing.Point(8, 8);
-			this.chbKeyboardMediaKeys.Name = "chbKeyboardMediaKeys";
-			this.chbKeyboardMediaKeys.Size = new System.Drawing.Size(200, 24);
-			this.chbKeyboardMediaKeys.TabIndex = 9;
-			this.chbKeyboardMediaKeys.Text = "Multimedia Keyboard";
-			this.chbKeyboardMediaKeys.CheckedChanged += new System.EventHandler(this.SettingChanged);
-			// 
-			// tabPageSendSongInfo
-			// 
-			this.tabPageSendSongInfo.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
-			this.tabPageSendSongInfo.Controls.Add(this.chbSendToSkype);
-			this.tabPageSendSongInfo.Controls.Add(this.chbSendToXfire);
-			this.tabPageSendSongInfo.Controls.Add(this.chbSendToMessenger);
-			this.tabPageSendSongInfo.Location = new System.Drawing.Point(4, 22);
-			this.tabPageSendSongInfo.Name = "tabPageSendSongInfo";
-			this.tabPageSendSongInfo.Size = new System.Drawing.Size(320, 134);
-			this.tabPageSendSongInfo.TabIndex = 5;
-			this.tabPageSendSongInfo.Text = "Plugins";
-			// 
-			// chbSendToSkype
-			// 
-			this.chbSendToSkype.Location = new System.Drawing.Point(8, 56);
-			this.chbSendToSkype.Name = "chbSendToSkype";
-			this.chbSendToSkype.Size = new System.Drawing.Size(192, 24);
-			this.chbSendToSkype.TabIndex = 24;
-			this.chbSendToSkype.Text = "Send Song Info To Skype";
-			// 
-			// chbSendToXfire
-			// 
-			this.chbSendToXfire.Location = new System.Drawing.Point(8, 32);
-			this.chbSendToXfire.Name = "chbSendToXfire";
-			this.chbSendToXfire.Size = new System.Drawing.Size(192, 24);
-			this.chbSendToXfire.TabIndex = 23;
-			this.chbSendToXfire.Text = "Send Song Info To Xfire";
-			// 
-			// chbSendToMessenger
-			// 
-			this.chbSendToMessenger.Location = new System.Drawing.Point(8, 8);
-			this.chbSendToMessenger.Name = "chbSendToMessenger";
-			this.chbSendToMessenger.Size = new System.Drawing.Size(248, 24);
-			this.chbSendToMessenger.TabIndex = 22;
-			this.chbSendToMessenger.Text = "Send Song Info To Messenger";
+			this.chbMinimizeToTrayOnClose.Location = new System.Drawing.Point(8, 32);
+			this.chbMinimizeToTrayOnClose.Name = "chbMinimizeToTrayOnClose";
+			this.chbMinimizeToTrayOnClose.Size = new System.Drawing.Size(208, 24);
+			this.chbMinimizeToTrayOnClose.TabIndex = 16;
+			this.chbMinimizeToTrayOnClose.Text = "Minimize To Tray On Close";
 			// 
 			// tabPageLastFM
 			// 
@@ -460,7 +359,7 @@ namespace OpenPandora
 			this.tabPageLastFM.Controls.Add(this.label3);
 			this.tabPageLastFM.Location = new System.Drawing.Point(4, 22);
 			this.tabPageLastFM.Name = "tabPageLastFM";
-			this.tabPageLastFM.Size = new System.Drawing.Size(320, 134);
+			this.tabPageLastFM.Size = new System.Drawing.Size(336, 158);
 			this.tabPageLastFM.TabIndex = 1;
 			this.tabPageLastFM.Text = "Last.FM";
 			// 
@@ -545,6 +444,122 @@ namespace OpenPandora
 			this.label3.TabIndex = 10;
 			this.label3.Text = "User";
 			// 
+			// tabPageSendSongInfo
+			// 
+			this.tabPageSendSongInfo.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToG15);
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToSkype);
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToXfire);
+			this.tabPageSendSongInfo.Controls.Add(this.chbSendToMessenger);
+			this.tabPageSendSongInfo.Location = new System.Drawing.Point(4, 22);
+			this.tabPageSendSongInfo.Name = "tabPageSendSongInfo";
+			this.tabPageSendSongInfo.Size = new System.Drawing.Size(336, 158);
+			this.tabPageSendSongInfo.TabIndex = 5;
+			this.tabPageSendSongInfo.Text = "Plugins";
+			// 
+			// chbSendToSkype
+			// 
+			this.chbSendToSkype.Location = new System.Drawing.Point(8, 56);
+			this.chbSendToSkype.Name = "chbSendToSkype";
+			this.chbSendToSkype.Size = new System.Drawing.Size(192, 24);
+			this.chbSendToSkype.TabIndex = 24;
+			this.chbSendToSkype.Text = "Send Song Info To Skype";
+			// 
+			// chbSendToXfire
+			// 
+			this.chbSendToXfire.Location = new System.Drawing.Point(8, 32);
+			this.chbSendToXfire.Name = "chbSendToXfire";
+			this.chbSendToXfire.Size = new System.Drawing.Size(192, 24);
+			this.chbSendToXfire.TabIndex = 23;
+			this.chbSendToXfire.Text = "Send Song Info To Xfire";
+			// 
+			// chbSendToMessenger
+			// 
+			this.chbSendToMessenger.Location = new System.Drawing.Point(8, 8);
+			this.chbSendToMessenger.Name = "chbSendToMessenger";
+			this.chbSendToMessenger.Size = new System.Drawing.Size(248, 24);
+			this.chbSendToMessenger.TabIndex = 22;
+			this.chbSendToMessenger.Text = "Send Song Info To Messenger";
+			// 
+			// tabPageControl
+			// 
+			this.tabPageControl.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
+			this.tabPageControl.Controls.Add(this.linkHelpGlobalShortcuts);
+			this.tabPageControl.Controls.Add(this.chbGlobalShortcuts);
+			this.tabPageControl.Controls.Add(this.chbKeyboardMediaKeys);
+			this.tabPageControl.Location = new System.Drawing.Point(4, 22);
+			this.tabPageControl.Name = "tabPageControl";
+			this.tabPageControl.Size = new System.Drawing.Size(336, 158);
+			this.tabPageControl.TabIndex = 4;
+			this.tabPageControl.Text = "Control";
+			// 
+			// linkHelpGlobalShortcuts
+			// 
+			this.linkHelpGlobalShortcuts.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
+			this.linkHelpGlobalShortcuts.Location = new System.Drawing.Point(128, 38);
+			this.linkHelpGlobalShortcuts.Name = "linkHelpGlobalShortcuts";
+			this.linkHelpGlobalShortcuts.Size = new System.Drawing.Size(40, 16);
+			this.linkHelpGlobalShortcuts.TabIndex = 21;
+			this.linkHelpGlobalShortcuts.TabStop = true;
+			this.linkHelpGlobalShortcuts.Text = "?";
+			this.linkHelpGlobalShortcuts.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkHelpGlobalShortcuts_LinkClicked);
+			// 
+			// chbGlobalShortcuts
+			// 
+			this.chbGlobalShortcuts.Location = new System.Drawing.Point(8, 32);
+			this.chbGlobalShortcuts.Name = "chbGlobalShortcuts";
+			this.chbGlobalShortcuts.Size = new System.Drawing.Size(128, 24);
+			this.chbGlobalShortcuts.TabIndex = 10;
+			this.chbGlobalShortcuts.Text = "Global Shortcuts";
+			this.chbGlobalShortcuts.CheckedChanged += new System.EventHandler(this.SettingChanged);
+			// 
+			// chbKeyboardMediaKeys
+			// 
+			this.chbKeyboardMediaKeys.Location = new System.Drawing.Point(8, 8);
+			this.chbKeyboardMediaKeys.Name = "chbKeyboardMediaKeys";
+			this.chbKeyboardMediaKeys.Size = new System.Drawing.Size(200, 24);
+			this.chbKeyboardMediaKeys.TabIndex = 9;
+			this.chbKeyboardMediaKeys.Text = "Multimedia Keyboard";
+			this.chbKeyboardMediaKeys.CheckedChanged += new System.EventHandler(this.SettingChanged);
+			// 
+			// tabPageGeneral
+			// 
+			this.tabPageGeneral.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
+			this.tabPageGeneral.Controls.Add(this.chbNotificationBalloon);
+			this.tabPageGeneral.Controls.Add(this.chbPopupNotificationWindow);
+			this.tabPageGeneral.Controls.Add(this.chbKeepOnTop);
+			this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
+			this.tabPageGeneral.Name = "tabPageGeneral";
+			this.tabPageGeneral.Size = new System.Drawing.Size(336, 158);
+			this.tabPageGeneral.TabIndex = 2;
+			this.tabPageGeneral.Text = "General";
+			// 
+			// chbNotificationBalloon
+			// 
+			this.chbNotificationBalloon.Location = new System.Drawing.Point(32, 56);
+			this.chbNotificationBalloon.Name = "chbNotificationBalloon";
+			this.chbNotificationBalloon.Size = new System.Drawing.Size(208, 24);
+			this.chbNotificationBalloon.TabIndex = 20;
+			this.chbNotificationBalloon.Text = "Show Classic Balloon";
+			// 
+			// chbPopupNotificationWindow
+			// 
+			this.chbPopupNotificationWindow.Location = new System.Drawing.Point(8, 32);
+			this.chbPopupNotificationWindow.Name = "chbPopupNotificationWindow";
+			this.chbPopupNotificationWindow.Size = new System.Drawing.Size(192, 24);
+			this.chbPopupNotificationWindow.TabIndex = 19;
+			this.chbPopupNotificationWindow.Text = "Popup Notification Window";
+			this.chbPopupNotificationWindow.CheckedChanged += new System.EventHandler(this.SettingChanged);
+			// 
+			// chbKeepOnTop
+			// 
+			this.chbKeepOnTop.Location = new System.Drawing.Point(8, 8);
+			this.chbKeepOnTop.Name = "chbKeepOnTop";
+			this.chbKeepOnTop.Size = new System.Drawing.Size(240, 24);
+			this.chbKeepOnTop.TabIndex = 17;
+			this.chbKeepOnTop.Text = "Keep On Top Of Other Windows";
+			this.chbKeepOnTop.CheckedChanged += new System.EventHandler(this.SettingChanged);
+			// 
 			// tabProxy
 			// 
 			this.tabProxy.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
@@ -560,7 +575,7 @@ namespace OpenPandora
 			this.tabProxy.Controls.Add(this.label5);
 			this.tabProxy.Location = new System.Drawing.Point(4, 22);
 			this.tabProxy.Name = "tabProxy";
-			this.tabProxy.Size = new System.Drawing.Size(320, 134);
+			this.tabProxy.Size = new System.Drawing.Size(336, 158);
 			this.tabProxy.TabIndex = 3;
 			this.tabProxy.Text = "Proxy";
 			// 
@@ -647,6 +662,14 @@ namespace OpenPandora
 			this.label5.TabIndex = 14;
 			this.label5.Text = "Host";
 			// 
+			// chbSendToG15
+			// 
+			this.chbSendToG15.Location = new System.Drawing.Point(8, 80);
+			this.chbSendToG15.Name = "chbSendToG15";
+			this.chbSendToG15.Size = new System.Drawing.Size(280, 24);
+			this.chbSendToG15.TabIndex = 25;
+			this.chbSendToG15.Text = "Send Song Info To Logitech G15 Keyboard LCD";
+			// 
 			// SettingsView
 			// 
 			this.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
@@ -657,15 +680,15 @@ namespace OpenPandora
 			this.Controls.Add(this.chbOpenLinksInDefaultBrowser);
 			this.ForeColor = System.Drawing.Color.WhiteSmoke;
 			this.Name = "SettingsView";
-			this.Size = new System.Drawing.Size(328, 192);
+			this.Size = new System.Drawing.Size(344, 216);
 			this.VisibleChanged += new System.EventHandler(this.SettingsView_VisibleChanged);
 			this.grbTitleFormat.ResumeLayout(false);
 			this.tabs.ResumeLayout(false);
 			this.tabPageDisplay.ResumeLayout(false);
-			this.tabPageGeneral.ResumeLayout(false);
-			this.tabPageControl.ResumeLayout(false);
-			this.tabPageSendSongInfo.ResumeLayout(false);
 			this.tabPageLastFM.ResumeLayout(false);
+			this.tabPageSendSongInfo.ResumeLayout(false);
+			this.tabPageControl.ResumeLayout(false);
+			this.tabPageGeneral.ResumeLayout(false);
 			this.tabProxy.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -861,7 +884,7 @@ namespace OpenPandora
 				configuration.LastFmPassword = Audioscrobbler.GetPasswordMD5(this.password);
 			}
 			
-			player.ApplyConfiguration(configuration, true);
+			player.ApplyConfiguration(configuration, true, false);
 		}
 		#endregion
 		
@@ -870,9 +893,11 @@ namespace OpenPandora
 		{
 			chbShowCloseButton.Checked = this.configuration.CloseButtonVisible;
 			chbMinimizeToTrayOnClose.Checked = this.configuration.CloseButtonMinimizeToTray;
+			chbMinimizeToTray.Checked = this.configuration.MinimizeToTray;
 			chbSendToMessenger.Checked = this.configuration.SendToMessenger;
 			chbSendToXfire.Checked = this.configuration.SendToXfire;
 			chbSendToSkype.Checked = this.configuration.SendToSkype;
+            chbSendToG15.Checked = this.configuration.SendToG15;
 			chbOpenLinksInDefaultBrowser.Checked = this.configuration.OpenInDefaultBrowser;
 
 			chbShowCloseButton.Enabled = this.configuration.IsConfigurationItemEnabled(Configuration.ConfigurationItemType.CloseButtonVisible);
@@ -965,10 +990,12 @@ namespace OpenPandora
 		private void UpdateSettings(object sender, System.EventArgs e)
 		{
 			configuration.CloseButtonVisible = chbShowCloseButton.Checked;
+			configuration.MinimizeToTray = chbMinimizeToTray.Checked;
 			configuration.CloseButtonMinimizeToTray = chbMinimizeToTrayOnClose.Checked;
 			configuration.SendToMessenger = chbSendToMessenger.Checked;
 			configuration.SendToXfire = chbSendToXfire.Checked;
 			configuration.SendToSkype = chbSendToSkype.Checked;
+            configuration.SendToG15 = chbSendToG15.Checked;
 			configuration.OpenInDefaultBrowser = chbOpenLinksInDefaultBrowser.Checked;
 			
 			if (rdbTitleTemplate1.Checked)

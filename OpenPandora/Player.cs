@@ -31,6 +31,7 @@ using System.Data;
 using AxSHDocVw;
 using mshtml;
 
+using lgLcdClassLibrary;//G15
 namespace OpenPandora
 {
 	public class Player : System.Windows.Forms.Form
@@ -66,6 +67,10 @@ namespace OpenPandora
 		private System.Windows.Forms.NotifyIcon notifyIcon;
 		private OpenPandora.Windows.Forms.TaskbarNotifier taskbarNotifier;
 		private Skype skype;
+        private G15 g15;
+
+        private ButtonDelegate bDelegate;//G15
+        private ConfigureDelegate cDelegate; //G15
 		
 		//
 		// Constructor
@@ -127,7 +132,7 @@ namespace OpenPandora
 				//
 
 				this.configuration = Configuration.Load();
-				ApplyConfiguration(this.configuration, false);
+				ApplyConfiguration(this.configuration, false, false);
 			
 				isPayingUser = this.configuration.PayingUser;
 						
@@ -697,12 +702,19 @@ namespace OpenPandora
 			try
 			{
 				string urlText = HttpUtility.UrlDecode(e.uRL as string);
+				Debug.WriteLine("browser_DocumentComplete: " + urlText);
 
 				if (urlText == "http://www.pandora.com/restricted") 
 				{
 					MessageBox.Show(this, "We are sorry, but Pandora blocked you from using their service.\nOnly users from inside U.S. are allowed.", "OpenPandora", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					Shell32.ShellExecute(0, "Open", urlText, "", Application.StartupPath, 1);
 					this.Close();
+				}
+				else if (urlText.StartsWith(@"res://C:\WINDOWS\system32\shdoclc.dll/navcancl.htm"))
+				{
+					Debug.WriteLine("Refreshing player in 15 seconds");
+					browserRefreshTimer.Interval = 15000;
+					browserRefreshTimer.Start();
 				}
 				else if (!loaded)
 				{
@@ -792,7 +804,7 @@ namespace OpenPandora
 
 					if (tuner.ContainsPlay)
 					{
-						OnPlayStart();
+						/*OnPlayStart();
 
 						++continuesPlayCounter;
 								
@@ -813,11 +825,11 @@ namespace OpenPandora
 							playedLength = 0;
 						}
 								
-						playedStartTime = DateTime.Now;
+						playedStartTime = DateTime.Now;*/
 					} 
 					else if (tuner.ContainsPause)
 					{
-						playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
+						/*playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
 						this.menuPlayerPlayPause.Text = "Play";
 								
 						paused = true;
@@ -828,7 +840,7 @@ namespace OpenPandora
 						RefreshPlayer(false);
 									
 						memoryTimer.Interval = MEMORYTIMER_PAUSE;
-						memoryTimer.Start();
+						memoryTimer.Start();*/
 					}
 					
 					if (tuner.ContainsLogout)
@@ -1001,14 +1013,37 @@ namespace OpenPandora
 							string songUrl = songUrlPart.Substring(songNamePart.IndexOf("'") + 1, songUrlPart.LastIndexOf("'") - songUrlPart.IndexOf("'") - 1);
 							string artUrl = artUrlPart.Substring(artUrlPart.IndexOf("'") + 1, artUrlPart.LastIndexOf("'") - artUrlPart.IndexOf("'") - 1);
 					
-							songName = HttpUtility.UrlDecode(songName.Replace("%25%32%37", "%27").Replace("%22", "\""));
-							artistName = HttpUtility.UrlDecode(artistName.Replace("%25%32%37", "%27").Replace("%22", "\""));
+							songName = HttpUtility.UrlDecode(songName.Replace("%25%32%37", "%27").Replace("%22", "\"")).Replace("%22", "\"");
+							artistName = HttpUtility.UrlDecode(artistName.Replace("%25%32%37", "%27").Replace("%22", "\"")).Replace("%22", "\"");
 							songUrl = HttpUtility.UrlDecode(songUrl);
 							artUrl = HttpUtility.UrlDecode(artUrl);
 								
 							refreshMessenger = !paused;
 							refreshXfire = !paused;
 							refreshSkype = !paused;
+                            refreshG15 = !paused;
+							OnPlayStart();
+
+							++continuesPlayCounter;
+								
+							memoryTimer.Interval = MEMORYTIMER_DELAY;
+							memoryTimer.Start();
+								
+							if (taskbarNotifier != null && taskbarNotifier.Visible)
+							{
+								taskbarNotifier.Hide();
+							}
+
+							if (!paused)
+							{
+								playedLength += (int)(DateTime.Now - playedStartTime).TotalSeconds;
+									
+								SubmitSongToLastFM(song.Artist, song.Name, playedLength);
+									
+								playedLength = 0;
+							}
+								
+							playedStartTime = DateTime.Now;
 
 							paused = false;
 
@@ -1031,6 +1066,7 @@ namespace OpenPandora
 							refreshMessenger = false;
 							refreshXfire = false;
 							refreshSkype = false;
+                            refreshG15 = false;
 
 							RefreshPlayer(false);
 									
@@ -1174,7 +1210,8 @@ namespace OpenPandora
 
 				//browser2.Refresh2();
 				
-				RefreshPlayer(false);
+				//RefreshPlayer(false);
+				ApplyConfiguration(configuration, true, true);
 			}
 			catch (Exception ex)
 			{
@@ -1276,6 +1313,7 @@ namespace OpenPandora
 				if (document == null)
 				{
 					Debug.WriteLine("Radio: document not loaded");
+					
 					browserRefreshTimer.Interval = 2000;
 					browserRefreshTimer.Start();
 
@@ -1289,8 +1327,8 @@ namespace OpenPandora
 				{
 					Debug.WriteLine("Radio: missing");
 
-					//browserRefreshTimer.Interval = 30000;
-					//browserRefreshTimer.Start();
+					browserRefreshTimer.Interval = 2000;
+					browserRefreshTimer.Start();
 
 					return;
 				}
@@ -1328,6 +1366,7 @@ namespace OpenPandora
 				configuration.OffsetLeft = left;
 				configuration.OffsetTop = top;
 				configuration.Save();
+				ApplyConfiguration(configuration, false, true);
 					
 				loaded = true;
 
@@ -1777,8 +1816,8 @@ namespace OpenPandora
 		// Internal methods
 		//
 		
-		#region internal void ApplyConfiguration(Configuration aplliedConfiguration, bool refreshPlayer)
-		internal void ApplyConfiguration(Configuration appliedConfiguration, bool refreshPlayer)
+		#region internal void ApplyConfiguration(Configuration aplliedConfiguration, bool refreshPlayer, bool force)
+		internal void ApplyConfiguration(Configuration appliedConfiguration, bool refreshPlayer, bool force)
 		{
 			try
 			{
@@ -1797,6 +1836,12 @@ namespace OpenPandora
 					configuration.ProxyUser != appliedConfiguration.ProxyUser ||
 					configuration.ProxyPassword != appliedConfiguration.ProxyPassword)
 				{
+					isProxyUpdated = true;
+				}
+
+				if (force)
+				{
+					isAudioscrobblerUpdated = true;
 					isProxyUpdated = true;
 				}
 			
@@ -1833,6 +1878,29 @@ namespace OpenPandora
 					}
 
 					toolTip.SetToolTip(this.btnMinimize, "Minimize");
+
+					//
+					// G15
+
+					if (configuration.SendToG15 && g15 == null)
+					{
+						Debug.WriteLine("Connecting to G15");
+
+						g15 = new G15();              
+                                        
+						// first define some delegates
+						bDelegate = new ButtonDelegate(this.ButtonDelegateImplementation);
+						cDelegate = new ConfigureDelegate(this.ConfigureDelegateImplementation);
+                                
+						g15.SetButtonDelegateImplementation(bDelegate);
+						g15.SetConfigureDelegateImplementation(cDelegate);
+						g15.OpenLCD();
+					} 
+					else if (!configuration.SendToG15 && g15 != null)
+					{
+						g15.CloseLCD();
+						g15 = null;
+					}
 			
 					//
 					// Refresh player
@@ -1842,6 +1910,7 @@ namespace OpenPandora
 						refreshMessenger = true;
 						refreshXfire = true;
 						refreshSkype = true;
+                        refreshG15 = true;
 					}
 			
 					if (refreshPlayer)
@@ -2105,6 +2174,7 @@ namespace OpenPandora
 			RefreshMessenger();
 			RefreshXfire();
 			RefreshSkype();
+            RefreshG15();
 		}
 		#endregion
 		
@@ -2161,6 +2231,73 @@ namespace OpenPandora
 				Xfire.SetMessage(string.Empty);
 				sentOnceToXfire = false;
 			}
+		}
+		#endregion
+
+        #region private void RefreshG15()
+        private void RefreshG15()
+        {
+            if (this.configuration.SendToG15 && g15 != null && refreshG15)
+            {
+                if (song.Name != string.Empty)
+                {
+                    g15.RefreshBitmap(song.Artist, song.Name, song.Album);
+                }
+            }
+
+        }
+        #endregion
+
+        #region int ButtonDelegateImplementation(int device, uint dwButtons, IntPtr pContext)
+        int ButtonDelegateImplementation(int device, uint dwButtons, IntPtr pContext)
+        {
+			Debug.WriteLine("G15 button pressed: " + dwButtons);
+            /* 
+               this function would have been implemented within the G15 class but the Pandora
+               object is created within Player.cs and thus to access the object member functions
+              (i.e. pandora.Like) it had to be done. 
+             
+            */
+            try
+            {
+                /* Assign tasks based on soft button pressed */
+                if (dwButtons == 1)
+                {
+                    pandora.Like();
+                }
+                else if (dwButtons == 2)
+                {
+                    pandora.Hate();       
+                }
+                else if (dwButtons == 4)
+                {
+
+                }
+                else if (dwButtons == 8)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+            catch
+            {
+            }
+
+            return 0;
+        }
+        #endregion
+
+        #region int ConfigureDelegateImplementation(int connection, IntPtr pContext)
+        int ConfigureDelegateImplementation(int connection, IntPtr pContext)
+        {
+			Debug.WriteLine("G15 configuration buuton pressed");
+
+            menuSettings_Click(this, new EventArgs());
+
+            return 0;
 		}
 		#endregion
 		
@@ -2558,6 +2695,7 @@ namespace OpenPandora
 			refreshMessenger = true;
 			refreshXfire = true;
 			refreshSkype = true;
+            refreshG15 = true;
 						
 			this.menuPlayerPlayPause.Enabled = false;
 			this.menuPlayerSkip.Enabled = false;
@@ -2990,6 +3128,7 @@ namespace OpenPandora
 		private bool refreshMessenger = false;
 		private bool refreshXfire = false;
         private bool refreshSkype = false;
+        private bool refreshG15 = false;
 		private string browserTitle = string.Empty;
 		private string message = string.Empty;
 		private string title = string.Empty;

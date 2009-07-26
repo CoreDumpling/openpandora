@@ -45,17 +45,17 @@ namespace OpenPandora
 			// settingsView
 			// 
 			this.settingsView.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(49)), ((System.Byte)(49)), ((System.Byte)(49)));
-			this.settingsView.Dock = System.Windows.Forms.DockStyle.Left;
+			this.settingsView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.settingsView.ForeColor = System.Drawing.Color.WhiteSmoke;
 			this.settingsView.Location = new System.Drawing.Point(1, 19);
 			this.settingsView.Name = "settingsView";
-			this.settingsView.Size = new System.Drawing.Size(328, 191);
+			this.settingsView.Size = new System.Drawing.Size(348, 220);
 			this.settingsView.TabIndex = 1;
 			// 
 			// SettingsForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(330, 211);
+			this.ClientSize = new System.Drawing.Size(350, 240);
 			this.Controls.Add(this.settingsView);
 			this.DockPadding.Bottom = 1;
 			this.DockPadding.Left = 1;

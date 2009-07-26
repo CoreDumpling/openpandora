@@ -32,6 +32,7 @@ namespace OpenPandora
 		#region public enum ConfigurationItemType
 		public enum ConfigurationItemType
 		{
+			MinimizeToTray,
 			CloseButtonMinimizeToTray,
 			CloseButtonVisible,
 			MinimizeButtonVisible,
@@ -62,6 +63,7 @@ namespace OpenPandora
 			Location,
 			MiniPlayerLocation,
 			SendToXfire,
+            SendToG15,
 			SendToSkype,
 			NotificationLocation,
 			NewVersion,
@@ -174,6 +176,20 @@ namespace OpenPandora
 		//
 		// Public properties
 		//
+
+		[XmlElement("minimizeToTray")]
+		#region public bool MinimizeToTray
+		public bool MinimizeToTray
+		{
+			get { return (bool)items[ConfigurationItemType.MinimizeToTray].Value; }
+			set
+			{
+				items[ConfigurationItemType.MinimizeToTray].Value = value;
+
+				Refresh();
+			}
+		}
+		#endregion
 
 		[XmlElement("closeButtonMinimizeToTray")]
 		#region public bool CloseButtonMinimizeToTray
@@ -573,6 +589,19 @@ namespace OpenPandora
 		}
 		#endregion
 
+        [XmlElement("sendToG15")]
+        #region public bool SendToG15
+        public bool SendToG15
+        {
+            get { return (bool)items[ConfigurationItemType.SendToG15].Value; }
+            set
+            {
+                items[ConfigurationItemType.SendToG15].Value = value;
+                Refresh();
+            }
+        }
+        #endregion
+
 		[XmlElement("sendToSkype")]
 		#region public bool SendToSkype
 		public bool SendToSkype
@@ -795,6 +824,8 @@ namespace OpenPandora
 				new ConfigurationItem("Show Close button", true);
 			items[ConfigurationItemType.CloseButtonMinimizeToTray] = 
 				new ConfigurationItem("Close button minimize to tray", false);
+			items[ConfigurationItemType.MinimizeToTray] = 
+				new ConfigurationItem("Minimize to tray", false);
 			items[ConfigurationItemType.MinimizeButtonVisible] = 
 				new ConfigurationItem("Show Minimize button", true, true);
 			items[ConfigurationItemType.SendToMessenger] = 
@@ -851,6 +882,8 @@ namespace OpenPandora
 				new ConfigurationItem("MiniPlayer location", string.Empty, true);
 			items[ConfigurationItemType.SendToXfire] = 
 				new ConfigurationItem("Send song info to Xfire", false, true);
+            items[ConfigurationItemType.SendToG15] =
+                new ConfigurationItem("Send song info to Logitech G15", false, true);
 			items[ConfigurationItemType.SendToSkype] = 
 				new ConfigurationItem("Send song info to Skype", false, true);
 			items[ConfigurationItemType.NotificationLocation] = 

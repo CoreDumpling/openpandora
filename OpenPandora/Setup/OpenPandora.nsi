@@ -143,10 +143,12 @@ SectionIn RO
   SetOutPath "$INSTDIR"
   
   ;ADD YOUR OWN FILES HERE...
+  File ..\..\lgLcdClassLibrary\Debug\lgLCDNETWrapper.dll
   File ..\bin\Debug\AxInterop.SHDocVw.dll
   File ..\bin\Debug\Interop.SHDocVw.dll
   File ..\bin\Debug\OpenPandora.exe
   File Microsoft.mshtml.dll
+  File lgLcdLibWrapper.dll
   
   ;Store installation folder
   WriteRegStr HKLM "Software\OpenPandora" "InstallLocation" $INSTDIR

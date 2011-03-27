@@ -1,0 +1,8 @@
+*.ncb
+*.suo
+*.user
+
+OpenPandora/bin
+OpenPandora/obj
+lgLcdClassLibrary/Debug
+lgLcdClassLibrary/Release

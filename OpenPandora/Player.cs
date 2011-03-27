@@ -855,7 +855,7 @@ namespace OpenPandora
 
 						Manager.Login(listenerID);						
 						LoadStations();
-						ResizeFromContent(new Size(radioSize.Width, radioSize.Height - 200));
+						ResizeFromContent(new Size(radioSize.Width, radioSize.Height));
 					}
 					
 					if (tuner.ContainsCreateStation)
@@ -1370,7 +1370,7 @@ namespace OpenPandora
 					
 				loaded = true;
 
-				ResizeFromContent(new Size(radioSize.Width, radioSize.Height - 200));
+				ResizeFromContent(new Size(radioSize.Width, radioSize.Height));
 			}
 			catch (Exception ex)
 			{

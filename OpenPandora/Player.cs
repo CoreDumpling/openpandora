@@ -68,6 +68,7 @@ namespace OpenPandora
 		private OpenPandora.Windows.Forms.TaskbarNotifier taskbarNotifier;
 		private Skype skype;
         private G15 g15;
+        private Winamp winamp;
 
         private ButtonDelegate bDelegate;//G15
         private ConfigureDelegate cDelegate; //G15
@@ -413,6 +414,8 @@ namespace OpenPandora
 			this.panelBrowser.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.browser2)).EndInit();
 			this.ResumeLayout(false);
+
+            this.winamp = Winamp.GetInstance();
 
 		}
 		#endregion

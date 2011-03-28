@@ -107,10 +107,6 @@ namespace OpenPandora
                 {
                     Debug.WriteLine("Could not create window: error " + Marshal.GetLastWin32Error());
                 }
-                else
-                {
-                    Debug.WriteLine("Created window: " + hWnd);
-                }
             }
 		}
 
@@ -123,7 +119,6 @@ namespace OpenPandora
         // Window message handler
         private static IntPtr WinampWindowProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
-            Debug.WriteLine("WinampWindowProc called: message type " + msg);
             return DefWindowProc(hWnd, msg, wParam, lParam);
         }
 	}

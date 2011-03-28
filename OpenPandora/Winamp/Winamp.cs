@@ -23,7 +23,7 @@ namespace OpenPandora
 
         private const string WINAMP_CLASS = "Winamp v1.x";
 
-        private IntPtr hWnd;
+        private IntPtr hFakeWinampWnd;
 
         private delegate IntPtr WindowProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
         private WindowProc winampWindowProc;
@@ -99,8 +99,8 @@ namespace OpenPandora
             }
             else
             {
-                hWnd = CreateWindowExW(0, WINAMP_CLASS, "Pandora", 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
-                if (hWnd == IntPtr.Zero)
+                hFakeWinampWnd = CreateWindowExW(0, WINAMP_CLASS, "Pandora", 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+                if (hFakeWinampWnd == IntPtr.Zero)
                 {
                     Debug.WriteLine("Could not create window: error " + Marshal.GetLastWin32Error());
                 }
@@ -110,9 +110,9 @@ namespace OpenPandora
         // Set the window title (actually the song title, from the perspective of the outside world)
         public void SetTitle(string title)
         {
-            if (hWnd != IntPtr.Zero)
+            if (hFakeWinampWnd != IntPtr.Zero)
             {
-                SetWindowTextW(hWnd, title);
+                SetWindowTextW(hFakeWinampWnd, title);
             }
         }
 

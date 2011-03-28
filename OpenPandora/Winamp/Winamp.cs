@@ -114,6 +114,12 @@ namespace OpenPandora
             }
 		}
 
+        // Set the window title (actually the song title, from the perspective of the outside world)
+        public void SetTitle(string title)
+        {
+            SetWindowTextW(hWnd, title);
+        }
+
         // Window message handler
         private static IntPtr WinampWindowProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {

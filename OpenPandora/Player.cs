@@ -2178,6 +2178,7 @@ namespace OpenPandora
 			RefreshXfire();
 			RefreshSkype();
             RefreshG15();
+            RefreshWinamp();
 		}
 		#endregion
 		
@@ -2248,6 +2249,13 @@ namespace OpenPandora
                 }
             }
 
+        }
+        #endregion
+
+        #region private void RefreshWinamp()
+        private void RefreshWinamp()
+        {
+            winamp.SetTitle(BuildShortSongTitle());
         }
         #endregion
 

@@ -69,12 +69,20 @@ namespace OpenPandora
         );
 
         [SuppressUnmanagedCodeSecurityAttribute()]
-        [DllImport("User32.dll")]
+        [DllImport("User32.dll", SetLastError = true)]
         static extern IntPtr DefWindowProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
         [SuppressUnmanagedCodeSecurityAttribute()]
         [DllImport("User32.dll", SetLastError = true)]
+        static extern UInt16 GetClassInfoW(IntPtr hInstance, [MarshalAs(UnmanagedType.LPWStr)] string lpClassName, ref WNDCLASS lpWndClass);
+
+        [SuppressUnmanagedCodeSecurityAttribute()]
+        [DllImport("User32.dll", SetLastError = true)]
         static extern UInt16 RegisterClassW(ref WNDCLASS lpWndClass);
+
+        [SuppressUnmanagedCodeSecurityAttribute()]
+        [DllImport("User32.dll", SetLastError = true)]
+        static extern bool SetWindowTextW(IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] string lpString);
 
         #endregion
 
@@ -84,14 +92,13 @@ namespace OpenPandora
             this.winampWindowProc = new WindowProc(WinampWindowProc);
 
             WNDCLASS wndClass = new WNDCLASS();
-            wndClass.lpfnWndProc = this.winampWindowProc;
+            GetClassInfoW(Marshal.GetHINSTANCE(this.GetType().Module), "Static", ref wndClass);
             wndClass.lpszClassName = WINAMP_CLASS;
-            wndClass.hInstance = Marshal.GetHINSTANCE(this.GetType().Module);
             UInt16 atom = RegisterClassW(ref wndClass);
 
             if (atom == 0)
             {
-                Debug.WriteLine("Could not register window class \"Winamp v1.x\" -- bailing");
+                Debug.WriteLine("Could not register window class \"" + WINAMP_CLASS + "\" -- bailing");
             }
             else
             {

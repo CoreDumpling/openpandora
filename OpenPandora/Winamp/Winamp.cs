@@ -1,10 +1,7 @@
 using System;
-using System.Data;
-using System.Security;
-using System.Threading;
-using System.Security.Permissions;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security;
 
 namespace OpenPandora
 {

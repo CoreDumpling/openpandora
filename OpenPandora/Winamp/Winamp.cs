@@ -110,7 +110,10 @@ namespace OpenPandora
         // Set the window title (actually the song title, from the perspective of the outside world)
         public void SetTitle(string title)
         {
-            SetWindowTextW(hWnd, title);
+            if (hWnd != IntPtr.Zero)
+            {
+                SetWindowTextW(hWnd, title);
+            }
         }
 
         // Window message handler

@@ -8,11 +8,11 @@ using System.Diagnostics;
 
 namespace OpenPandora
 {
-	/// <summary>
-	/// Fake Winamp IPC stub.
-	/// </summary>
-	public class Winamp
-	{
+    /// <summary>
+    /// Fake Winamp IPC stub.
+    /// </summary>
+    public class Winamp
+    {
         // Winamp singleton -- only one instance needed application-wide
         private static Winamp instance = null;
         public static Winamp GetInstance()
@@ -86,9 +86,9 @@ namespace OpenPandora
 
         #endregion
 
-		// Constructor
-		public Winamp()
-		{
+        // Constructor
+        public Winamp()
+        {
             this.winampWindowProc = new WindowProc(WinampWindowProc);
 
             WNDCLASS wndClass = new WNDCLASS();
@@ -108,7 +108,7 @@ namespace OpenPandora
                     Debug.WriteLine("Could not create window: error " + Marshal.GetLastWin32Error());
                 }
             }
-		}
+        }
 
         // Set the window title (actually the song title, from the perspective of the outside world)
         public void SetTitle(string title)
@@ -121,5 +121,5 @@ namespace OpenPandora
         {
             return DefWindowProc(hWnd, msg, wParam, lParam);
         }
-	}
+    }
 }

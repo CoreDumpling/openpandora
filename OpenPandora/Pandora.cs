@@ -32,6 +32,7 @@ namespace OpenPandora
 		#region public Pandora(AxSHDocVw.AxWebBrowser browser)
 		public Pandora(AxSHDocVw.AxWebBrowser browser)
 		{
+            Control.CheckForIllegalCrossThreadCalls = false;
 			this.browser = browser;
 			this.radioSize = new Size(0, 0);
 			

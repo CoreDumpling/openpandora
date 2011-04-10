@@ -79,6 +79,7 @@ namespace OpenPandora
 		private System.Windows.Forms.CheckBox chbMinimizeToTray;
 		private System.Windows.Forms.CheckBox chbMinimizeToTrayOnClose;
 		private System.Windows.Forms.CheckBox chbSendToG15;
+        private System.Windows.Forms.CheckBox chbPublishLikeWinamp;
 		private System.ComponentModel.Container components = null;
 
 		//
@@ -169,6 +170,7 @@ namespace OpenPandora
 			this.label2 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.chbSendToG15 = new System.Windows.Forms.CheckBox();
+            this.chbPublishLikeWinamp = new System.Windows.Forms.CheckBox();
 			this.grbTitleFormat.SuspendLayout();
 			this.tabs.SuspendLayout();
 			this.tabPageDisplay.SuspendLayout();
@@ -451,6 +453,7 @@ namespace OpenPandora
 			this.tabPageSendSongInfo.Controls.Add(this.chbSendToSkype);
 			this.tabPageSendSongInfo.Controls.Add(this.chbSendToXfire);
 			this.tabPageSendSongInfo.Controls.Add(this.chbSendToMessenger);
+            this.tabPageSendSongInfo.Controls.Add(this.chbPublishLikeWinamp);
 			this.tabPageSendSongInfo.Location = new System.Drawing.Point(4, 22);
 			this.tabPageSendSongInfo.Name = "tabPageSendSongInfo";
 			this.tabPageSendSongInfo.Size = new System.Drawing.Size(336, 158);
@@ -669,6 +672,14 @@ namespace OpenPandora
 			this.chbSendToG15.Size = new System.Drawing.Size(280, 24);
 			this.chbSendToG15.TabIndex = 25;
 			this.chbSendToG15.Text = "Send Song Info To Logitech G15 Keyboard LCD";
+            //
+            // chbPublishLikeWinamp
+            //
+            this.chbPublishLikeWinamp.Location = new System.Drawing.Point(8, 104);
+            this.chbPublishLikeWinamp.Name = "chbPublishLikeWinamp";
+            this.chbPublishLikeWinamp.Size = new System.Drawing.Size(280, 24);
+            this.chbPublishLikeWinamp.TabIndex = 26;
+            this.chbPublishLikeWinamp.Text = "Publish Song Info Like Winamp";
 			// 
 			// SettingsView
 			// 
@@ -898,6 +909,7 @@ namespace OpenPandora
 			chbSendToXfire.Checked = this.configuration.SendToXfire;
 			chbSendToSkype.Checked = this.configuration.SendToSkype;
             chbSendToG15.Checked = this.configuration.SendToG15;
+            chbPublishLikeWinamp.Checked = this.configuration.PublishLikeWinamp;
 			chbOpenLinksInDefaultBrowser.Checked = this.configuration.OpenInDefaultBrowser;
 
 			chbShowCloseButton.Enabled = this.configuration.IsConfigurationItemEnabled(Configuration.ConfigurationItemType.CloseButtonVisible);
@@ -996,6 +1008,7 @@ namespace OpenPandora
 			configuration.SendToXfire = chbSendToXfire.Checked;
 			configuration.SendToSkype = chbSendToSkype.Checked;
             configuration.SendToG15 = chbSendToG15.Checked;
+            configuration.PublishLikeWinamp = chbPublishLikeWinamp.Checked;
 			configuration.OpenInDefaultBrowser = chbOpenLinksInDefaultBrowser.Checked;
 			
 			if (rdbTitleTemplate1.Checked)

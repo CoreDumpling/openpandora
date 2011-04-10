@@ -65,6 +65,7 @@ namespace OpenPandora
 			SendToXfire,
             SendToG15,
 			SendToSkype,
+            PublishLikeWinamp,
 			NotificationLocation,
 			NewVersion,
 			NewVersionReport
@@ -615,7 +616,20 @@ namespace OpenPandora
 		}
 		#endregion
 
-		[XmlElement("notificationLocation")]
+        [XmlElement("publishLikeWinamp")]
+        #region public bool PublishLikeWinamp
+        public bool PublishLikeWinamp
+        {
+            get { return (bool)items[ConfigurationItemType.PublishLikeWinamp].Value; }
+            set
+            {
+                items[ConfigurationItemType.PublishLikeWinamp].Value = value;
+                Refresh();
+            }
+        }
+        #endregion
+
+        [XmlElement("notificationLocation")]
 		#region public string NotificationLocation
 		public string NotificationLocation
 		{
@@ -884,9 +898,11 @@ namespace OpenPandora
 				new ConfigurationItem("Send song info to Xfire", false, true);
             items[ConfigurationItemType.SendToG15] =
                 new ConfigurationItem("Send song info to Logitech G15", false, true);
-			items[ConfigurationItemType.SendToSkype] = 
-				new ConfigurationItem("Send song info to Skype", false, true);
-			items[ConfigurationItemType.NotificationLocation] = 
+            items[ConfigurationItemType.SendToSkype] =
+                new ConfigurationItem("Send song info to Skype", false, true);
+            items[ConfigurationItemType.PublishLikeWinamp] =
+                new ConfigurationItem("Publish song info like Winamp", false, true);
+            items[ConfigurationItemType.NotificationLocation] = 
 				new ConfigurationItem("Notification window location", string.Empty, true);
 			items[ConfigurationItemType.NewVersion] = 
 				new ConfigurationItem("Last run version", "0.0.0.0", true);

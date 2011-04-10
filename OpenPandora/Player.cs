@@ -2255,7 +2255,15 @@ namespace OpenPandora
         #region private void RefreshWinamp()
         private void RefreshWinamp()
         {
-            winamp.SetTitle(BuildShortSongTitle());
+            if (this.configuration.PublishLikeWinamp)
+            {
+                winamp.Enabled = true;
+                winamp.SetTitle(BuildShortSongTitle());
+            }
+            else
+            {
+                winamp.Enabled = false;
+            }
         }
         #endregion
 

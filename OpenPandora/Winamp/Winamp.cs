@@ -21,6 +21,7 @@ namespace OpenPandora
             return instance;
         }
 
+        private WNDCLASS wndClass;
         private const string WINAMP_CLASS = "Winamp v1.x";
 
         private IntPtr hFakeWinampWnd;
@@ -71,6 +72,10 @@ namespace OpenPandora
 
         [SuppressUnmanagedCodeSecurityAttribute()]
         [DllImport("User32.dll", SetLastError = true)]
+        static extern bool DestroyWindow(IntPtr hWnd);
+
+        [SuppressUnmanagedCodeSecurityAttribute()]
+        [DllImport("User32.dll", SetLastError = true)]
         static extern UInt16 GetClassInfoW(IntPtr hInstance, [MarshalAs(UnmanagedType.LPWStr)] string lpClassName, ref WNDCLASS lpWndClass);
 
         [SuppressUnmanagedCodeSecurityAttribute()]
@@ -86,23 +91,50 @@ namespace OpenPandora
         // Constructor
         public Winamp()
         {
+            this.hFakeWinampWnd = IntPtr.Zero;
             this.winampWindowProc = new WindowProc(WinampWindowProc);
 
-            WNDCLASS wndClass = new WNDCLASS();
+            this.wndClass = new WNDCLASS();
             GetClassInfoW(Marshal.GetHINSTANCE(this.GetType().Module), "Static", ref wndClass);
             wndClass.lpszClassName = WINAMP_CLASS;
-            UInt16 atom = RegisterClassW(ref wndClass);
+            UInt16 atom = RegisterClassW(ref this.wndClass);
 
             if (atom == 0)
             {
                 Debug.WriteLine("Could not register window class \"" + WINAMP_CLASS + "\" -- bailing");
             }
-            else
+        }
+
+        private void CreateFakeWinampWindow()
+        {
+            hFakeWinampWnd = CreateWindowExW(0, WINAMP_CLASS, "Pandora", 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+            if (hFakeWinampWnd == IntPtr.Zero)
             {
-                hFakeWinampWnd = CreateWindowExW(0, WINAMP_CLASS, "Pandora", 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
-                if (hFakeWinampWnd == IntPtr.Zero)
+                Debug.WriteLine("Could not create window: error " + Marshal.GetLastWin32Error());
+            }
+        }
+
+        private void DestroyFakeWinampWindow()
+        {
+            DestroyWindow(hFakeWinampWnd);
+            hFakeWinampWnd = IntPtr.Zero;
+        }
+
+        public bool Enabled
+        {
+            get
+            {
+                return hFakeWinampWnd == IntPtr.Zero;
+            }
+            set
+            {
+                if (value && hFakeWinampWnd == IntPtr.Zero)
                 {
-                    Debug.WriteLine("Could not create window: error " + Marshal.GetLastWin32Error());
+                    CreateFakeWinampWindow();
+                }
+                else if (!value && hFakeWinampWnd != IntPtr.Zero)
+                {
+                    DestroyFakeWinampWindow();
                 }
             }
         }
